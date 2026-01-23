@@ -22,7 +22,7 @@ export default function LoginForm() {
 
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/user');
     } catch (err: any) {
       const errorMessage = err?.response?.data?.message || err?.message || 'Login failed. Please try again.';
       setError(errorMessage);
