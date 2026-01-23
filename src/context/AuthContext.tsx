@@ -47,14 +47,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
+    console.log('🔐 Login attempt for:', email);
     try {
       const response = await axios.post('/api/auth/login', {
         email,
         password,
       });
 
+      console.log('✅ Login response received:', response.data);
+
       const { data } = response.data;
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data;
+
+      console.log('🔑 Tokens extracted');
 
       // Decode JWT to get user info
       const decoded = JSON.parse(atob(newAccessToken.split('.')[1]));
@@ -65,6 +70,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role: decoded.role,
       };
 
+      console.log('👤 User data decoded:', userData);
+
       // Store tokens and user
       setAccessToken(newAccessToken);
       setRefreshToken(newRefreshToken);
@@ -74,11 +81,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('refreshToken', newRefreshToken);
       sessionStorage.setItem('user', JSON.stringify(userData));
 
+      console.log('💾 Tokens and user stored in storage');
+
       // Set axios default header
       axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+
+      console.log('🎉 Login successful!');
     } catch (error: any) {
       // Log server response body to help debug failures
-      console.error('Login error response:', error?.response?.data ?? error);
+      console.error('❌ Login error response:', error?.response?.data ?? error);
       throw error;
     } finally {
       setIsLoading(false);
