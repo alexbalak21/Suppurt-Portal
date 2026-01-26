@@ -1,0 +1,40 @@
+import { useState } from "react";
+import { useAuth } from "./AuthContext";
+import { useUser } from "../user";
+import { useNavigate } from "react-router-dom";
+
+export function useLogout() {
+  const { apiClient, clearAccessToken, clearRefreshToken, accessToken, refreshToken } = useAuth();
+  const { setUser } = useUser();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const logout = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const headers: Record<string, string> = {};
+      if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+      if (refreshToken) headers["Content-Type"] = "application/json";
+
+      await apiClient("/api/auth/logout", {
+        method: "POST",
+        headers: Object.keys(headers).length ? headers : undefined,
+        body: refreshToken ? JSON.stringify({ refresh_token: refreshToken }) : undefined,
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Logout failed";
+      setError(message);
+    } finally {
+      clearAccessToken();
+      clearRefreshToken();
+      setUser(null);
+      setLoading(false);
+      navigate("/");
+    }
+  };
+
+  return { logout, loading, error } as const;
+}

@@ -1,6 +1,10 @@
 import React, { useState, useCallback } from "react";
 import Toast, { type ToastType } from "./Toast";
 
+type ToastRegistrar = typeof window & {
+  showToast?: (message: string, type: ToastType, duration?: number) => void;
+};
+
 export interface ToastItem {
   id: string;
   message: string;
@@ -52,9 +56,10 @@ const ToastContainer: React.FC<ToastContainerProps> = ({
 
   // Expose addToast function globally for easy access
   React.useEffect(() => {
-    (window as any).showToast = addToast;
+    const globalWindow = window as ToastRegistrar;
+    globalWindow.showToast = addToast;
     return () => {
-      delete (window as any).showToast;
+      delete globalWindow.showToast;
     };
   }, [addToast]);
 
@@ -75,10 +80,12 @@ const ToastContainer: React.FC<ToastContainerProps> = ({
 };
 
 // Hook to use toast functionality
+// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => {
   const addToast = (message: string, type: ToastType = "info", duration = 5000) => {
-    if ((window as any).showToast) {
-      (window as any).showToast(message, type, duration);
+    const globalWindow = window as ToastRegistrar;
+    if (globalWindow.showToast) {
+      globalWindow.showToast(message, type, duration);
     }
   };
 

@@ -1,25 +1,27 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastContainer";
 import { Button, Input } from "../components";
-import { login } from "../features/auth";
+import { register } from "../features/auth";
 import { useAuth } from "../features/auth";
 import { useUser } from "../features/user";
 
-interface LoginFormData {
+interface RegisterFormData {
+  name: string;
   email: string;
   password: string;
 }
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
   const toast = useToast();
   const { setAccessToken, setRefreshToken } = useAuth();
   const { setUser } = useUser();
 
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "john.doe@example.com",
-    password: "password@1234",
+  const [formData, setFormData] = useState<RegisterFormData>({
+    name: "",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,25 +35,28 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
-    if (!formData.email.trim() || !formData.password) {
-      setError("Please enter both email and password");
+    if (!formData.name.trim() || !formData.email.trim() || !formData.password) {
+      setError("Please fill out all fields");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const data = await login({ email: formData.email, password: formData.password });
+      const data = await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
 
-      // Store token and user
       setAccessToken(data.access_token);
       setRefreshToken(data.refresh_token ?? null);
       setUser(data.user);
 
-      toast.success("Login successful!");
-      navigate("/");
+      toast.success("Registration successful! Redirecting to profile...");
+      navigate("/profile");
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Login failed. Please try again.";
+      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -61,17 +66,10 @@ export default function Login() {
   return (
     <div className="h-full bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
-        </h2>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Or{" "}
-          <Link
-            to="/register"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            create a new account
-          </Link>
+          Or{' '}
+          <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">sign in to an existing account</a>
         </p>
       </div>
 
@@ -79,11 +77,32 @@ export default function Login() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {error && (
             <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4">
-              <p className="text-sm text-red-700">{error}</p>
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              </div>
             </div>
           )}
 
           <form className="space-y-6" onSubmit={handleSubmit}>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              autoComplete="name"
+              label="Full name"
+              value={formData.name}
+              onChange={handleChange}
+              disabled={isLoading}
+              placeholder="John Doe"
+            />
+
             <Input
               id="email"
               name="email"
@@ -100,7 +119,7 @@ export default function Login() {
               id="password"
               name="password"
               type="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               label="Password"
               value={formData.password}
               onChange={handleChange}
@@ -108,39 +127,13 @@ export default function Login() {
               placeholder="••••••••"
             />
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
-
             <Button
               type="submit"
               disabled={isLoading}
               loading={isLoading}
               fullWidth
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? "Creating account..." : "Create account"}
             </Button>
           </form>
         </div>
