@@ -1,10 +1,15 @@
 // shared/lib/apiClient.ts
 
 // Base URL configuration
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8100';
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const buildUrl = (path: string): string => {
-  return `${BASE_URL}${path}`;
+  if (!BASE_URL || BASE_URL === '/') return path;
+  // Remove trailing slash from BASE_URL and leading slash from path
+  const base = BASE_URL.replace(/\/$/, '');
+  const cleanPath = path.replace(/^\//, '');
+  return `${base}/${cleanPath}`;
 };
 
 export const apiClient = {

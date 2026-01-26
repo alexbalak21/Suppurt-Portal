@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import type { AuthContextType } from "./auth.types";
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8100';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
