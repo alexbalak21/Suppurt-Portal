@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastContainer";
+import FormErrorMessage from "../components/FormErrorMessage";
 import { Button, Input } from "../components";
 import { login } from "../features/auth";
 import { useAuth } from "../features/auth";
@@ -77,11 +78,7 @@ export default function Login() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {error && (
-            <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          )}
+          <FormErrorMessage message={error} />
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <Input
