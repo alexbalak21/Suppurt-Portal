@@ -1,3 +1,4 @@
+// import { useRole } from "../features/auth/useRole";
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -19,6 +20,7 @@ const userLinks = [
 ];
 
 export function AppRoutes() {
+  // You can add role-based logic here if needed, or keep this as the main route structure
   return (
     <Routes>
       {/* Normal pages without sidebar */}

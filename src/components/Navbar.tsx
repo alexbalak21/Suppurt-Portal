@@ -10,16 +10,25 @@ function classNames(...classes: Array<string | false | null | undefined>): strin
 interface NavbarProps {
   user?: {name: string; email: string; profileImage?: string | null} | null
 }
+import { useRole } from "../features/auth/useRole";
 
 export default function Navbar({user}: NavbarProps) {
   const location = useLocation()
 
-  const navigation = [
-    {name: "Home", href: "/", icon: HomeIcon},
-    {name: "About", href: "/about", icon: InformationCircleIcon},
-    {name: "API Demo", href: "/demo", icon: CodeBracketIcon},
-    {name: "Editor", href: "/editor", icon: PencilSquareIcon},
-  ]
+  const { isUser, isAgent, isAdmin, isVisitor } = useRole();
+
+  const navLinks = [
+    { name: "Home", href: "/", show: true },
+    { name: "About", href: "/about", show: isVisitor },
+    { name: "API Demo", href: "/demo", show: isUser || isAgent || isAdmin },
+    { name: "Editor", href: "/editor", show: isUser || isAgent || isAdmin },
+    { name: "My Profile", href: "/user/profile", show: isUser },
+    { name: "Dashboard", href: "/user/dashboard", show: isUser },
+    { name: "Tickets", href: "/agent/tickets", show: isAgent },
+    { name: "Agent Dashboard", href: "/agent/dashboard", show: isAgent },
+    { name: "Manage Users", href: "/admin/users", show: isAdmin },
+    { name: "Admin Settings", href: "/admin/settings", show: isAdmin },
+  ];
 
   const isActive = (path: string) => location.pathname === path
 
@@ -46,19 +55,19 @@ export default function Navbar({user}: NavbarProps) {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4 h-16">
-                {navigation.map((item) => (
+                {navLinks.filter(l => l.show).map(link => (
                   <Link
-                    key={item.name}
-                    to={item.href}
-                    aria-current={isActive(item.href) ? "page" : undefined}
+                    key={link.name}
+                    to={link.href}
+                    aria-current={isActive(link.href) ? "page" : undefined}
                     className={classNames(
-                      isActive(item.href)
+                      isActive(link.href)
                         ? "text-indigo-600 font-semibold border-b-3 border-indigo-600"
                         : "text-gray-500 hover:text-gray-800 hover:border-gray-300 border-transparent",
                       "flex items-center h-full px-3 text-sm font-medium border-b-2 transition-colors",
                     )}>
-                    <item.icon className="mr-2 h-5 w-5" aria-hidden="true" />
-                    {item.name}
+                    {/* If you want to add icons, add an 'icon' property to navLinks and render here */}
+                    {link.name}
                   </Link>
                 ))}
               </div>
@@ -86,20 +95,20 @@ export default function Navbar({user}: NavbarProps) {
       {/* Mobile nav */}
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 pt-2 pb-3">
-          {navigation.map((item) => (
+          {navLinks.filter(l => l.show).map(link => (
             <DisclosureButton
-              key={item.name}
+              key={link.name}
               as={Link}
-              to={item.href}
-              aria-current={isActive(item.href) ? "page" : undefined}
+              to={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               className={classNames(
-                isActive(item.href)
+                isActive(link.href)
                   ? "text-indigo-600 font-semibold bg-gray-50 border-l-4 border-indigo-600"
                   : "text-gray-700 hover:text-indigo-600 hover:border-l-4 hover:border-indigo-600",
                 "flex items-center px-3 py-2 text-base font-medium transition-colors w-full",
               )}>
-              <item.icon className="mr-2 h-5 w-5" aria-hidden="true" />
-              {item.name}
+              {/* If you want to add icons, add an 'icon' property to navLinks and render here */}
+              {link.name}
             </DisclosureButton>
           ))}
         </div>

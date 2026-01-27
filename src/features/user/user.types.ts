@@ -1,8 +1,11 @@
+
+export type Role = "USER" | "AGENT" | "ADMIN" | "VISITOR";
+
 export interface UserInfo {
   id: number;
   name: string;
   email: string;
-  roles: string[];
+  roles: Role[];
   createdAt: string;
   updatedAt: string;
   profileImage: string | null;

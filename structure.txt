@@ -1,0 +1,50 @@
+src/
+  main.tsx                - App entry point
+  app/
+    App.tsx               - Main App component
+    index.ts              - App exports
+    Providers.tsx         - Context providers setup
+    routes.tsx            - App routes definition
+  components/
+    Avatar.tsx            - User avatar component
+    Button.tsx            - Reusable button
+    Confirm.tsx           - Confirmation dialog
+    EditableText.tsx      - Inline editable text
+    Editor.tsx            - WYSIWYG HTML editor
+    FormErrorMessage.tsx  - Form error display
+    index.ts              - Components exports
+    Input.tsx             - Input field
+    Navbar.tsx            - Top navigation bar
+    Sidebar.tsx           - Side navigation
+    Toast.tsx             - Toast notification
+    ToastContainer.tsx    - Toasts container
+    UserLayout.tsx        - User page layout
+    UserMenu.tsx          - User menu dropdown
+  features/
+    auth/
+      auth.api.ts         - Auth API calls
+      auth.types.ts       - Auth types/interfaces
+      AuthContext.tsx     - Auth context provider
+      index.ts            - Auth exports
+      useLogout.ts        - Logout hook
+    user/
+      index.ts            - User exports
+      user.types.ts       - User types/interfaces
+      UserContext.tsx     - User context provider
+  pages/
+    About.tsx             - About page
+    ApiDemo.tsx           - API demo page
+    EditorPage.tsx        - Editor demo page
+    Home.tsx              - Home page
+    Login.tsx             - Login page
+    Register.tsx          - Register page
+    User/
+      Profile.tsx         - User profile page
+      UpdateProfile.tsx   - Update profile page
+      UpdateUserPassword.tsx - Change password page
+  shared/
+    lib/
+      apiClient.ts        - API client setup
+      index.ts            - Shared lib exports
+  styles/
+    main.css              - Main CSS styles

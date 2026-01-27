@@ -1,0 +1,34 @@
+/api/user:
+
+body :
+{
+  "id": 1,
+  "name": "test_user",
+  "email": "testuser@example.com",
+  "roles": [
+    "USER"
+  ],
+  "createdAt": "2026-01-27T20:48:31.297250Z",
+  "updatedAt": "2026-01-27T20:48:31.297250Z"
+}
+
+
+/api/auth/login
+
+{
+  "message": "Login successful",
+  "data": {
+    "access_token": "...",
+    "refresh_token": "...",
+    "user": {
+      "id": 1,
+      "name": "test_user",
+      "email": "testuser@example.com",
+      "roles": [
+        "USER"
+      ],
+      "createdAt": "2026-01-27T20:48:31.297250Z",
+      "updatedAt": "2026-01-27T20:48:31.297250Z"
+    }
+  }
+}
