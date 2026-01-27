@@ -42,8 +42,6 @@ export default function EditorPage() {
           <BtnNumberedList />
           <BtnBulletList />
           <BtnLink />
-          <BtnUndo />
-          <BtnRedo />
         </Toolbar>
       </Editor>
 
