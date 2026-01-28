@@ -19,13 +19,15 @@ export default function Select() {
       <Listbox value={selected} onChange={setSelected}>
         <ListboxButton
           className={clsx(
-            'relative block w-full rounded-lg bg-gray-800 py-1.5 pr-8 pl-3 text-left text-sm/6 text-white',
-            'focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white'
+            // light mode
+            'relative block w-full rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 py-1.5 pr-8 pl-3 text-left text-sm',
+            // dark mode
+            'dark:bg-gray-800 dark:text-white dark:outline-gray-700'
           )}
         >
           {selected.name}
           <ChevronDownIcon
-            className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white"
+            className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-gray-500 dark:fill-white/60"
             aria-hidden="true"
           />
         </ListboxButton>
@@ -34,7 +36,10 @@ export default function Select() {
           anchor="bottom"
           transition
           className={clsx(
-            'w-(--button-width) rounded-xl border border-gray-700 bg-gray-800 p-1 [--anchor-gap:--spacing(1)] focus:outline-none',
+            // light mode
+            'w-(--button-width) rounded-xl border border-gray-200 bg-white p-1 shadow-md focus:outline-none',
+            // dark mode
+            'dark:border-white/5 dark:bg-gray-800',
             'transition duration-100 ease-in data-leave:data-closed:opacity-0'
           )}
         >
@@ -42,10 +47,16 @@ export default function Select() {
             <ListboxOption
               key={person.name}
               value={person}
-              className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-gray-700"
+              className={clsx(
+                'group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none',
+                // light hover
+                'data-focus:bg-gray-100',
+                // dark hover
+                'dark:data-focus:bg-white/10'
+              )}
             >
-              <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" />
-              <div className="text-sm/6 text-white">{person.name}</div>
+              <CheckIcon className="invisible size-4 text-blue-600 dark:fill-white group-data-selected:visible" />
+              <div className="text-sm text-gray-900 dark:text-white">{person.name}</div>
             </ListboxOption>
           ))}
         </ListboxOptions>
