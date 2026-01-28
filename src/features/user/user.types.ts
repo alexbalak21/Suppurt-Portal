@@ -1,5 +1,7 @@
 
-export type Role = "USER" | "AGENT" | "ADMIN" | "VISITOR";
+
+export type Role = "USER" | "AGENT" | "ADMIN" | "VISITOR" | string;
+
 
 export interface UserInfo {
   id: number;
@@ -14,4 +16,6 @@ export interface UserInfo {
 export interface UserContextType {
   user: UserInfo | null;
   setUser: (user: UserInfo | null) => void;
+  activeRole: Role | null;
+  setActiveRole: (role: Role) => void;
 }

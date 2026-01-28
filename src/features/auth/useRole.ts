@@ -1,32 +1,26 @@
+
 import { useUser } from "../user/UserContext";
 import type { Role } from "../user/user.types";
 
 export function useRole() {
-  const { user } = useUser();
-
-  console.log("[useRole] user:", user);
+  const { user, activeRole, setActiveRole } = useUser();
 
   const hasRole = (role: Role) => {
-    const result = user?.roles?.includes(role);
-    console.log(`[useRole] hasRole(${role}):`, result);
-    return result;
+    return user?.roles?.includes(role);
   };
 
-  const isUser = hasRole("USER");
-  const isAgent = hasRole("AGENT");
-  const isAdmin = hasRole("ADMIN");
-  const isVisitor = !user || user.roles?.includes("VISITOR");
-
-  console.log("[useRole] isUser:", isUser);
-  console.log("[useRole] isAgent:", isAgent);
-  console.log("[useRole] isAdmin:", isAdmin);
-  console.log("[useRole] isVisitor:", isVisitor);
+  const isActiveRole = (role: Role) => {
+    return activeRole === role;
+  };
 
   return {
-    isUser,
-    isAgent,
-    isAdmin,
-    isVisitor,
+    activeRole,
+    setActiveRole,
     hasRole,
+    isActiveRole,
+    isUser: activeRole === "USER",
+    isAgent: activeRole === "AGENT",
+    isAdmin: activeRole === "ADMIN",
+    isVisitor: activeRole === "VISITOR" || !activeRole,
   };
 }

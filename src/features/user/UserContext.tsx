@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "../auth";
-import type { UserInfo, UserContextType } from "./user.types";
+import type { UserInfo, UserContextType, Role } from "./user.types";
 
 type RawUser = {
   id: number;
@@ -36,15 +36,31 @@ function normalizeUserData(data: RawUser): UserInfo {
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [activeRole, setActiveRoleState] = useState<Role | null>(null);
   const { apiClient, authenticated } = useAuth();
 
   // Prevent React Strict Mode from running the effect twice
   const didRun = useRef(false);
 
+  // Load activeRole from localStorage on mount
+  useEffect(() => {
+    const storedRole = localStorage.getItem("activeRole");
+    if (storedRole) {
+      setActiveRoleState(storedRole);
+    }
+  }, []);
+
+  // Save activeRole to localStorage when it changes
+  useEffect(() => {
+    if (activeRole) {
+      localStorage.setItem("activeRole", activeRole);
+    }
+  }, [activeRole]);
+
   useEffect(() => {
     if (!authenticated) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser(null);
+      setActiveRoleState(null);
       didRun.current = false; // Reset the ref when logging out
       return;
     }
@@ -60,21 +76,36 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         if (response.ok) {
           const userData = await response.json();
           console.log("[UserContext] /api/user userData:", userData);
-          setUser(normalizeUserData(userData));
+          const normalized = normalizeUserData(userData);
+          setUser(normalized);
+          // If activeRole is not in user's roles, set to first role
+          setActiveRoleState((prev) => {
+            if (prev && normalized.roles.includes(prev)) return prev;
+            return normalized.roles[0] || null;
+          });
         } else {
           setUser(null);
+          setActiveRoleState(null);
         }
       } catch (err) {
         console.log("[UserContext] fetchUser error:", err);
         setUser(null);
+        setActiveRoleState(null);
       }
     };
 
     fetchUser();
   }, [authenticated, apiClient]);
 
+  const setActiveRole = (role: Role) => {
+    if (user && user.roles.includes(role)) {
+      setActiveRoleState(role);
+      localStorage.setItem("activeRole", role);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, activeRole, setActiveRole }}>
       {children}
     </UserContext.Provider>
   );
