@@ -4,7 +4,7 @@ import { Button, EditableText, Avatar } from "../../components";
 import { useUser } from "../../features/user";
 import { useRole } from "../../features/auth/useRole";
 import { useAuth } from "../../features/auth";
-import Select from "../../components/Select";
+import Select, { SelectOption } from "../../components/Select";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -76,6 +76,16 @@ export default function Profile() {
     return <div className="text-center p-8">No user loaded.</div>;
   }
 
+  // Convert roles → SelectOption[]
+  const roleOptions: SelectOption[] = user.roles.map((role, index) => ({
+    id: index,
+    label: <span>{role}</span>
+  }));
+
+  // Ensure activeRole is a SelectOption
+  const selectedRole: SelectOption =
+    activeRole ?? roleOptions[0];
+
   return (
     <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
       <div className="flex items-center justify-between mb-4">
@@ -125,24 +135,27 @@ export default function Profile() {
             onSave={handleSaveEmail}
           />
 
-
           <div className="flex gap-4 items-center">
             <strong className="w-28 text-gray-700">Active Role:</strong>
-            {user.roles.length > 1 ? (
+
+            {roleOptions.length > 1 ? (
               <Select
-                options={user.roles}
-                value={activeRole || user.roles[0]}
+                options={roleOptions}
+                value={selectedRole}
                 onChange={setActiveRole}
+                renderOption={(opt) => opt.label}
               />
             ) : (
-              <span className="text-gray-900">{user.roles[0]}</span>
+              <span className="text-gray-900">{roleOptions[0].label}</span>
             )}
           </div>
 
-          {user.roles.length > 1 && (
+          {roleOptions.length > 1 && (
             <div className="flex gap-4">
               <strong className="w-28 text-gray-700">All Roles:</strong>
-              <span className="text-gray-900">{user.roles.join(", ")}</span>
+              <span className="text-gray-900">
+                {user.roles.join(", ")}
+              </span>
             </div>
           )}
 
