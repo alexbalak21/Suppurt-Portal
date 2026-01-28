@@ -55,7 +55,7 @@ export default function Select() {
                 'dark:data-focus:bg-white/10'
               )}
             >
-              <CheckIcon className="invisible size-4 text-blue-600 dark:fill-white group-data-selected:visible" />
+              <CheckIcon className="invisible size-4 text-blue-600 dark:text-blue-400 group-data-selected:visible" />
               <div className="text-sm text-gray-900 dark:text-white">{person.name}</div>
             </ListboxOption>
           ))}
