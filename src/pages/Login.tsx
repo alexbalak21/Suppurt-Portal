@@ -19,8 +19,8 @@ export default function Login() {
   const { setUser } = useUser();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "john.doe@example.com",
-    password: "password@1234",
+    email: "gordon.freeman@example.com",
+    password: "password1234",
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);

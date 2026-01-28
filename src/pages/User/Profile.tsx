@@ -4,6 +4,7 @@ import { Button, EditableText, Avatar } from "../../components";
 import { useUser } from "../../features/user";
 import { useRole } from "../../features/auth/useRole";
 import { useAuth } from "../../features/auth";
+import Select from "../../components/Select";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -128,15 +129,13 @@ export default function Profile() {
           <div className="flex gap-4 items-center">
             <strong className="w-28 text-gray-700">Active Role:</strong>
             {user.roles.length > 1 ? (
-              <select
-                className="border rounded px-2 py-1"
+              <Select
+                options={user.roles}
+                // @ts-ignore
                 value={activeRole || user.roles[0]}
-                onChange={e => setActiveRole(e.target.value)}
-              >
-                {user.roles.map(role => (
-                  <option key={role} value={role}>{role}</option>
-                ))}
-              </select>
+                // @ts-ignore
+                onChange={setActiveRole}
+              />
             ) : (
               <span className="text-gray-900">{user.roles[0]}</span>
             )}
