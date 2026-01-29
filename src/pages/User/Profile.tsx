@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useTheme } from "../../features/theme/useTheme";
+import type { Theme } from "../../features/theme/useTheme";
 import { useNavigate } from "react-router-dom";
 import { Button, EditableText, Avatar } from "../../components";
 import { useUser } from "../../features/user";
@@ -12,6 +14,9 @@ export default function Profile() {
   const { activeRole, setActiveRole } = useRole();
   const { apiClient } = useAuth();
   const [loading, setLoading] = useState(false);
+
+  // Theme hook
+  const { theme, setTheme } = useTheme();
 
   const handleSaveName = async (newName: string) => {
     if (user) {
@@ -109,6 +114,16 @@ export default function Profile() {
             />
           </label>
         </div>
+      </div>
+
+      {/* Theme selector */}
+      <div className="flex gap-4 items-center mb-6">
+        <strong className="w-28 text-gray-700">Theme:</strong>
+        <SimpleSelect
+          options={["light", "dark", "system"]}
+          value={theme}
+          onChange={(val) => setTheme(val as Theme)}
+        />
       </div>
 
       {user && (
