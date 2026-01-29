@@ -21,7 +21,8 @@ import "../styles/editor.css"
 
 interface EditorProps {
   content: string,
-  setContent: (value: string) => void
+  setContent: (value: string) => void,
+  placeholder?: string
 }
 
 /**
@@ -41,7 +42,8 @@ interface EditorProps {
  *   - Toolbar and editor area are styled for modern UI out of the box.
  */
 
-export default function Editor({ content, setContent }: EditorProps) {
+
+export default function Editor({ content, setContent, placeholder }: EditorProps) {
   function onChange(e: ContentEditableEvent) {
     setContent(e.target.value)
   }
@@ -52,6 +54,7 @@ export default function Editor({ content, setContent }: EditorProps) {
         <WysiwygEditor
           value={content}
           onChange={onChange}
+          placeholder={typeof placeholder === 'string' ? placeholder : ''}
           className="
           w-full h-64 p-2 bg-white shadow-sm
           dark:bg-gray-700 dark:text-gray-100

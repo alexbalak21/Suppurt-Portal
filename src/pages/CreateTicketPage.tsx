@@ -6,7 +6,7 @@ import type {SelectOption }from "../components/Select";
 
 
 export default function CreateTicketPage() {
-  const [content, setContent] = useState("my <b>HTML</b>");
+  const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
 
   // Mock priorities
@@ -41,6 +41,7 @@ export default function CreateTicketPage() {
         </div>
       </div>
       <Editor
+      placeholder="Describe your issue here..."
         content={content}
         setContent={setContent}
       />
