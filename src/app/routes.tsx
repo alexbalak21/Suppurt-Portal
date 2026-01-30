@@ -11,8 +11,8 @@ import UpdateUserPassword from "../pages/User/UpdateUserPassword";
 import { UserLayout } from "../components";
 import { UserIcon, PencilSquareIcon, KeyIcon } from "@heroicons/react/24/outline";
 
-import CreateTicketPage from "../pages/CreateTicketPage";
-import TicketListPage from "../pages/TicketListPage";
+import CreateTicketPage from "../pages/Ticket/CreateTicketPage";
+import TicketListPage from "../pages/Ticket/TicketListPage";
 
 const userLinks = [
   { name: "Profile", href: "/profile", icon: UserIcon },

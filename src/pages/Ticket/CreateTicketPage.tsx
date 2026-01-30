@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import Editor from "../components/Editor";
-import { Input } from "../components";
-import Select from "../components/Select";
-import type { SelectOption } from "../components/Select";
-import { usePriorities } from "../features/ticket/usePriorities";
-import { useCreateTicket } from "../features/ticket/useCreateTicket";
+import Editor from "../../components/Editor";
+import { Input } from "../../components";
+import Select from "../../components/Select";
+import type { SelectOption } from "../../components/Select";
+import { usePriorities } from "../../features/ticket/usePriorities";
+import { useCreateTicket } from "../../features/ticket/useCreateTicket";
 
 
 
@@ -44,13 +44,14 @@ export default function CreateTicketPage() {
       <Input value={title} label="Title" placeholder="Enter ticket title" className="mb-4" onChange={e => setTitle(e.target.value)} />
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priority</label>
-        <div className="max-w-xs">
+        <div >
           {prioritiesLoading ? (
             <div>Loading priorities...</div>
           ) : prioritiesError ? (
             <div className="text-red-500">{prioritiesError}</div>
           ) : (
             <Select
+              className="w-full"
               options={priorities.map(p => ({ id: p.id, label: p.name }))}
               value={priority}
               onChange={setPriority}
