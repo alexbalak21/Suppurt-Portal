@@ -1,11 +1,26 @@
-import {defineConfig} from "vite"
+import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
+import { resolve } from "path"
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss()
+  ],
+
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "src"),
+      "@app": resolve(__dirname, "src/app"),
+      "@components": resolve(__dirname, "src/components"),
+      "@features": resolve(__dirname, "src/features"),
+      "@utils": resolve(__dirname, "src/utils"),
+    },
+  },
+
   base: "/",
+
   server: {
     proxy: {
       "/api": {
@@ -16,6 +31,7 @@ export default defineConfig({
       },
     },
   },
+
   build: {
     outDir: "S:/DEV/Issue-Tracker-App/src/main/resources/static",
     emptyOutDir: true,

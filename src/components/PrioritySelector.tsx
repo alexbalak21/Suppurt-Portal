@@ -4,13 +4,13 @@ import {
   ListboxOption,
   ListboxOptions,
 } from '@headlessui/react'
+import { priorityColors } from "@/utils/priorityColors"
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import { useState } from 'react'
 import type { ReactNode } from 'react'
 
 export type SelectOption = {
-  id: number
+  id: 1 | 2 | 3 | 4
   label: ReactNode
 }
 
@@ -27,26 +27,26 @@ export default function Select({
   onChange,
   className,
 }: SelectProps) {
-  const [internalValue, setInternalValue] = useState<SelectOption>(options[0])
-  const selected = value ?? internalValue
 
-  const handleChange = (opt: SelectOption) => {
-    onChange ? onChange(opt) : setInternalValue(opt)
-  }
+  // Fully controlled: if parent gives a value, use it.
+  // Otherwise fallback to first option.
+  const selected = value ?? options[0]
 
   return (
-    <Listbox value={selected} onChange={handleChange}>
-      <div className={clsx("w-full", className)}>
+    <Listbox value={selected} onChange={onChange}>
+      <div className="w-full">
         <ListboxButton
           className={clsx(
-            "relative block w-full rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 py-1.5 pr-8 pl-3 text-left text-sm",
-            "dark:bg-gray-800 dark:text-white dark:outline-gray-700"
+            "relative block ps-4 w-full rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 text-left",
+            "dark:bg-gray-800 dark:text-white dark:outline-gray-700",
+            priorityColors[selected.id].bg,
+            className
           )}
         >
           {selected.label}
 
           <ChevronDownIcon
-            className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-gray-500 dark:fill-white/60"
+            className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-2.5 size-4 text-gray-500 dark:fill-white/60"
           />
         </ListboxButton>
 
