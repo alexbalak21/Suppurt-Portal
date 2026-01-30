@@ -27,6 +27,7 @@ export default function Navbar({user}: NavbarProps) {
     { name: "About", href: "/about", show: isVisitor },
     { name: "API Demo", href: "/demo", show: isUser || isAgent || isAdmin },
     { name: "Create Ticket", href: "/create-ticket", show: isUser || isAgent || isAdmin },
+    { name: "My Tickets", href: "/ticket-list", show: isUser },
     { name: "My Profile", href: "/user/profile", show: isUser },
     { name: "Dashboard", href: "/user/dashboard", show: isUser },
     { name: "Tickets", href: "/agent/tickets", show: isAgent },

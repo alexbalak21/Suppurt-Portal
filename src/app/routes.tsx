@@ -12,6 +12,7 @@ import { UserLayout } from "../components";
 import { UserIcon, PencilSquareIcon, KeyIcon } from "@heroicons/react/24/outline";
 
 import CreateTicketPage from "../pages/CreateTicketPage";
+import TicketListPage from "../pages/TicketListPage";
 
 const userLinks = [
   { name: "Profile", href: "/profile", icon: UserIcon },
@@ -28,6 +29,7 @@ export function AppRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/demo" element={<ApiDemo />} />
       <Route path="/create-ticket" element={<CreateTicketPage />} />
+      <Route path="/ticket-list" element={<TicketListPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
