@@ -35,7 +35,7 @@ export default function CreateTicketPage() {
       setContent("");
       setPriority(priorities.length > 0 ? { id: priorities[0].id, label: priorities[0].name } : undefined);
       alert("Ticket submitted!");
-    } catch {}
+    } catch { }
   };
 
   return (
@@ -51,11 +51,12 @@ export default function CreateTicketPage() {
             <div className="text-red-500">{prioritiesError}</div>
           ) : (
             <Select
-              className="w-full"
+              className="w-full h-10"
               options={priorities.map(p => ({ id: p.id, label: p.name }))}
               value={priority}
               onChange={setPriority}
             />
+
           )}
         </div>
       </div>
