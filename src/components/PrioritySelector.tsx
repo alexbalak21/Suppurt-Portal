@@ -7,7 +7,7 @@ import {
 } from '@headlessui/react'
 import { usePriorities } from "../features/ticket/usePriorities";
 import { usePatchTicketPriority } from "../features/ticket/usePatchTicketPriority";
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { priorityDotColors } from "../utils/priorityDotColors";
 import type { ReactNode } from 'react'
@@ -204,16 +204,19 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
           />
         </div>
         {hasChanged && ticketId && (
-          <div className="flex gap-2 pt-0">
+          <div className="inline-flex rounded-lg dark:border-gray-600">
             <button
               onClick={handleSave}
               disabled={patchLoading}
               className={clsx(
-                "px-3 py-1.5 rounded text-sm font-medium transition-colors",
-                "bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed"
+                "p-2 transition-colors",
+                "bg-green-400 text-green-800 hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-700",
+                "disabled:bg-green-400 disabled:cursor-not-allowed",
+                "first:rounded-l-md border-r border-gray-300 dark:border-gray-600"
               )}
+              title="Save"
             >
-              {patchLoading ? 'Saving...' : 'Save'}
+              <CheckIcon className="h-4 w-4" />
             </button>
             <button
               onClick={() => {
@@ -224,11 +227,14 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
               }}
               disabled={patchLoading}
               className={clsx(
-                "px-3 py-1.5 rounded text-sm font-medium transition-colors",
-                "bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed"
+                "p-2 transition-colors",
+                "bg-red-400 text-red-800 hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700",
+                "disabled:bg-red-400 disabled:cursor-not-allowed",
+                "last:rounded-r-md"
               )}
+              title="Cancel"
             >
-              Cancel
+              <XMarkIcon className="h-4 w-4"/>
             </button>
           </div>
         )}

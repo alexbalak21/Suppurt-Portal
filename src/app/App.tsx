@@ -6,7 +6,7 @@ export default function App() {
   const { user } = useUser();
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar user={user} />
       <div className="flex-1 w-full">
         <AppRoutes />

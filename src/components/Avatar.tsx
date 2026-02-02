@@ -10,7 +10,7 @@ export default function Avatar({
   name,
   imageUrl,
   size = 32,
-  bgColor = "bg-indigo-600",
+  bgColor = "bg-gray-400",
   textColor = "text-white",
 }: AvatarProps) {
   const initial = name ? name.charAt(0).toUpperCase() : "?";

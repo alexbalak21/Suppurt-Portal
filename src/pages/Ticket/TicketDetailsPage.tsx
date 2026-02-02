@@ -9,17 +9,45 @@ import StatusChip from '../../components/StatusChip';
 import Tooltip from '../../components/Tooltip';
 import { PrioritySelector } from '../../components/PrioritySelector';
 import AssignedChip from '../../components/AssignedChip';
+import Conversation from '../../components/Conversation';
+import AddMessage from '../../components/AddMessage';
 
+
+interface MessageData {
+  id: number;
+  senderId: number;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const TicketDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { apiClient } = useAuth();
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [messages, setMessages] = useState<MessageData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
   const { user } = useUser();
+
+  const fetchTicketData = () => {
+    setLoading(true);
+    apiClient(`/api/tickets/${id}`)
+      .then(async (res: Response) => {
+        if (!res.ok) throw new Error("Failed to fetch ticket");
+        const data = await res.json();
+        setTicket(data.ticket);
+        setMessages(data.messages || []);
+      })
+      .catch((err: any) => {
+        setError(err.message || "Error fetching ticket");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -28,7 +56,10 @@ const TicketDetailsPage: React.FC = () => {
       .then(async (res: Response) => {
         if (!res.ok) throw new Error("Failed to fetch ticket");
         const data = await res.json();
-        if (isMounted) setTicket(data.ticket);
+        if (isMounted) {
+          setTicket(data.ticket);
+          setMessages(data.messages || []);
+        }
       })
       .catch((err: any) => {
         if (isMounted) setError(err.message || "Error fetching ticket");
@@ -97,16 +128,16 @@ const TicketDetailsPage: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="font-extralight pb-1">Priority:</span>
-              
-                <span className="inline-block">
-                  <PrioritySelector 
-                    priorityId={ticket.priorityId} 
-                    priorityName={priority?.name} 
-                    ticketId={id}
-                    onSave={handlePrioritySaved}
-                  />
-                </span>
-             
+
+              <span className="inline-block">
+                <PrioritySelector
+                  priorityId={ticket.priorityId}
+                  priorityName={priority?.name}
+                  ticketId={id}
+                  onSave={handlePrioritySaved}
+                />
+              </span>
+
             </div>
           </div>
           <div className="flex flex-col items-start sm:items-end gap-2">
@@ -153,7 +184,21 @@ const TicketDetailsPage: React.FC = () => {
           <div className="mb-2"><span className="font-semibold">Resolved at:</span> {new Date(ticket.resolvedAt).toLocaleString()}</div>
         )}
       </div>
+
+
+
+      {/* Conversation Section */}
+      <div className="mt-6">
+        <Conversation messages={messages} />
+      </div>
+
+      {/* Add Message Section */}
+      <div className="mt-6">
+        <AddMessage ticketId={id!} onMessageAdded={fetchTicketData} />
+      </div>
     </div>
+
+
   );
 };
 
