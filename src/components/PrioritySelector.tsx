@@ -48,10 +48,10 @@ function PrioritySelectorUI({
 
   return (
     <Listbox value={selected} onChange={onChange}>
-      <div className="w-full relative">
+      <div className="relative w-full">
         <ListboxButton
           className={clsx(
-            "relative block ps-4 w-full rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 text-left whitespace-nowrap",
+            "relative block ps-4 rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 text-left whitespace-nowrap",
             "dark:bg-gray-800 dark:text-white dark:outline-gray-700",
             className
           )}
@@ -64,10 +64,9 @@ function PrioritySelectorUI({
         </ListboxButton>
 
         <ListboxOptions
-          anchor="bottom"
           transition
           className={clsx(
-            "rounded-xl border border-gray-200 bg-white p-1 shadow-md focus:outline-none",
+            "absolute left-0 top-full mt-1 min-w-full rounded-xl border border-gray-200 bg-white p-1 shadow-md focus:outline-none z-10",
             "dark:border-white/5 dark:bg-gray-800",
             "transition duration-100 ease-in data-leave:data-closed:opacity-0"
           )}
@@ -156,7 +155,7 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
       options={options}
       value={selected ?? options[0]}
       onChange={setSelected}
-      className="py-1.5 pr-8 pl-3 text-sm"
+      className="w-full py-1.5 pr-8 pl-3 text-sm"
     />
   );
 };

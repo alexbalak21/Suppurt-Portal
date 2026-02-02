@@ -1,22 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Editor from "@components/Editor";
 import Input from "@components/Input";
-import Select from "@/components/PrioritySelector";
-import type { SelectOption } from "@/components/PrioritySelector";
-import { usePriorities } from "../../features/ticket/usePriorities";
+import { PrioritySelector } from "@/components/PrioritySelector";
 import { useCreateTicket } from "../../features/ticket/useCreateTicket";
 
 export default function CreateTicketPage() {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-
-  const {
-    priorities,
-    loading: prioritiesLoading,
-    error: prioritiesError,
-  } = usePriorities();
-
-  const [priority, setPriority] = useState<SelectOption | undefined>(undefined);
+  const [priorityId, setPriorityId] = useState<number | undefined>(undefined);
 
   const {
     createTicket,
@@ -25,57 +16,25 @@ export default function CreateTicketPage() {
     success,
   } = useCreateTicket();
 
-  // Log priorities from API
-  console.log("🔥 priorities from API:", priorities);
-
-  // Set default priority when priorities are loaded
-  useEffect(() => {
-    if (priorities && priorities.length > 0 && !priority) {
-      const defaultPriority: SelectOption = {
-        id: priorities[0].id as 1 | 2 | 3 | 4,
-        label: priorities[0].name,
-      };
-
-      console.log("⚡ Setting default priority:", defaultPriority);
-      setPriority(defaultPriority);
-    }
-  }, [priorities, priority]);
-
   const handleSubmit = async () => {
-    if (!title.trim() || !content.trim() || !priority) return;
+    if (!title.trim() || !content.trim() || !priorityId) return;
 
     const payload = {
       title,
       body: content,
-      priorityId: priority.id,
+      priorityId,
     };
-
-    console.log("🚀 SUBMIT PAYLOAD:", payload);
 
     try {
       await createTicket(payload);
-
       setTitle("");
       setContent("");
-
-      if (priorities.length > 0) {
-        const resetPriority: SelectOption = {
-          id: priorities[0].id as 1 | 2 | 3 | 4,
-          label: priorities[0].name,
-        };
-
-        console.log("🔄 Resetting priority:", resetPriority);
-        setPriority(resetPriority);
-      }
-
+      setPriorityId(undefined);
       alert("Ticket submitted!");
     } catch (err) {
       console.log("❌ Submit error:", err);
     }
   };
-
-  // Log selected priority every render
-  console.log("🎯 CURRENT SELECTED PRIORITY:", priority);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
@@ -89,34 +48,11 @@ export default function CreateTicketPage() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <div className="mb-4">
+      <div className="mb-4 w-1/2">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Priority
         </label>
-
-        {prioritiesLoading ? (
-          <div>Loading priorities...</div>
-        ) : prioritiesError ? (
-          <div className="text-red-500">{prioritiesError}</div>
-        ) : (
-          <Select
-            className="w-full h-10"
-            options={priorities.map((p) => {
-              const opt: SelectOption = {
-                id: p.id as 1 | 2 | 3 | 4,
-                label: p.name,
-              };
-
-              console.log("🟦 MAPPED OPTION:", opt);
-              return opt;
-            })}
-            value={priority}
-            onChange={(opt) => {
-              console.log("🟩 USER SELECTED:", opt);
-              setPriority(opt);
-            }}
-          />
-        )}
+        <PrioritySelector priorityId={priorityId} />
       </div>
 
       <Editor
@@ -132,8 +68,7 @@ export default function CreateTicketPage() {
         onClick={handleSubmit}
         disabled={
           creating ||
-          prioritiesLoading ||
-          !priority ||
+          !priorityId ||
           !title.trim() ||
           !content.trim()
         }
