@@ -17,11 +17,12 @@ const TicketDetailsPage: React.FC = () => {
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
   const { user } = useUser();
 
-  useEffect(() => {
+  const fetchTicket = () => {
     let isMounted = true;
     setLoading(true);
     apiClient(`/api/tickets/${id}`)
@@ -39,7 +40,15 @@ const TicketDetailsPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [id, apiClient]);
+  };
+
+  useEffect(() => {
+    return fetchTicket();
+  }, [id, apiClient, refreshKey]);
+
+  const handlePrioritySaved = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   if (loading) {
     return (
@@ -93,7 +102,12 @@ const TicketDetailsPage: React.FC = () => {
               <span className="font-extralight pb-1">Priority:</span>
               <Tooltip content={`Priority`}>
                 <span className="inline-block">
-                  <PrioritySelector priorityId={ticket.priorityId} priorityName={priority?.name} />
+                  <PrioritySelector 
+                    priorityId={ticket.priorityId} 
+                    priorityName={priority?.name} 
+                    ticketId={id}
+                    onSave={handlePrioritySaved}
+                  />
                 </span>
               </Tooltip>
             </div>

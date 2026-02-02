@@ -6,6 +6,7 @@ import {
   ListboxOptions,
 } from '@headlessui/react'
 import { usePriorities } from "../features/ticket/usePriorities";
+import { usePatchTicketPriority } from "../features/ticket/usePatchTicketPriority";
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import { priorityDotColors } from "../utils/priorityDotColors";
@@ -19,6 +20,8 @@ export type SelectOption = {
 type PrioritySelectorProps = {
   priorityId?: number;
   priorityName?: string;
+  ticketId?: string | number;
+  onSave?: () => void;
 };
 
 type SelectorUIProps = {
@@ -51,7 +54,7 @@ function PrioritySelectorUI({
       <div className="relative w-full">
         <ListboxButton
           className={clsx(
-            "relative block ps-4 rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 text-left whitespace-nowrap",
+            "relative block ps-4 rounded-lg bg-white text-gray-900 outline outline-gray-300 text-left whitespace-nowrap",
             "dark:bg-gray-800 dark:text-white dark:outline-gray-700",
             className
           )}
@@ -92,8 +95,11 @@ function PrioritySelectorUI({
 export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
   priorityId,
   priorityName,
+  ticketId,
+  onSave,
 }) => {
   const { priorities, loading } = usePriorities();
+  const { patchPriority, loading: patchLoading, error: patchError } = usePatchTicketPriority();
 
   const options = useMemo<SelectOption[]>(
     () =>
@@ -114,6 +120,8 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
   );
 
   const [selected, setSelected] = useState<SelectOption | undefined>(undefined);
+  const [hasChanged, setHasChanged] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!options.length) return;
@@ -122,6 +130,7 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
       const match = options.find((opt) => opt.id === priorityId);
       if (match) {
         setSelected(match);
+        setHasChanged(false);
         return;
       }
     }
@@ -134,13 +143,34 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
         const match = options.find((opt) => opt.id === matchPriority.id);
         if (match) {
           setSelected(match);
+          setHasChanged(false);
           return;
         }
       }
     }
 
     setSelected(options[0]);
+    setHasChanged(false);
   }, [options, priorities, priorityId, priorityName]);
+
+  const handleChange = (opt: SelectOption) => {
+    setSelected(opt);
+    setHasChanged(opt.id !== priorityId);
+    setSaveError(null);
+  };
+
+  const handleSave = async () => {
+    if (!selected || !ticketId) return;
+
+    try {
+      setSaveError(null);
+      await patchPriority({ ticketId, priorityId: selected.id });
+      setHasChanged(false);
+      onSave?.();
+    } catch (err) {
+      setSaveError(patchError || 'Failed to save priority');
+    }
+  };
 
   if (loading || options.length === 0) {
     return (
@@ -151,12 +181,48 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
   }
 
   return (
-    <PrioritySelectorUI
-      options={options}
-      value={selected ?? options[0]}
-      onChange={setSelected}
-      className="w-full py-1.5 pr-8 pl-3 text-sm"
-    />
+    <div className="flex flex-col gap-2">
+      <PrioritySelectorUI
+        options={options}
+        value={selected ?? options[0]}
+        onChange={handleChange}
+        className="w-full py-1.5 pr-8 pl-3 text-sm"
+      />
+      {hasChanged && ticketId && (
+        <div className="flex gap-2">
+          <button
+            onClick={handleSave}
+            disabled={patchLoading}
+            className={clsx(
+              "px-3 py-1.5 rounded text-sm font-medium transition-colors",
+              "bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed"
+            )}
+          >
+            {patchLoading ? 'Saving...' : 'Save'}
+          </button>
+          <button
+            onClick={() => {
+              const originalOpt = options.find((opt) => opt.id === priorityId) || options[0];
+              setSelected(originalOpt);
+              setHasChanged(false);
+              setSaveError(null);
+            }}
+            disabled={patchLoading}
+            className={clsx(
+              "px-3 py-1.5 rounded text-sm font-medium transition-colors",
+              "bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed"
+            )}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+      {saveError && (
+        <div className="text-sm text-red-600 mt-1">
+          {saveError}
+        </div>
+      )}
+    </div>
   );
 };
 
