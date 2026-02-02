@@ -7,7 +7,7 @@ import { useUser } from '../../features/user';
 import { useAuth } from '../../features/auth';
 import StatusChip from '../../components/StatusChip';
 import Tooltip from '../../components/Tooltip';
-import { PriorityChip } from '../../components/PriorityChip';
+import { PrioritySelector } from '../../components/PrioritySelector';
 import AssignedChip from '../../components/AssignedChip';
 
 
@@ -93,7 +93,7 @@ const TicketDetailsPage: React.FC = () => {
               <span className="font-extralight pb-1">Priority:</span>
               <Tooltip content={`Priority`}>
                 <span className="inline-block">
-                  <PriorityChip priorityId={ticket.priorityId} priorityName={priority?.name} />
+                  <PrioritySelector priorityId={ticket.priorityId} priorityName={priority?.name} />
                 </span>
               </Tooltip>
             </div>

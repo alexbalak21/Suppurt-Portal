@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import Editor from "@components/Editor";
 import Input from "@components/Input";
-import Select from "@components/PrioritySelector";
-import type { SelectOption } from "@components/PrioritySelector";
+import Select from "@/components/PrioritySelector";
+import type { SelectOption } from "@/components/PrioritySelector";
 import { usePriorities } from "../../features/ticket/usePriorities";
 import { useCreateTicket } from "../../features/ticket/useCreateTicket";
 
