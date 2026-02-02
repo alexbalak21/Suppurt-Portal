@@ -1,20 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTickets } from '../../features/ticket/useTickets';
+import type { Ticket } from '../../features/ticket/useTickets';
 import { usePriorities } from '../../features/ticket/usePriorities';
 import { useStatuses } from '../../features/ticket/useStatuses';
 import { useUser } from '../../features/user';
+import { useAuth } from '../../features/auth';
 
 
 const TicketDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { tickets, loading, error } = useTickets();
+  const { apiClient } = useAuth();
+  const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
   const { user } = useUser();
 
-  // id from params is string, ticket.id is number
-  const ticket = tickets?.find((t) => t.id === Number(id));
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    apiClient(`/api/tickets/${id}`)
+      .then(async (res: Response) => {
+        if (!res.ok) throw new Error("Failed to fetch ticket");
+        const data = await res.json();
+        if (isMounted) setTicket(data.ticket);
+      })
+      .catch((err: any) => {
+        if (isMounted) setError(err.message || "Error fetching ticket");
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [id, apiClient]);
 
   if (loading) {
     return (
