@@ -17,12 +17,11 @@ const TicketDetailsPage: React.FC = () => {
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
   const { user } = useUser();
 
-  const fetchTicket = () => {
+  useEffect(() => {
     let isMounted = true;
     setLoading(true);
     apiClient(`/api/tickets/${id}`)
@@ -40,14 +39,12 @@ const TicketDetailsPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  };
+  }, [id, apiClient]);
 
-  useEffect(() => {
-    return fetchTicket();
-  }, [id, apiClient, refreshKey]);
-
-  const handlePrioritySaved = () => {
-    setRefreshKey(prev => prev + 1);
+  const handlePrioritySaved = (newPriorityId: number) => {
+    if (ticket) {
+      setTicket({ ...ticket, priorityId: newPriorityId });
+    }
   };
 
   if (loading) {

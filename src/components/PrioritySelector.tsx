@@ -21,7 +21,7 @@ type PrioritySelectorProps = {
   priorityId?: number;
   priorityName?: string;
   ticketId?: string | number;
-  onSave?: () => void;
+  onSave?: (newPriorityId: number) => void;
 };
 
 type SelectorUIProps = {
@@ -164,9 +164,9 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
 
     try {
       setSaveError(null);
-      await patchPriority({ ticketId, priorityId: selected.id });
+      const newPriorityId = await patchPriority({ ticketId, priorityId: selected.id });
       setHasChanged(false);
-      onSave?.();
+      onSave?.(newPriorityId);
     } catch (err) {
       setSaveError(patchError || 'Failed to save priority');
     }

@@ -9,7 +9,7 @@ type PatchTicketPriorityParams = {
 type UsePatchTicketPriorityReturn = {
   loading: boolean;
   error: string | null;
-  patchPriority: (params: PatchTicketPriorityParams) => Promise<void>;
+  patchPriority: (params: PatchTicketPriorityParams) => Promise<number>;
 };
 
 export const usePatchTicketPriority = (): UsePatchTicketPriorityReturn => {
@@ -34,6 +34,9 @@ export const usePatchTicketPriority = (): UsePatchTicketPriorityReturn => {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to update ticket priority');
       }
+
+      const data = await response.json();
+      return data.priority_id || priorityId;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
