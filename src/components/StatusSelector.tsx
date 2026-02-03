@@ -51,7 +51,7 @@ function StatusSelectorUI({
       <div className="relative w-full">
         <ListboxButton
           className={clsx(
-            "relative block ps-4 rounded-lg bg-white text-gray-900 outline outline-gray-300 text-left whitespace-nowrap",
+            "relative block w-33 ps-4 rounded-lg bg-white text-gray-900 outline outline-gray-300 text-left whitespace-nowrap",
             "dark:bg-gray-800 dark:text-white dark:outline-gray-700",
             isLoading && "opacity-50 cursor-not-allowed",
             className
@@ -127,7 +127,7 @@ export const StatusSelector: React.FC<StatusSelectorProps> = ({
     setError(null);
 
     try {
-      const response = await apiClient(`/api/tickets/${ticketId}`, {
+      const response = await apiClient(`/api/tickets/${ticketId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

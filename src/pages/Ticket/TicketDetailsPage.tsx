@@ -9,6 +9,7 @@ import { useUser } from '../../features/user';
 import { useAssignTicket } from '../../features/ticket/useAssignTicket';
 import { can } from '../../features/auth/permissions';
 import StatusChip from '../../components/StatusChip';
+import { StatusSelector } from '../../components/StatusSelector';
 import Tooltip from '../../components/Tooltip';
 import { PrioritySelector } from '../../components/PrioritySelector';
 import { PriorityDisplay } from '../../components/PriorityDisplay';
@@ -84,6 +85,12 @@ const TicketDetailsPage: React.FC = () => {
   const handlePrioritySaved = (newPriorityId: number) => {
     if (ticket) {
       setTicket({ ...ticket, priorityId: newPriorityId });
+    }
+  };
+
+  const handleStatusSaved = (newStatusId: number) => {
+    if (ticket) {
+      setTicket({ ...ticket, statusId: newStatusId });
     }
   };
 
@@ -199,11 +206,17 @@ const TicketDetailsPage: React.FC = () => {
 
             <div className="flex items-center gap-2">
               <span className="font-extralight pb-1">Status:</span>
-              <Tooltip content={`Status`}>
                 <div>
-                  <StatusChip statusId={ticket.statusId} statusName={status?.name} />
+                  {activeRole && !can('changeStatus', activeRole as any) ? (
+                    <StatusChip statusId={ticket.statusId} statusName={status?.name} />
+                  ) : (
+                    <StatusSelector
+                      statusId={ticket.statusId}
+                      ticketId={id}
+                      onSave={handleStatusSaved}
+                    />
+                  )}
                 </div>
-              </Tooltip>
             </div>
           </div>
         </div>
