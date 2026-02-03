@@ -1,6 +1,4 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
-import clsx from 'clsx'
 import { useState } from 'react'
 
 const people = [
@@ -15,32 +13,20 @@ export default function ListboxSelect() {
   const [selected, setSelected] = useState(people[1])
 
   return (
-    <div className="mx-auto h-screen w-52 pt-20">
+    <div className="relative w-60">
       <Listbox value={selected} onChange={setSelected}>
-        <ListboxButton
-          className={clsx(
-            'relative block w-full rounded-lg outline-1 bg-white py-1.5 pr-8 pl-3 text-left text-sm/6 text-black',
-          )}
-        >
+        <ListboxButton className="w-full border px-3 py-2 rounded bg-white text-left">
           {selected.name}
-          <ChevronDownIcon
-            className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-black/60"
-            aria-hidden="true"
-          />
         </ListboxButton>
-        <ListboxOptions
-          anchor="bottom"
-          className={clsx(
-            'w-(--button-width) rounded-xl border border-black/5 bg-white/5 p-1 [--anchor-gap:--spacing(1)] focus:outline-none'
-          )}
-        >
+
+        <ListboxOptions className="absolute mt-1 w-full bg-white shadow-lg rounded max-h-60 overflow-auto z-50 border">
           {people.map((person) => (
             <ListboxOption
-              key={person.name}
+              key={person.id}
               value={person}
-              className={clsx(`bg-${person.color}-500`, "group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none")}
+              className="cursor-pointer px-3 py-2 hover:bg-gray-100"
             >
-              <div className="text-sm/6 text-black">{person.name}</div>
+              {person.name}
             </ListboxOption>
           ))}
         </ListboxOptions>
