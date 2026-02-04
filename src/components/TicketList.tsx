@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import type { Ticket } from "../features/ticket/useTickets";
 import { usePriorities } from "../features/ticket/usePriorities";
 import { useStatuses } from "../features/ticket/useStatuses";
-import StatusChip from "./StatusChip";
+import StatusBadge from "./StatusBadge";
+import type { BadgeColor } from "../features/theme/badgeColors";
 import { priorityDotColors } from "../utils/priorityDotColors";
 
 interface TicketListProps {
@@ -30,8 +31,14 @@ export default function TicketList({ tickets }: TicketListProps) {
     return status?.name || 'Unknown';
   };
 
-  return (
+  const getStatusColor = (statusId: number): BadgeColor => {
+    const status = statuses.find(s => s.id === statusId);
+    return (status?.color as BadgeColor) || 'gray';
+  };
+
+    return (
     <div className="overflow-x-auto">
+      <h1>TICKETS</h1>
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead className="bg-gray-50 dark:bg-gray-800">
           <tr>
@@ -56,7 +63,7 @@ export default function TicketList({ tickets }: TicketListProps) {
                 </span>
               </td>
               <td className="px-4 py-2 whitespace-nowrap">
-                <StatusChip statusId={ticket.statusId} statusName={getStatusName(ticket.statusId)} />
+                <StatusBadge text={getStatusName(ticket.statusId)} color={getStatusColor(ticket.statusId)} />
               </td>
               <td className="px-4 py-2 whitespace-nowrap">{new Date(ticket.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}</td>
             </tr>
