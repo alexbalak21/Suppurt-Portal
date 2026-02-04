@@ -1,42 +1,92 @@
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
-import { useState } from 'react'
-import StatusBadge from './StatusBadge'
-import clsx from 'clsx'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import type { BadgeColor } from '../features/theme/badgeColors'
+import React, { useMemo, useState } from "react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@headlessui/react";
+import clsx from "clsx";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { useStatuses } from "../features/ticket/useStatuses";
+import { useAuth } from "../features/auth";
+import StatusBadge from "@components/StatusBadge"; // correct
+import type { BadgeColor } from "../features/theme/badgeColors";
 
-interface Status {
-  id: number
-  name: string
-  color: BadgeColor
-}
+type StatusSelectorProps = {
+  statusId?: number;
+  ticketId?: string | number;
+  onSave?: (newStatusId: number) => void;
+  onChange?: (statusId: number) => void;
+};
 
-const people: Status[] = [
-  { id: 1, name: 'Open', color: 'blue' },
-  { id: 2, name: 'In Progress', color: 'violet' },
-  { id: 3, name: 'Waiting', color: 'yellow' },
-  { id: 4, name: 'On Hold', color: 'orange' },
-  { id: 5, name: 'Resolved', color: 'green' },
-  { id: 6, name: 'Closed', color: 'gray' },
-  { id: 7, name: 'Canceled', color: 'brown' },
-]
+export const StatusSelector: React.FC<StatusSelectorProps> = ({
+  statusId,
+  ticketId,
+  onSave,
+  onChange,
+}) => {
+  const { statuses } = useStatuses();
+  const { apiClient } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export default function ListboxSelect() {
-  const [selected, setSelected] = useState<Status>(people[0])
+  // Convert backend statuses → UI options with Badge
+  const options = useMemo(() => {
+    return statuses.map((s) => ({
+      id: s.id,
+      name: s.name,
+      color: s.color as BadgeColor,
+    }));
+  }, [statuses]);
+
+  const selected = useMemo(
+    () => options.find((o) => o.id === statusId) ?? options[0],
+    [options, statusId]
+  );
+
+  const handleChange = async (newStatus: { id: number }) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await apiClient(`/api/tickets/${ticketId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status_id: newStatus.id }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.message || "Failed to update status");
+      }
+
+      onSave?.(newStatus.id);
+      onChange?.(newStatus.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!selected) {
+    return <div className="text-sm text-gray-500">Loading statuses...</div>;
+  }
 
   return (
-    <div className="relative w-35">
-      <Listbox value={selected} onChange={setSelected}>
-        <div className="relative w-full">
-
+    <div className="flex flex-col gap-1">
+      <Listbox value={selected} onChange={handleChange} disabled={loading}>
+        <div className="relative w-35">
           {/* BUTTON */}
           <ListboxButton
             className={clsx(
               "relative block w-full ps-4 py-1.5 rounded-lg bg-white text-gray-900 outline outline-gray-300 text-left whitespace-nowrap",
-              "dark:bg-gray-800 dark:text-white dark:outline-gray-700"
+              "dark:bg-gray-800 dark:text-white dark:outline-gray-700",
+              loading && "opacity-50 cursor-not-allowed"
             )}
           >
             <StatusBadge text={selected.name} color={selected.color} />
+
             <ChevronDownIcon
               className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-2.5 size-4 text-gray-500 dark:fill-white/60"
             />
@@ -51,22 +101,25 @@ export default function ListboxSelect() {
               "transition duration-100 ease-in data-leave:data-closed:opacity-0"
             )}
           >
-            {people.map((status) => (
+            {options.map((opt) => (
               <ListboxOption
-                key={status.id}
-                value={status}
+                key={opt.id}
+                value={opt}
                 className={clsx(
                   "group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none",
                   "data-focus:bg-gray-100 dark:data-focus:bg-white/10"
                 )}
               >
-                <StatusBadge text={status.name} color={status.color} />
+                <StatusBadge text={opt.name} color={opt.color} />
               </ListboxOption>
             ))}
           </ListboxOptions>
-
         </div>
       </Listbox>
+
+      {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
-  )
-}
+  );
+};
+
+export default StatusSelector;

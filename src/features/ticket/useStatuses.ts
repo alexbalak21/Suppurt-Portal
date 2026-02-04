@@ -4,7 +4,8 @@ import { useAuth } from "../auth";
 export interface Status {
   id: number;
   name: string;
-  type: string;
+  description: string;
+  color: string;
 }
 
 export function useStatuses() {
