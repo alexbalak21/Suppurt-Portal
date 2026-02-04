@@ -1,12 +1,14 @@
 import React from 'react';
 import { useUsers } from '../features/user/useUsers';
+import Avatar from './Avatar';
 
-interface AssignedChipProps {
+// Deprecated: Use UserBadge instead
+interface UserBadgeProps {
   userId?: number | null;
   userName?: string;
 }
 
-const AssignedChip: React.FC<AssignedChipProps> = ({ userId, userName }) => {
+const UserBadge: React.FC<UserBadgeProps> = ({ userId, userName }) => {
   const { users } = useUsers();
   const isUnassigned = !userId;
   const resolvedName = userName ?? users.find((user) => user.id === userId)?.name;
@@ -19,9 +21,9 @@ const AssignedChip: React.FC<AssignedChipProps> = ({ userId, userName }) => {
           : 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-700'
       }`}
     >
-      {isUnassigned ? 'Unassigned' : resolvedName || `User #${userId}`}
+     {isUnassigned ? 'Unassigned' : resolvedName || `User #${userId}`}
     </span>
   );
 };
 
-export default AssignedChip;
+export default UserBadge;

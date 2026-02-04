@@ -4,7 +4,7 @@ import { usePriorities } from "../features/ticket/usePriorities";
 import { useStatuses } from "../features/ticket/useStatuses";
 import StatusChip from "./StatusChip";
 import { priorityDotColors } from "../utils/priorityDotColors";
-import AssignedChip from "./AssignedChip";
+import UserBadge from "./UserBadge";
 
 interface AdminTicketListProps {
   tickets: Ticket[];
@@ -65,7 +65,7 @@ export default function AdminTicketList({ tickets }: AdminTicketListProps) {
               </td>
               <td className="px-4 py-2 whitespace-nowrap">
                 {ticket.assignedTo ? (
-                  <AssignedChip userId={ticket.assignedTo} />
+                  <UserBadge userId={ticket.assignedTo} />
                 ) : (
                   <span className="text-sm text-gray-400 dark:text-gray-500">Unassigned</span>
                 )}

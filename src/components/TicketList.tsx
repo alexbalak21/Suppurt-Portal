@@ -3,7 +3,7 @@ import type { Ticket } from "../features/ticket/useTickets";
 import { usePriorities } from "../features/ticket/usePriorities";
 import { useStatuses } from "../features/ticket/useStatuses";
 import StatusBadge from "./StatusBadge";
-import AssignedChip from "./AssignedChip";
+import UserBadge from "./UserBadge";
 import type { BadgeColor } from "../features/theme/badgeColors";
 import { priorityDotColors } from "../utils/priorityDotColors";
 
@@ -45,37 +45,37 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
           <tr>
             {/* Show ID for support/admin/manager */}
             {showAdminColumns && (
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                 ID
               </th>
             )}
-            
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+
+            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
               Title
             </th>
-            
+
             {/* Show Created By for support/admin/manager */}
             {showAdminColumns && (
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                 Created By
               </th>
             )}
 
             {/* Show Assigned To for support/admin/manager */}
             {showAdminColumns && (
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                 Assigned To
               </th>
             )}
-            
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+
+            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
               Priority
             </th>
-            
+
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
               Status
             </th>
-            
+
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
               Created
             </th>
@@ -117,22 +117,20 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
 
               {/* Assigned To Column */}
               {showAdminColumns && (
-                <td className="px-4 py-2 whitespace-nowrap">
+                <td className="py-2 whitespace-nowrap text-center">
                   {ticket.assignedTo ? (
-                    <AssignedChip userId={ticket.assignedTo} />
+                    <UserBadge userId={ticket.assignedTo} />
                   ) : (
-                    <span className="text-sm text-gray-400 dark:text-gray-500">Unassigned</span>
+                    <UserBadge userId={null} />
                   )}
                 </td>
               )}
-
               {/* Priority Column */}
-              <td className="px-4 py-2 whitespace-nowrap">
+              <td className="px-4 py-2 text-center whitespace-nowrap">
                 <span className="inline-flex items-center gap-2">
                   <span
-                    className={`w-3 h-3 rounded-sm ${
-                      getPriorityColor(ticket.priorityId).bg
-                    }`}
+                    className={`w-3 h-3 rounded-sm ${getPriorityColor(ticket.priorityId).bg
+                      }`}
                   ></span>
                   {getPriorityName(ticket.priorityId)}
                 </span>

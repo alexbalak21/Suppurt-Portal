@@ -1,6 +1,6 @@
 import React from 'react';
 import Tooltip from './Tooltip';
-import AssignedChip from './AssignedChip';
+import UserBadge from './UserBadge';
 import Button from './Button';
 import AssignTicketSelector from './AssignTicketSelector';
 
@@ -35,7 +35,7 @@ const AssignedTo: React.FC<AssignedToProps> = ({
         <span className="font-extralight pb-1">Assigned to:</span>
         <Tooltip content="Assigned To">
           <div>
-            <AssignedChip userId={assignedUserId} />
+            <UserBadge userId={assignedUserId} />
           </div>
         </Tooltip>
       </div>
