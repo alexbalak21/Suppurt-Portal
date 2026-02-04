@@ -1,46 +1,71 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { useState } from 'react'
-import Badge from './Badge'
+import StatusBadge from './StatusBadge'
+import clsx from 'clsx'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import type { BadgeColor } from '../features/theme/badgeColors'
 
-type BadgeColor = 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'gray' | 'orange'
-
-interface Person {
+interface Status {
   id: number
   name: string
   color: BadgeColor
 }
 
-const people: Person[] = [
-  { id: 1, name: 'Tom Cook', color: 'red' },
-  { id: 2, name: 'Wade Cooper', color: 'green' },
-  { id: 3, name: 'Tanya Fox', color: 'blue' },
-  { id: 4, name: 'Arlene Mccoy', color: 'yellow' },
-  { id: 5, name: 'Devon Webb', color: 'purple' },
+const people: Status[] = [
+  { id: 1, name: 'Open', color: 'blue' },
+  { id: 2, name: 'In Progress', color: 'violet' },
+  { id: 3, name: 'Waiting', color: 'yellow' },
+  { id: 4, name: 'On Hold', color: 'orange' },
+  { id: 5, name: 'Resolved', color: 'green' },
+  { id: 6, name: 'Closed', color: 'gray' },
+  { id: 7, name: 'Canceled', color: 'brown' },
 ]
 
 export default function ListboxSelect() {
-  const [selected, setSelected] = useState<Person>(people[1])
+  const [selected, setSelected] = useState<Status>(people[0])
 
   return (
     <div className="relative w-35">
       <Listbox value={selected} onChange={setSelected}>
+        <div className="relative w-full">
 
-        <ListboxButton className="w-full border px-3 py-2 rounded bg-white text-left">
-          <Badge text={selected.name} color={selected.color} />
-        </ListboxButton>
+          {/* BUTTON */}
+          <ListboxButton
+            className={clsx(
+              "relative block w-full ps-4 py-1.5 rounded-lg bg-white text-gray-900 outline outline-gray-300 text-left whitespace-nowrap",
+              "dark:bg-gray-800 dark:text-white dark:outline-gray-700"
+            )}
+          >
+            <StatusBadge text={selected.name} color={selected.color} />
+            <ChevronDownIcon
+              className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-2.5 size-4 text-gray-500 dark:fill-white/60"
+            />
+          </ListboxButton>
 
-        <ListboxOptions className="absolute mt-1 w-full bg-white shadow-lg rounded max-h-60 overflow-auto z-50 border">
-          {people.map((person) => (
-            <ListboxOption
-              key={person.id}
-              value={person}
-              className="cursor-pointer px-3 py-2 hover:bg-gray-100"
-            >
-              <Badge text={person.name} color={person.color} />
-            </ListboxOption>
-          ))}
-        </ListboxOptions>
+          {/* OPTIONS */}
+          <ListboxOptions
+            transition
+            className={clsx(
+              "absolute left-0 top-full mt-1 min-w-full rounded-xl border border-gray-200 bg-white p-1 shadow-md focus:outline-none z-10",
+              "dark:border-white/5 dark:bg-gray-800",
+              "transition duration-100 ease-in data-leave:data-closed:opacity-0"
+            )}
+          >
+            {people.map((status) => (
+              <ListboxOption
+                key={status.id}
+                value={status}
+                className={clsx(
+                  "group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none",
+                  "data-focus:bg-gray-100 dark:data-focus:bg-white/10"
+                )}
+              >
+                <StatusBadge text={status.name} color={status.color} />
+              </ListboxOption>
+            ))}
+          </ListboxOptions>
 
+        </div>
       </Listbox>
     </div>
   )
