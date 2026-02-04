@@ -8,7 +8,7 @@ import { useRole } from '../../features/auth/useRole';
 import { useUser } from '../../features/user';
 import { useAssignTicket } from '../../features/ticket/useAssignTicket';
 import { can } from '../../features/auth/permissions';
-import StatusChip from '../../components/StatusChip';
+import StatusBadge from '../../components/StatusBadge';
 import { StatusSelector } from '../../components/StatusSelector';
 import Tooltip from '../../components/Tooltip';
 import { PrioritySelector } from '../../components/PrioritySelector';
@@ -212,7 +212,7 @@ const TicketDetailsPage: React.FC = () => {
               <span className="font-extralight pb-1">Status:</span>
                 <div>
                   {activeRole && !can('changeStatus', activeRole as any) ? (
-                    <StatusChip statusId={ticket.statusId} statusName={status?.name} />
+                    <StatusBadge text={status?.name} color={status?.color as import("../../features/theme/colors").Colors} />
                   ) : (
                     <StatusSelector
                       statusId={ticket.statusId}
