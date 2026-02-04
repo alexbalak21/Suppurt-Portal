@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../features/auth';
 import Button from './Button';
 
@@ -12,6 +12,7 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +41,10 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
       const newMessage = await response.json();
       setMessage('');
       onMessageAdded(newMessage);
+      // Scroll to Add a Message section after posting
+      setTimeout(() => {
+        sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     } catch (err: any) {
       setError(err.message || 'Error posting message');
     } finally {
@@ -48,7 +53,7 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
+    <div ref={sectionRef} className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
       <h3 className="text-lg font-semibold text-gray-900 mb-3">Add a Message</h3>
       <form onSubmit={handleSubmit}>
         <textarea
@@ -67,7 +72,7 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
             type="submit"
             disabled={isSubmitting || !message.trim()}
           >
-            {isSubmitting ? 'Posting...' : 'Post Message'}
+            {isSubmitting ? 'Sending...' : 'Send Message'}
           </Button>
         </div>
       </form>
