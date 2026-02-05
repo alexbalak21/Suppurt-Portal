@@ -6,6 +6,7 @@ export interface Priority {
   name: string;
   level: number;
   description: string;
+  color: string;
 }
 
 export function usePriorities() {
