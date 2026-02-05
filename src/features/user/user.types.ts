@@ -1,6 +1,6 @@
 
 
-export type Role = "USER" | "AGENT" | "ADMIN" | "VISITOR" | string;
+export type Role = "USER" | "AGENT" | "ADMIN" | "VISITOR" | "MANAGER" | string;
 
 
 export interface UserInfo {

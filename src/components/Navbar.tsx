@@ -22,23 +22,25 @@ type NavLink = {
 export default function Navbar({user}: NavbarProps) {
   const location = useLocation();
 
-  const {isUser, isSupport, isAdmin, isVisitor} = useRole()
+  const {isUser, isSupport, isAdmin, isVisitor, isManager} = useRole()
 
   const navLinks: NavLink[] = useMemo(
     () => [
       {name: "Home", href: "/", show: true},
       {name: "About", href: "/about", show: isVisitor},
-      {name: "API Demo", href: "/demo", show: isUser || isSupport || isAdmin},
-      {name: "Create Ticket", href: "/create-ticket", show: isUser || isSupport || isAdmin},
+      {name: "API Demo", href: "/demo", show: isUser || isSupport || isAdmin || isManager},
+      {name: "Create Ticket", href: "/create-ticket", show: isUser || isSupport || isAdmin || isManager},
       {name: "My Tickets", href: "/ticket-list", show: isUser},
-      {name: "My Profile", href: "/user/profile", show: isUser},
+      {name: "My Profile", href: "/user/profile", show: isUser || isManager},
       {name: "Dashboard", href: "/user/dashboard", show: isUser},
       {name: "Tickets", href: "/agent/tickets", show: isSupport},
       {name: "Support Dashboard", href: "/support/dashboard", show: isSupport},
+      {name: "Manager Dashboard", href: "/manager/dashboard", show: isManager},
+      {name: "All Tickets", href: "/ticket-list", show: isManager},
       {name: "Manage Users", href: "/admin/users", show: isAdmin},
       {name: "Admin Settings", href: "/admin/settings", show: isAdmin},
     ],
-    [isAdmin, isSupport, isUser, isVisitor],
+    [isAdmin, isSupport, isUser, isVisitor, isManager],
   )
 
   const visibleNavLinks = useMemo(() => navLinks.filter(link => link.show), [navLinks])

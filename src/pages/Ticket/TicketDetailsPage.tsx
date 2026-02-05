@@ -29,7 +29,7 @@ const TicketDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { apiClient } = useAuth();
   const { user } = useUser();
-  const { activeRole } = useRole();
+  const { activeRole, isManager } = useRole();
   const { loading: assigning, error: assignError, assignTicket } = useAssignTicket();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
@@ -39,7 +39,8 @@ const TicketDetailsPage: React.FC = () => {
   const { statuses } = useStatuses();
   
   const canAssignSelf = activeRole && can('assignSelf', activeRole as any);
-  const canAssignOthers = activeRole && can('assignOthers', activeRole as any);
+  // MANAGER can assign tickets to support users
+  const canAssignOthers = (activeRole && can('assignOthers', activeRole as any)) || isManager;
   const isAssignedToMe = user?.id && ticket?.assignedTo === user.id;
 
   const fetchTicketData = () => {
@@ -256,6 +257,7 @@ const TicketDetailsPage: React.FC = () => {
         )}
       </div>
 
+      {/* MANAGER has access to all messages and notes */}
       <div className="mt-6">
         <Conversation messages={messages} />
       </div>

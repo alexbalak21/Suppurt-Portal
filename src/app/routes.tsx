@@ -16,6 +16,7 @@ import CreateTicketPage from "../pages/Ticket/CreateTicketPage";
 import TicketListPage from "../pages/Ticket/TicketListPage";
 import TicketDetailsPage from "../pages/Ticket/TicketDetailsPage";
 import SupportDashboard from "../pages/Support/SupportDashboard";
+import ManagerDashboard from "../pages/Manager/managerDashboard/ManagerDashboard";
 
 const userLinks = [
   { name: "Dashboard", href: "/user/dashboard", icon: HomeIcon },
@@ -37,6 +38,7 @@ export function AppRoutes() {
       <Route path="/ticket/:id" element={<TicketDetailsPage />} />
       <Route path="/agent/tickets" element={<TicketListPage />} />
       <Route path="/support/dashboard" element={<SupportDashboard />} />
+      <Route path="/manager/dashboard" element={<ManagerDashboard />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
