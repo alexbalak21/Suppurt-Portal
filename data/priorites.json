@@ -1,0 +1,31 @@
+
+[
+  {
+    "id": 1,
+    "name": "Low",
+    "level": 1,
+    "description": "Minor inconvenience, cosmetic issues",
+    "color": "green"
+  },
+  {
+    "id": 2,
+    "name": "Medium",
+    "level": 2,
+    "description": "Normal issues affecting a single user",
+    "color": "yellow"
+  },
+  {
+    "id": 3,
+    "name": "High",
+    "level": 3,
+    "description": "Major issue affecting work or multiple users",
+    "color": "orange"
+  },
+  {
+    "id": 4,
+    "name": "Critical",
+    "level": 4,
+    "description": "System down, security issue, production outage",
+    "color": "red"
+  }
+]

@@ -1,0 +1,190 @@
+[
+  {
+    "id": 1,
+    "name": "ADMIN",
+    "description": "System administrator",
+    "permissions": [
+      {
+        "id": 22,
+        "name": "status.read",
+        "description": "Read/view ticket statuses"
+      },
+      {
+        "id": 5,
+        "name": "ticket.write",
+        "description": "Create or update tickets"
+      },
+      {
+        "id": 1,
+        "name": "admin.manage",
+        "description": "Full admin access"
+      },
+      {
+        "id": 2,
+        "name": "user.manage",
+        "description": "Manage users"
+      },
+      {
+        "id": 21,
+        "name": "status.manage",
+        "description": "Manage ticket statuses"
+      },
+      {
+        "id": 4,
+        "name": "ticket.read",
+        "description": "Read/view tickets"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "USER",
+    "description": "User role",
+    "permissions": [
+      {
+        "id": 22,
+        "name": "status.read",
+        "description": "Read/view ticket statuses"
+      },
+      {
+        "id": 3,
+        "name": "ticket.create",
+        "description": "Create tickets, read & update own tickets"
+      },
+      {
+        "id": 30,
+        "name": "message.create",
+        "description": "Create ticket messages"
+      },
+      {
+        "id": 42,
+        "name": "conversation.reply",
+        "description": "Reply to ticket conversations"
+      },
+      {
+        "id": 9,
+        "name": "user.read",
+        "description": "Read user information"
+      },
+      {
+        "id": 31,
+        "name": "message.read",
+        "description": "Read/view ticket messages"
+      },
+      {
+        "id": 41,
+        "name": "conversation.read",
+        "description": "Read/view ticket conversations"
+      },
+      {
+        "id": 32,
+        "name": "message.write",
+        "description": "Create or update messages"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "SUPPORT",
+    "description": "support role",
+    "permissions": [
+      {
+        "id": 22,
+        "name": "status.read",
+        "description": "Read/view ticket statuses"
+      },
+      {
+        "id": 5,
+        "name": "ticket.write",
+        "description": "Create or update tickets"
+      },
+      {
+        "id": 42,
+        "name": "conversation.reply",
+        "description": "Reply to ticket conversations"
+      },
+      {
+        "id": 9,
+        "name": "user.read",
+        "description": "Read user information"
+      },
+      {
+        "id": 6,
+        "name": "ticket.assign",
+        "description": "Assign tickets to users"
+      },
+      {
+        "id": 31,
+        "name": "message.read",
+        "description": "Read/view ticket messages"
+      },
+      {
+        "id": 41,
+        "name": "conversation.read",
+        "description": "Read/view ticket conversations"
+      },
+      {
+        "id": 32,
+        "name": "message.write",
+        "description": "Create or update messages"
+      },
+      {
+        "id": 4,
+        "name": "ticket.read",
+        "description": "Read/view tickets"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "MANAGER",
+    "description": "Manager role with elevated support capabilities",
+    "permissions": [
+      {
+        "id": 22,
+        "name": "status.read",
+        "description": "Read/view ticket statuses"
+      },
+      {
+        "id": 5,
+        "name": "ticket.write",
+        "description": "Create or update tickets"
+      },
+      {
+        "id": 9,
+        "name": "user.read",
+        "description": "Read user information"
+      },
+      {
+        "id": 42,
+        "name": "conversation.reply",
+        "description": "Reply to ticket conversations"
+      },
+      {
+        "id": 6,
+        "name": "ticket.assign",
+        "description": "Assign tickets to users"
+      },
+      {
+        "id": 31,
+        "name": "message.read",
+        "description": "Read/view ticket messages"
+      },
+      {
+        "id": 41,
+        "name": "conversation.read",
+        "description": "Read/view ticket conversations"
+      },
+      {
+        "id": 32,
+        "name": "message.write",
+        "description": "Create or update messages"
+      },
+      {
+        "id": 4,
+        "name": "ticket.read",
+        "description": "Read/view tickets"
+      }
+    ]
+  }
+]

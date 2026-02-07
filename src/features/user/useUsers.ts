@@ -4,6 +4,7 @@ import { useAuth } from "../auth";
 export interface BasicUser {
   id: number;
   name: string;
+  roles: string[];
 }
 
 export function useUsers() {

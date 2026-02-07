@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Open",
+    "description": "Ticket has been created and is awaiting action",
+    "color": "blue"
+  },
+  {
+    "id": 2,
+    "name": "In Progress",
+    "description": "Work has started and is actively being handled",
+    "color": "violet"
+  },
+  {
+    "id": 3,
+    "name": "Waiting",
+    "description": "Ticket is paused, pending user input or information",
+    "color": "yellow"
+  },
+  {
+    "id": 4,
+    "name": "On Hold",
+    "description": "Ticket is temporarily on hold",
+    "color": "orange"
+  },
+  {
+    "id": 5,
+    "name": "Resolved",
+    "description": "Issue has been resolved",
+    "color": "green"
+  },
+  {
+    "id": 6,
+    "name": "Closed",
+    "description": "Ticket is closed",
+    "color": "gray"
+  },
+  {
+    "id": 7,
+    "name": "Canceled",
+    "description": "Ticket has been canceled",
+    "color": "brown"
+  }
+]

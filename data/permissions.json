@@ -1,0 +1,207 @@
+[
+  {
+    "id": 1,
+    "name": "admin.manage",
+    "description": "Full admin access"
+  },
+  {
+    "id": 2,
+    "name": "user.manage",
+    "description": "Manage users"
+  },
+  {
+    "id": 3,
+    "name": "ticket.create",
+    "description": "Create tickets, read & update own tickets"
+  },
+  {
+    "id": 4,
+    "name": "ticket.read",
+    "description": "Read/view tickets"
+  },
+  {
+    "id": 5,
+    "name": "ticket.write",
+    "description": "Create or update tickets"
+  },
+  {
+    "id": 6,
+    "name": "ticket.assign",
+    "description": "Assign tickets to users"
+  },
+  {
+    "id": 7,
+    "name": "ticket.delete",
+    "description": "Delete tickets"
+  },
+  {
+    "id": 8,
+    "name": "ticket.manage",
+    "description": "Manage tickets"
+  },
+  {
+    "id": 9,
+    "name": "user.read",
+    "description": "Read user information"
+  },
+  {
+    "id": 10,
+    "name": "user.write",
+    "description": "Create or update users"
+  },
+  {
+    "id": 11,
+    "name": "user.delete",
+    "description": "Delete users"
+  },
+  {
+    "id": 13,
+    "name": "role.read",
+    "description": "Read roles"
+  },
+  {
+    "id": 14,
+    "name": "role.write",
+    "description": "Create or update roles"
+  },
+  {
+    "id": 15,
+    "name": "role.delete",
+    "description": "Delete roles"
+  },
+  {
+    "id": 16,
+    "name": "role.manage",
+    "description": "Manage roles and their permissions"
+  },
+  {
+    "id": 17,
+    "name": "permission.read",
+    "description": "Read permissions"
+  },
+  {
+    "id": 18,
+    "name": "permission.write",
+    "description": "Create or update permissions"
+  },
+  {
+    "id": 19,
+    "name": "permission.delete",
+    "description": "Delete permissions"
+  },
+  {
+    "id": 20,
+    "name": "permission.manage",
+    "description": "Manage permissions"
+  },
+  {
+    "id": 21,
+    "name": "status.manage",
+    "description": "Manage ticket statuses"
+  },
+  {
+    "id": 22,
+    "name": "status.read",
+    "description": "Read/view ticket statuses"
+  },
+  {
+    "id": 23,
+    "name": "status.write",
+    "description": "Create or update statuses"
+  },
+  {
+    "id": 24,
+    "name": "status.delete",
+    "description": "Delete statuses"
+  },
+  {
+    "id": 25,
+    "name": "status.transition",
+    "description": "Change a ticket's status"
+  },
+  {
+    "id": 26,
+    "name": "status.transition.reopen",
+    "description": "Reopen resolved or closed tickets"
+  },
+  {
+    "id": 27,
+    "name": "status.transition.close",
+    "description": "Close tickets"
+  },
+  {
+    "id": 28,
+    "name": "status.transition.cancel",
+    "description": "Cancel tickets"
+  },
+  {
+    "id": 29,
+    "name": "message.manage",
+    "description": "Manage ticket messages"
+  },
+  {
+    "id": 30,
+    "name": "message.create",
+    "description": "Create ticket messages"
+  },
+  {
+    "id": 31,
+    "name": "message.read",
+    "description": "Read/view ticket messages"
+  },
+  {
+    "id": 32,
+    "name": "message.write",
+    "description": "Create or update messages"
+  },
+  {
+    "id": 33,
+    "name": "message.delete",
+    "description": "Delete messages"
+  },
+  {
+    "id": 34,
+    "name": "message.transition",
+    "description": "Change a ticket's status"
+  },
+  {
+    "id": 35,
+    "name": "message.transition.reopen",
+    "description": "Reopen resolved or closed tickets"
+  },
+  {
+    "id": 36,
+    "name": "message.transition.close",
+    "description": "Close tickets"
+  },
+  {
+    "id": 37,
+    "name": "message.transition.cancel",
+    "description": "Cancel tickets"
+  },
+  {
+    "id": 38,
+    "name": "note.manage",
+    "description": "Manage ticket notes"
+  },
+  {
+    "id": 39,
+    "name": "note.read",
+    "description": "Read/view ticket notes"
+  },
+  {
+    "id": 40,
+    "name": "conversation.manage",
+    "description": "Manage ticket conversations"
+  },
+  {
+    "id": 41,
+    "name": "conversation.read",
+    "description": "Read/view ticket conversations"
+  },
+  {
+    "id": 42,
+    "name": "conversation.reply",
+    "description": "Reply to ticket conversations"
+  }
+]

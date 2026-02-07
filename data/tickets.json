@@ -1,0 +1,122 @@
+[
+  {
+    "id": 6,
+    "title": "Hello",
+    "body": "Word",
+    "priorityId": 3,
+    "statusId": 1,
+    "createdBy": 2,
+    "assignedTo": null,
+    "createdAt": "2026-02-02T20:10:46.238785",
+    "updatedAt": "2026-02-03T15:17:14.948095",
+    "resolvedAt": null
+  },
+  {
+    "id": 5,
+    "title": "Ticket Title",
+    "body": "Hello world",
+    "priorityId": 3,
+    "statusId": 1,
+    "createdBy": 2,
+    "assignedTo": null,
+    "createdAt": "2026-02-02T20:08:08.422387",
+    "updatedAt": "2026-02-02T20:49:32.109773",
+    "resolvedAt": null
+  },
+  {
+    "id": 7,
+    "title": "John Doe creating issue 1",
+    "body": "John Doe create issue 1",
+    "priorityId": 1,
+    "statusId": 1,
+    "createdBy": 4,
+    "assignedTo": null,
+    "createdAt": "2026-02-02T22:17:34.150893",
+    "updatedAt": "2026-02-02T22:17:34.150893",
+    "resolvedAt": null
+  },
+  {
+    "id": 8,
+    "title": "John Doe creating issue 2",
+    "body": "John Doe create issue 2",
+    "priorityId": 3,
+    "statusId": 1,
+    "createdBy": 4,
+    "assignedTo": null,
+    "createdAt": "2026-02-02T22:18:53.15304",
+    "updatedAt": "2026-02-02T22:18:53.15304",
+    "resolvedAt": null
+  },
+  {
+    "id": 9,
+    "title": "John Doe ID 4 creating issue",
+    "body": "John Doe ID 4 create issue 1",
+    "priorityId": 1,
+    "statusId": 1,
+    "createdBy": 4,
+    "assignedTo": null,
+    "createdAt": "2026-02-02T22:30:56.489112",
+    "updatedAt": "2026-02-02T22:30:56.489112",
+    "resolvedAt": null
+  },
+  {
+    "id": 10,
+    "title": "John Doe ID 4 creating issue",
+    "body": "John Doe ID 4 create issue 1",
+    "priorityId": 1,
+    "statusId": 1,
+    "createdBy": 4,
+    "assignedTo": null,
+    "createdAt": "2026-02-02T22:39:10.249132",
+    "updatedAt": "2026-02-02T22:39:10.249132",
+    "resolvedAt": null
+  },
+  {
+    "id": 3,
+    "title": "Ticket 3",
+    "body": "Ticke 3 body content",
+    "priorityId": 2,
+    "statusId": 1,
+    "createdBy": 2,
+    "assignedTo": null,
+    "createdAt": "2026-02-01T21:53:15.138685",
+    "updatedAt": "2026-02-03T11:40:47.411566",
+    "resolvedAt": null
+  },
+  {
+    "id": 4,
+    "title": "Ticket 4",
+    "body": "Ticke 4 body content",
+    "priorityId": 1,
+    "statusId": 1,
+    "createdBy": 2,
+    "assignedTo": null,
+    "createdAt": "2026-02-01T21:53:19.045219",
+    "updatedAt": "2026-02-05T13:18:07.719861",
+    "resolvedAt": null
+  },
+  {
+    "id": 2,
+    "title": "Ticket 2",
+    "body": "Ticke 2 body content",
+    "priorityId": 4,
+    "statusId": 1,
+    "createdBy": 2,
+    "assignedTo": null,
+    "createdAt": "2026-02-01T21:53:11.167967",
+    "updatedAt": "2026-02-05T13:20:08.656054",
+    "resolvedAt": null
+  },
+  {
+    "id": 1,
+    "title": "Password reset email missing - URGENT",
+    "body": "I requested a password reset but never received the email. I checked spam and waited 15 minutes. Please resolve ASAP.",
+    "priorityId": 4,
+    "statusId": 3,
+    "createdBy": 2,
+    "assignedTo": 3,
+    "createdAt": "2026-02-01T21:48:19.653792",
+    "updatedAt": "2026-02-05T14:50:03.256882",
+    "resolvedAt": null
+  }
+]

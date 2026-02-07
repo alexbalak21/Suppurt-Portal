@@ -1,7 +1,5 @@
 import { usePriorities } from "@features/ticket/usePriorities";
 import type { Ticket } from "@features/ticket/useTickets";
-import type { Priority } from "@features/ticket/usePriorities";
-import { priorityDotColors } from "@utils/priorityDotColors";
 
 interface Props {
   tickets: Ticket[];
@@ -14,7 +12,7 @@ export default function PriorityChart({ tickets }: Props) {
   const colorHexMap: Record<string, string> = {
     green: "#22c55e",
     yellow: "#eab308",
-    orange: "#f97316",
+    orange: "#f97316",  
     red: "#ef4444",
   };
   const colorBgMap: Record<string, string> = {

@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Administrator",
+    "email": "admin@example.com",
+    "createdAt": "2026-02-01T13:49:27.419148",
+    "updatedAt": "2026-02-01T13:49:27.419148",
+    "roles": [
+      "ADMIN"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Gordon Freeman",
+    "email": "gordon.freeman@example.com",
+    "createdAt": "2026-02-01T19:00:00.479856",
+    "updatedAt": "2026-02-01T19:00:00.479856",
+    "roles": [
+      "USER"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Max Payne",
+    "email": "max.payne@example.com",
+    "createdAt": "2026-02-02T21:37:12.738517",
+    "updatedAt": "2026-02-02T21:37:12.738517",
+    "roles": [
+      "SUPPORT"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "createdAt": "2026-02-02T22:03:34.268103",
+    "updatedAt": "2026-02-02T22:03:34.268103",
+    "roles": [
+      "USER"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Manager",
+    "email": "manager@example.com",
+    "createdAt": "2026-02-05T18:10:39.263701",
+    "updatedAt": "2026-02-05T18:10:39.263701",
+    "roles": [
+      "MANAGER"
+    ]
+  }
+]
