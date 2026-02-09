@@ -7,7 +7,7 @@ export interface BasicUser {
   roles: string[];
 }
 
-export function useUsers() {
+export function useUsers(filter?: { role?: number }) {
   const { apiClient } = useAuth();
   const [users, setUsers] = useState<BasicUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,12 @@ export function useUsers() {
     let isMounted = true;
     setLoading(true);
 
-    apiClient("/api/users")
+    let url = "/api/users";
+    if (filter?.role) {
+      url += `?role=${filter.role}`;
+    }
+
+    apiClient(url)
       .then(async (res: Response) => {
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
@@ -33,7 +38,7 @@ export function useUsers() {
     return () => {
       isMounted = false;
     };
-  }, [apiClient]);
+  }, [apiClient, filter?.role]);
 
   return { users, loading, error };
 }

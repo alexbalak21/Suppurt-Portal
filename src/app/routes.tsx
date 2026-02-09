@@ -1,4 +1,3 @@
-// import { useRole } from "../features/auth/useRole";
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -16,7 +15,7 @@ import CreateTicketPage from "../pages/Ticket/CreateTicketPage";
 import TicketListPage from "../pages/Ticket/TicketListPage";
 import TicketDetailsPage from "../pages/Ticket/TicketDetailsPage";
 import SupportDashboard from "../pages/Support/SupportDashboard";
-import ManagerDashboard from "../pages/Manager/managerDashboard/ManagerDashboard";
+import ManagerDashboard from "../pages/Manager/ManagerDashboard";
 
 const userLinks = [
   { name: "Dashboard", href: "/user/dashboard", icon: HomeIcon },

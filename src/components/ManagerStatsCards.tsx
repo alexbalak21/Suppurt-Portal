@@ -1,4 +1,4 @@
-import type { BasicUser } from "@features/user/useUsers";
+
 import type { Ticket } from "@features/ticket/useTickets";
 
 function isToday(dateStr: string) {
@@ -7,7 +7,7 @@ function isToday(dateStr: string) {
   return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
 }
 
-export default function ManagerStatsCards({ tickets, users }: { tickets: Ticket[]; users: BasicUser[] }) {
+export default function ManagerStatsCards({ tickets }: { tickets: Ticket[] }) {
   const total = tickets.length;
   const unassigned = tickets.filter(t => !t.assignedTo).length;
   const waiting = tickets.filter(t => t.statusId === 3).length;
