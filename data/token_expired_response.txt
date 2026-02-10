@@ -1,0 +1,50 @@
+HTTP/1.1 401 
+Vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+X-Token-Expired: true
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json;charset=ISO-8859-1
+Content-Length: 32
+Date: Tue, 10 Feb 2026 21:59:05 GMT
+Connection: close
+
+{
+  "error": "access_token_expired"
+}
+
+
+url to refresh :
+
+### REFRESH TOKEN ###
+# @name refresh
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+
+
+refresh response :
+
+HTTP/1.1 200 
+Vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 10 Feb 2026 22:01:15 GMT
+Connection: close
+
+{
+  "message": "Token refreshed successfully",
+  "data": {
+    "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJzdGF0dXMucmVhZCIsInRpY2tldC53cml0ZSIsInVzZXIucmVhZCIsImNvbnZlcnNhdGlvbi5yZXBseSIsInRpY2tldC5hc3NpZ24iLCJtZXNzYWdlLnJlYWQiLCJjb252ZXJzYXRpb24ucmVhZCIsIm1lc3NhZ2Uud3JpdGUiLCJ0aWNrZXQucmVhZCJdLCJuYW1lIjoiR29yZG9uIEZyZWVtYW4iLCJlbWFpbCI6ImdvcmRvbi5mcmVlbWFuQGV4YW1wbGUuY29tIiwianRpIjoiYjMwY2ViZTUtYWVlMy00ZWJjLTgwZDAtYjM0MjJiYjBhNmNiIiwic3ViIjoiMiIsImlhdCI6MTc3MDc2MDg3NSwiZXhwIjoxNzcwNzYxNzc1fQ.Pech01wVX17JJJ1CQGLwJz4U5SCsQ-eua3h9KhbbXEw",
+    "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsImp0aSI6IjE2OTc5ZWE0LWJkNzUtNDlkZS05NzU0LTE4YjdiNGIzNDUxNSIsInN1YiI6IjIiLCJpYXQiOjE3NzA3NjA4NzUsImV4cCI6MTc3MTM2NTY3NX0.FSmLUtMX18osuOXQr9hfqOSsj039zNw4BM_AlcWqYLE"
+  }
+}
