@@ -14,7 +14,6 @@ interface VerticalBarsProps {
 export function VerticalBars({
   data,
   maxY,
-  barWidth = 40,
   minHeight = 8,
 }: VerticalBarsProps) {
   const max = maxY || Math.max(...data.map(d => d.value), 1);
