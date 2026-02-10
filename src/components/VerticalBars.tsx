@@ -19,8 +19,10 @@ export function VerticalBars({
 }: VerticalBarsProps) {
   const max = maxY || Math.max(...data.map(d => d.value), 1);
 
+  const LABEL_HEIGHT = 40;
+
   return (
-    <div className="inline-flex items-end gap-6 h-[85%]">
+    <div className="flex items-end gap-6 h-full w-full">
       {data.map(slice => {
         if (slice.value === 0) return null;
 
@@ -29,11 +31,14 @@ export function VerticalBars({
         return (
           <div
             key={slice.label}
-            className="flex flex-col items-center"
-            style={{ width: barWidth, height: "100%" }}
+            className="flex flex-col items-center flex-1"
+            style={{ height: "100%" }}
           >
             {/* BAR AREA */}
-            <div className="relative w-full flex-1 flex items-end">
+            <div
+              className="relative w-full flex items-end"
+              style={{ height: `calc(100% - ${LABEL_HEIGHT}px)` }}
+            >
               <div
                 className={`w-full rounded-t ${slice.color}`}
                 style={{
@@ -44,13 +49,16 @@ export function VerticalBars({
               />
             </div>
 
-            {/* FIXED HEIGHT LABEL AREA */}
-            <div className="flex flex-col items-center mt-1" style={{ height: 40 }}>
-              <span className="text-xs text-center text-gray-900 dark:text-gray-100">
+            {/* LABEL AREA */}
+            <div
+              className="flex flex-col items-center justify-center mt-1 mb-1"
+              style={{ height: LABEL_HEIGHT }}
+            >
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-tight">
                 {slice.label}
               </span>
 
-              <span className="text-xs text-gray-500 dark:text-gray-300">
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {slice.value}
               </span>
             </div>

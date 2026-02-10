@@ -40,9 +40,9 @@ export default function DonutChart({ title, slices }: Props) {
       </div>
 
       {/* UPDATED LEGEND */}
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
         {slices.map(s => (
-          <div key={s.label} className="flex items-center justify-center gap-2">
+          <div key={s.label} className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-sm" style={{ background: s.color }} />
             <span className="text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">
               {s.label} ({s.value})
