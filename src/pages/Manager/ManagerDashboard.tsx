@@ -8,51 +8,68 @@ import TeamRecentActivity from "@components/TeamRecentActivity";
 import AssignTicketModal from "@components/AssignTicketModal";
 import TicketList from "@components/TicketList";
 import { useState, useEffect } from "react";
+import { usePriorities } from "@features/ticket/usePriorities";
+import { priorityDotColors } from "@features/theme/priorityDotColors";
+
 
 export default function ManagerDashboard() {
-		const { isManager } = useRole();
-		const { tickets, loading, error } = useTickets();
-		const { users } = useUsers({role : 3});
-		const [assignModal, setAssignModal] = useState<{ open: boolean; ticketId: number | null }>({ open: false, ticketId: null });
+	// All hooks must be called unconditionally and in the same order
+	const { isManager } = useRole();
+	const { tickets, loading, error } = useTickets();
+	const { users } = useUsers({ role: 3 });
+	const { priorities } = usePriorities();
+	const [assignModal, setAssignModal] = useState<{ open: boolean; ticketId: number | null }>({ open: false, ticketId: null });
 
-		useEffect(() => {
-			console.log('ManagerDashboardLegacy mounted');
-			console.log('Users:', users);
-		}, [users]);
+	useEffect(() => {
+		console.log('ManagerDashboardLegacy mounted');
+		console.log('Users:', users);
+	}, [users]);
 
-		if (!isManager) return <div className="p-8 text-red-600">Access denied.</div>;
-		if (loading) return <div className="p-8 text-gray-500">Loading tickets...</div>;
-		if (error) return <div className="p-8 text-red-600">{error}</div>;
+	if (!isManager) return <div className="p-8 text-red-600">Access denied.</div>;
+	if (loading) return <div className="p-8 text-gray-500">Loading tickets...</div>;
+	if (error) return <div className="p-8 text-red-600">{error}</div>;
 
-		// Handler stub for assignment
-		const handleAssign = (_ticketId: number, _agentId: number) => {
-			// TODO: Wire backend
-			setAssignModal({ open: false, ticketId: null });
+	// Handler stub for assignment
+	const handleAssign = (_ticketId: number, _agentId: number) => {
+		// TODO: Wire backend
+		setAssignModal({ open: false, ticketId: null });
+	};
+
+	// Prepare slices for DonutChart
+	const palette = [
+		"#6366f1", // indigo
+		"#f59e42", // orange
+		"#10b981", // green
+		"#ef4444", // red
+		"#fbbf24", // yellow
+		"#3b82f6", // blue
+		"#a21caf", // purple
+		"#14b8a6", // teal
+		"#eab308", // amber
+		"#64748b", // slate
+	];
+
+	
+	const agentSlices = users.map((u, i) => ({
+		label: u.name,
+		value: tickets.filter(t => t.assignedTo === u.id).length,
+		color: palette[i % palette.length],
+	}));
+	const unassignedCount = tickets.filter(t => !t.assignedTo).length;
+	const slices = [
+		...agentSlices,
+		{ label: "Unassigned", value: unassignedCount, color: "#d1d5db" },
+	];
+
+	// Use hex values from priorityDotColors for priorities
+	const prioritySlices = priorities.map(priority => {
+		const colorEntry = priorityDotColors[priority.id as keyof typeof priorityDotColors];
+		return {
+			label: priority.name,
+			value: tickets.filter(t => t.priorityId === priority.id).length,
+			color: colorEntry?.hex || '#6b7280',
 		};
-
-		// Prepare slices for DonutChart
-		const palette = [
-			"#6366f1", // indigo
-			"#f59e42", // orange
-			"#10b981", // green
-			"#ef4444", // red
-			"#fbbf24", // yellow
-			"#3b82f6", // blue
-			"#a21caf", // purple
-			"#14b8a6", // teal
-			"#eab308", // amber
-			"#64748b", // slate
-		];
-		const agentSlices = users.map((u, i) => ({
-			label: u.name,
-			value: tickets.filter(t => t.assignedTo === u.id).length,
-			color: palette[i % palette.length],
-		}));
-		const unassignedCount = tickets.filter(t => !t.assignedTo).length;
-		const slices = [
-			...agentSlices,
-			{ label: "Unassigned", value: unassignedCount, color: "#d1d5db" },
-		];
+	});
 
 		return (
 			<div className="mx-auto max-w-7xl space-y-8">
@@ -60,8 +77,9 @@ export default function ManagerDashboard() {
 				<TicketsStatusBars tickets={tickets} />
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 					<DonutChart title="Assignment Workload" slices={slices} />
-					<PriorityHeatmap tickets={tickets} users={users} />
+					<DonutChart title="Tickets by Priority" slices={prioritySlices} />
 				</div>
+				<PriorityHeatmap tickets={tickets} users={users} />
 				<TeamRecentActivity tickets={tickets} users={users} />
 				<div className="mt-8">
 					<TicketList tickets={tickets} showAdminColumns={true} />
