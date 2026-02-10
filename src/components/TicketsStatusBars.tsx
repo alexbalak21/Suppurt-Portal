@@ -37,8 +37,8 @@ export default function TicketsStatusBars({ tickets, maxY }: TicketsStatusBarsPr
 
   // Tallest bar is 100% height, others scale proportionally
   return (
-    <div className="bg-white py-4 px-6 rounded shadow inline-block">
-      <h3 className="font-semibold mb-4 text-center w-full">Tickets Status</h3>
+    <div className="bg-white dark:bg-gray-900 py-4 px-6 rounded shadow dark:shadow-lg inline-block">
+      <h3 className="font-semibold mb-4 text-center w-full text-gray-900 dark:text-gray-100">Tickets Status</h3>
       <div className="inline-flex items-end gap-4 h-50">
         {statusCounts.map(status => {
           // Calculate height in percent, min 8px for visibility
@@ -53,8 +53,8 @@ export default function TicketsStatusBars({ tickets, maxY }: TicketsStatusBarsPr
                   title={`${status.name}: ${status.count}`}
                 ></div>
               </div>
-              <span className="mt-2 text-xs text-center whitespace-nowrap">{status.name}</span>
-              <span className="text-xs text-gray-500">{status.count}</span>
+              <span className="mt-2 text-xs text-center whitespace-nowrap text-gray-900 dark:text-gray-100">{status.name}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-300">{status.count}</span>
             </div>
           );
         })}
