@@ -7,6 +7,7 @@ import React, {
   useCallback,
   useRef
 } from "react";
+import { useNavigate } from "react-router-dom";
 import type { AuthContextType } from "./auth.types";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -14,6 +15,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const navigate = useNavigate();
   const [accessToken, setAccessTokenState] = useState<string | null>(() => {
     try {
       return localStorage.getItem("access_token");
@@ -125,6 +127,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       refreshSubscribers.current = [];
       clearAccessToken();
       clearRefreshToken();
+      // Redirect to login with session expired message
+      navigate("/login?session=expired");
       return null;
     } finally {
       isRefreshing.current = false;
