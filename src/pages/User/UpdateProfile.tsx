@@ -28,7 +28,7 @@ export default function UpdateProfile() {
           setSuccess(true);
           setTimeout(() => {
             setSuccess(false);
-          }, 2000);
+          }, 1000);
         } else {
           throw new Error("Failed to update name");
         }

@@ -59,8 +59,8 @@ export default function UpdateUserPassword({ onClose }: { onClose: () => void })
       toast.success(data?.message || "Password updated successfully");
       setTimeout(() => {
         if (onClose) onClose();
-        navigate('/profile');
-      }, 1500);
+        navigate('/update-profile');
+      }, 500);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to update password';
       setError(message);
