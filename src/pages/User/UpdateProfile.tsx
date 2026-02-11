@@ -1,10 +1,72 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Input, Avatar } from "../../components";
+import { EditableText } from "../../components";
 import { useUser, USER_ENDPOINTS } from "../../features/user";
 import { useAuth } from "../../features/auth";
 
 export default function UpdateProfile() {
+    const handleSaveName = async (newName: string) => {
+      if (user) {
+        setSubmitting(true);
+        try {
+          const response = await apiClient(USER_ENDPOINTS.userUpdate, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: newName }),
+          });
+          if (response.ok) {
+            const updated = await response.json();
+            setUser({
+              ...user,
+              ...updated,
+            });
+            setFormData((prev) => ({ ...prev, name: updated.name }));
+            setSuccess(true);
+            setTimeout(() => {
+              setSuccess(false);
+            }, 2000);
+          } else {
+            throw new Error("Failed to update name");
+          }
+        } catch (err: any) {
+          setError(err?.message || "Failed to update name");
+        } finally {
+          setSubmitting(false);
+        }
+      }
+    };
+
+    const handleSaveEmail = async (newEmail: string) => {
+      if (user) {
+        setSubmitting(true);
+        try {
+          const response = await apiClient(USER_ENDPOINTS.userUpdate, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: newEmail }),
+          });
+          if (response.ok) {
+            const updated = await response.json();
+            setUser({
+              ...user,
+              ...updated,
+            });
+            setFormData((prev) => ({ ...prev, email: updated.email }));
+            setSuccess(true);
+            setTimeout(() => {
+              setSuccess(false);
+            }, 2000);
+          } else {
+            throw new Error("Failed to update email");
+          }
+        } catch (err: any) {
+          setError(err?.message || "Failed to update email");
+        } finally {
+          setSubmitting(false);
+        }
+      }
+    };
   const navigate = useNavigate();
   const { user, setUser } = useUser();
   const { apiClient } = useAuth();
@@ -50,10 +112,8 @@ export default function UpdateProfile() {
       const updated = await response.json();
       setUser(updated);
       setSuccess(true);
-
       setTimeout(() => {
         setSuccess(false);
-        navigate("/profile");
       }, 2000);
     } catch (err: unknown) {
       console.error("Update failed:", err);
@@ -94,7 +154,7 @@ export default function UpdateProfile() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] pt-16 flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-[calc(100vh-65px)] ps-10 pb-30 flex items-center justify-center bg-gray-100 dark:bg-gray-900">
       <div className="max-w-md bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6 min-w-100">
         {/* Upload profile image at the top */}
         <div className="flex justify-center mb-6">
@@ -133,7 +193,7 @@ export default function UpdateProfile() {
         {success && (
           <div className="mb-6 p-4 bg-green-50 rounded-md">
             <div className="flex">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <svg
                   className="h-5 w-5 text-green-400"
                   xmlns="http://www.w3.org/2000/svg"
@@ -149,60 +209,79 @@ export default function UpdateProfile() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-green-800">
-                  Profile updated successfully! Redirecting...
+                  Your profile has been updated!
                 </p>
               </div>
             </div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <Input
-              label="Full Name"
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              maxLength={100}
-              placeholder="Enter your full name"
-            />
-          </div>
+        {/* EditableText fields for name and email */}
+        <div className="space-y-3 mb-6">
+          <EditableText
+            label="Name"
+            value={user.name}
+            onSave={async (newName: string) => {
+              setSubmitting(true);
+              setError(null);
+              try {
+                const response = await apiClient(USER_ENDPOINTS.userUpdate, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ name: newName }),
+                });
+                if (!response.ok) throw new Error("Failed to update name");
+                const updated = await response.json();
+                setUser(updated);
+                setSuccess(true);
+                setTimeout(() => {
+                  setSuccess(false);
+                }, 2000);
+              } catch (err: any) {
+                setError(err?.message || "Failed to update name");
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+          />
+          <EditableText
+            label="Email"
+            value={user.email}
+            onSave={async (newEmail: string) => {
+              setSubmitting(true);
+              setError(null);
+              try {
+                const response = await apiClient(USER_ENDPOINTS.userUpdate, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email: newEmail }),
+                });
+                if (!response.ok) throw new Error("Failed to update email");
+                const updated = await response.json();
+                setUser(updated);
+                setSuccess(true);
+                setTimeout(() => {
+                  setSuccess(false);
+                }, 2000);
+              } catch (err: any) {
+                setError(err?.message || "Failed to update email");
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+          />
+        </div>
 
-          <div>
-            <Input
-              label="Email address"
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              maxLength={100}
-              placeholder="Enter your email address"
-            />
-          </div>
-
-          <div className="flex items-center justify-between pt-4">
-            <Button
-              type="button"
-              onClick={() => navigate("/profile")}
-              variant="secondary"
-              className="w-full sm:w-auto"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={submitting}
-              className="w-full sm:w-auto"
-            >
-              {submitting ? "Updating..." : "Update Profile"}
-            </Button>
-          </div>
-        </form>
+        <div className="flex items-center justify-between pt-4">
+          <Button
+            type="button"
+            onClick={() => navigate("/profile")}
+            variant="secondary"
+            className="w-full sm:w-auto"
+          >
+            Back
+          </Button>
+        </div>
       </div>
     </div>
   );

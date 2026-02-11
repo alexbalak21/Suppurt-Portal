@@ -32,9 +32,9 @@ export default function EditableField({ label, value, onSave }: EditableFieldPro
   };
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex gap-4 items-start">
-        <strong className="w-28 text-gray-700 dark:text-gray-300">{label}:</strong>
+    <div className="flex flex-col gap-1 mb-6">
+      <div className="flex gap-4 items-center">
+        <strong className="w-28 text-gray-700 dark:text-gray-300 text-center">{label}:</strong>
         {editing ? (
           <div className="flex items-start gap-2 flex-1">
             <Input
@@ -70,7 +70,7 @@ export default function EditableField({ label, value, onSave }: EditableFieldPro
             ) : (
               <button
                 onClick={() => setEditing(true)}
-                className="p-1 rounded-md hover:bg-gray-100"
+                className="p-1 rounded-md hover:bg-gray-100 ms-5"
               >
                 <PencilIcon className="h-5 w-5 text-gray-500" />
               </button>

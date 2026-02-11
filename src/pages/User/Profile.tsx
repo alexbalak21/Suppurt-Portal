@@ -18,43 +18,6 @@ export default function Profile() {
   // Theme hook
   const { theme, setTheme } = useTheme();
 
-  const handleSaveName = async (newName: string) => {
-    if (user) {
-      setLoading(true);
-      try {
-        const response = await apiClient(USER_ENDPOINTS.me, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: newName }),
-        });
-        if (response.ok) {
-          const updated = await response.json();
-          setUser(updated);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  const handleSaveEmail = async (newEmail: string) => {
-    if (user) {
-      setLoading(true);
-      try {
-        const response = await apiClient(USER_ENDPOINTS.me, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: newEmail }),
-        });
-        if (response.ok) {
-          const updated = await response.json();
-          setUser(updated);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
 
   const handleProfileImageUpload = async (file: File) => {
     try {
@@ -128,18 +91,16 @@ export default function Profile() {
         </div>
 
         {user && (
-          <div className="space-y-3">
-            <EditableText
-              label="Name"
-              value={user.name}
-              onSave={handleSaveName}
-            />
 
-            <EditableText
-              label="Email"
-              value={user.email}
-              onSave={handleSaveEmail}
-            />
+          <div className="space-y-3">
+            <div className="flex gap-4 items-center">
+              <strong className="w-28 text-gray-700 dark:text-gray-300">Name:</strong>
+              <span className="text-gray-900 dark:text-gray-100">{user.name}</span>
+            </div>
+            <div className="flex gap-4 items-center">
+              <strong className="w-28 text-gray-700 dark:text-gray-300">Email:</strong>
+              <span className="text-gray-900 dark:text-gray-100">{user.email}</span>
+            </div>
 
 
             <div className="flex gap-4 items-center">
