@@ -4,69 +4,72 @@ import { Button, Input, Avatar } from "../../components";
 import { EditableText } from "../../components";
 import { useUser, USER_ENDPOINTS } from "../../features/user";
 import { useAuth } from "../../features/auth";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import UpdateUserPassword from "./UpdateUserPassword";
 
 export default function UpdateProfile() {
-    const handleSaveName = async (newName: string) => {
-      if (user) {
-        setSubmitting(true);
-        try {
-          const response = await apiClient(USER_ENDPOINTS.userUpdate, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: newName }),
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const handleSaveName = async (newName: string) => {
+    if (user) {
+      setSubmitting(true);
+      try {
+        const response = await apiClient(USER_ENDPOINTS.userUpdate, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: newName }),
+        });
+        if (response.ok) {
+          const updated = await response.json();
+          setUser({
+            ...user,
+            ...updated,
           });
-          if (response.ok) {
-            const updated = await response.json();
-            setUser({
-              ...user,
-              ...updated,
-            });
-            setFormData((prev) => ({ ...prev, name: updated.name }));
-            setSuccess(true);
-            setTimeout(() => {
-              setSuccess(false);
-            }, 2000);
-          } else {
-            throw new Error("Failed to update name");
-          }
-        } catch (err: any) {
-          setError(err?.message || "Failed to update name");
-        } finally {
-          setSubmitting(false);
+          setFormData((prev) => ({ ...prev, name: updated.name }));
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 2000);
+        } else {
+          throw new Error("Failed to update name");
         }
+      } catch (err: any) {
+        setError(err?.message || "Failed to update name");
+      } finally {
+        setSubmitting(false);
       }
-    };
+    }
+  };
 
-    const handleSaveEmail = async (newEmail: string) => {
-      if (user) {
-        setSubmitting(true);
-        try {
-          const response = await apiClient(USER_ENDPOINTS.userUpdate, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: newEmail }),
+  const handleSaveEmail = async (newEmail: string) => {
+    if (user) {
+      setSubmitting(true);
+      try {
+        const response = await apiClient(USER_ENDPOINTS.userUpdate, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: newEmail }),
+        });
+        if (response.ok) {
+          const updated = await response.json();
+          setUser({
+            ...user,
+            ...updated,
           });
-          if (response.ok) {
-            const updated = await response.json();
-            setUser({
-              ...user,
-              ...updated,
-            });
-            setFormData((prev) => ({ ...prev, email: updated.email }));
-            setSuccess(true);
-            setTimeout(() => {
-              setSuccess(false);
-            }, 2000);
-          } else {
-            throw new Error("Failed to update email");
-          }
-        } catch (err: any) {
-          setError(err?.message || "Failed to update email");
-        } finally {
-          setSubmitting(false);
+          setFormData((prev) => ({ ...prev, email: updated.email }));
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 2000);
+        } else {
+          throw new Error("Failed to update email");
         }
+      } catch (err: any) {
+        setError(err?.message || "Failed to update email");
+      } finally {
+        setSubmitting(false);
       }
-    };
+    }
+  };
   const navigate = useNavigate();
   const { user, setUser } = useUser();
   const { apiClient } = useAuth();
@@ -270,6 +273,21 @@ export default function UpdateProfile() {
               }
             }}
           />
+
+          <div className="flex gap-4 items-center">
+            <strong className="w-28 text-gray-700 dark:text-gray-300 text-center">Password:</strong>
+            <div className="flex items-center justify-between flex-1">
+              <span className="text-gray-900 dark:text-white">••••••••</span>
+              <button
+                type="button"
+                className="p-1 rounded-md hover:bg-gray-100 ms-5"
+                onClick={() => setShowPasswordModal(true)}
+                aria-label="Edit Password"
+              >
+                <PencilIcon className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center justify-between pt-4">
@@ -282,6 +300,10 @@ export default function UpdateProfile() {
             Back
           </Button>
         </div>
+
+        {showPasswordModal && (
+          <UpdateUserPassword onClose={() => setShowPasswordModal(false)} />
+        )}
       </div>
     </div>
   );
