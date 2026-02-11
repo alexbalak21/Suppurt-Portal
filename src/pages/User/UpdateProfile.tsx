@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Avatar } from "../../components";
 import { EditableText } from "../../components";
@@ -52,7 +52,7 @@ export default function UpdateProfile() {
 
   return (
     <div className="min-h-[calc(100vh-65px)] ps-8 flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="max-w-md bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6 min-w-100">
+      <div className="max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6 min-w-100 border border-gray-200 dark:border-gray-700">
         {/* Upload profile image at the top */}
         <div className="flex justify-center mb-6">
           <div className="relative group">
@@ -61,7 +61,7 @@ export default function UpdateProfile() {
               imageUrl={user.profileImage}
               size={96}
             />
-            <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity">
+            <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-60 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity">
               <span className="text-white text-xs">Change</span>
               <input
                 type="file"
@@ -77,22 +77,22 @@ export default function UpdateProfile() {
         </div>
 
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Update Profile</h2>
-          <p className="mt-2 text-sm text-gray-600">Update your account information</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Update Profile</h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Update your account information</p>
         </div>
 
         {error && (
-          <div className="mb-4 text-sm text-red-700 bg-red-100 p-3 rounded">
+          <div className="mb-4 text-sm text-red-700 dark:text-red-200 bg-red-100 dark:bg-red-900 p-3 rounded">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mb-6 p-4 bg-green-50 rounded-md">
+          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900 rounded-md">
             <div className="flex">
               <div className="shrink-0">
                 <svg
-                  className="h-5 w-5 text-green-400"
+                  className="h-5 w-5 text-green-400 dark:text-green-300"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -105,7 +105,7 @@ export default function UpdateProfile() {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-green-800">
+                <p className="text-sm font-medium text-green-800 dark:text-green-200">
                   Your profile has been updated!
                 </p>
               </div>
@@ -171,10 +171,8 @@ export default function UpdateProfile() {
             <div className="flex items-center justify-between flex-1">
               <span className="text-gray-900 dark:text-white">••••••••</span>
               <button
-                type="button"
-                className="p-1 rounded-md hover:bg-gray-100 ms-5"
                 onClick={() => setShowPasswordModal(true)}
-                aria-label="Edit Password"
+                className="p-1 rounded-md hover:bg-gray-100 ms-5"
               >
                 <PencilIcon className="h-5 w-5 text-gray-500" />
               </button>
@@ -187,7 +185,7 @@ export default function UpdateProfile() {
             type="button"
             onClick={() => navigate("/profile")}
             variant="secondary"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
           >
             Back
           </Button>

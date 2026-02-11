@@ -16,7 +16,7 @@ export default function Login() {
   const navigate = useNavigate();
   const toast = useToast();
   const { setAccessToken, setRefreshToken } = useAuth();
-  const { setUser } = useUser();
+  const { setUser, setActiveRole } = useUser();
 
   const [formData, setFormData] = useState<LoginFormData>({
     email: "gordon.freeman@example.com",
@@ -45,9 +45,14 @@ export default function Login() {
       const response = await login({ email: formData.email, password: formData.password });
 
       // Store token and user
+
       setAccessToken(response.data.access_token);
       setRefreshToken(response.data.refresh_token ?? null);
       setUser(response.data.user);
+      // Set activeRole to first available role after login
+      if (response.data.user?.roles?.length) {
+        setActiveRole(response.data.user.roles[0]);
+      }
 
       toast.success("Login successful!");
       navigate("/");

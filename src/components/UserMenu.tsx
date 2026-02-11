@@ -34,7 +34,7 @@ export default function UserMenu({ user }: UserMenuProps) {
 
       <MenuItems
         transition
-        className="absolute right-0 z-10 mt-5 w-48 origin-top-right rounded-md bg-white py-1 outline outline-gray-200 
+        className="absolute right-0 z-10 mt-5 w-48 origin-top-right rounded-md bg-white dark:bg-gray-900 py-1 outline outline-gray-200 dark:outline-gray-700
                   transition 
                   data-closed:scale-95 data-closed:transform data-closed:opacity-0 
                   data-open:opacity-100 data-open:scale-100 
@@ -44,7 +44,7 @@ export default function UserMenu({ user }: UserMenuProps) {
         <MenuItem>
           <Link
             to="/profile"
-            className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            className="block px-4 py-2 text-sm text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
           >
             Profile
           </Link>
@@ -54,7 +54,7 @@ export default function UserMenu({ user }: UserMenuProps) {
           <button
             onClick={() => setShowConfirm(true)}
             disabled={loading}
-            className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="block w-full text-left px-4 py-2 text-sm text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Logging out..." : "Logout"}
           </button>

@@ -25,8 +25,8 @@ export default function TicketsStatusBars({ tickets, maxY }: TicketsStatusBarsPr
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-900 px-6 py-1 rounded shadow h-68">
-      <h3 className="font-semibold mb-1 text-center text-gray-900 dark:text-gray-100">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 py-1 rounded shadow-md dark:shadow-lg h-68 transition-colors duration-300">
+      <h3 className="font-semibold mb-1 text-center text-gray-800 dark:text-gray-50">
         Tickets Status
       </h3>
 

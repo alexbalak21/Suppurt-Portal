@@ -70,27 +70,27 @@ export default function UpdateUserPassword({ onClose }: { onClose: () => void })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="relative max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6 min-w-100 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/70">
+      <div className="relative max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md dark:shadow-lg overflow-hidden p-6 min-w-100 animate-fadeIn transition-colors duration-300">
         <button
-          className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl font-bold focus:outline-none"
+          className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl font-bold focus:outline-none"
           onClick={onClose}
           aria-label="Close"
         >
           ×
         </button>
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Update Password</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Update Password</h2>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-md text-sm">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mb-4 p-3 bg-green-50 text-green-700 rounded-md text-sm">
+          <div className="mb-4 p-3 bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-md text-sm">
             Password updated successfully! Redirecting...
           </div>
         )}

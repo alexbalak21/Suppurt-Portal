@@ -39,7 +39,7 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md dark:shadow-lg w-full h-full transition-colors duration-300">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead className="bg-gray-50 dark:bg-gray-800">
           <tr>
@@ -120,10 +120,9 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
               <td className="px-4 py-2 text-center whitespace-nowrap">
                 <span className="inline-flex items-center gap-2">
                   <span
-                    className={`w-3 h-3 rounded-sm ${getPriorityColor(ticket.priorityId).bg
-                      }`}
+                    className={`w-3 h-3 rounded-sm border border-gray-300 dark:border-gray-700 ${getPriorityColor(ticket.priorityId).bg}`}
                   ></span>
-                  {getPriorityName(ticket.priorityId)}
+                  <span className="text-gray-900 dark:text-gray-100">{getPriorityName(ticket.priorityId)}</span>
                 </span>
               </td>
 

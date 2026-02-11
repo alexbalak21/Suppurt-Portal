@@ -23,7 +23,7 @@ export default function DonutChart({ title, slices }: Props) {
   const gradient = `conic-gradient(${segments.join(",")})`;
 
   return (
-    <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow-md dark:shadow-lg transition-colors duration-300">
       <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
         {title}
       </h2>
