@@ -22,7 +22,8 @@ type NavLink = {
 export default function Navbar({user}: NavbarProps) {
   const location = useLocation();
 
-  const {isUser, isSupport, isAdmin, isVisitor, isManager} = useRole()
+  const {isUser, isSupport, isAdmin, isVisitor, isManager, activeRole} = useRole();
+  console.log('[Navbar] user:', user, 'activeRole:', activeRole, {isUser, isSupport, isAdmin, isVisitor, isManager});
 
   const navLinks: NavLink[] = useMemo(
     () => [

@@ -38,6 +38,7 @@ function normalizeUserData(data: RawUser): UserInfo {
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [activeRole, setActiveRoleState] = useState<Role | null>(null);
+  console.log('[UserProvider] RENDER user:', user, 'activeRole:', activeRole);
   const { apiClient, authenticated } = useAuth();
 
   // Prevent React Strict Mode from running the effect twice
@@ -47,6 +48,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const storedRole = localStorage.getItem("activeRole");
     if (storedRole) {
+      console.log('[UserProvider] Loaded activeRole from localStorage:', storedRole);
       setActiveRoleState(storedRole);
     }
   }, []);
@@ -54,12 +56,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   // Save activeRole to localStorage when it changes
   useEffect(() => {
     if (activeRole) {
+      console.log('[UserProvider] Saving activeRole to localStorage:', activeRole);
       localStorage.setItem("activeRole", activeRole);
     }
   }, [activeRole]);
 
   useEffect(() => {
     if (!authenticated) {
+      console.log('[UserProvider] Not authenticated, clearing user and activeRole');
       setUser(null);
       setActiveRoleState(null);
       didRun.current = false; // Reset the ref when logging out
@@ -81,7 +85,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           setUser(normalized);
           // If activeRole is not in user's roles, set to first role
           setActiveRoleState((prev) => {
-            if (prev && normalized.roles.includes(prev)) return prev;
+            if (prev && normalized.roles.includes(prev)) {
+              console.log('[UserProvider] activeRole remains:', prev);
+              return prev;
+            }
+            console.log('[UserProvider] Setting activeRole to first user role:', normalized.roles[0]);
             return normalized.roles[0] || null;
           });
         } else {
@@ -99,9 +107,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [authenticated, apiClient]);
 
   const setActiveRole = (role: Role) => {
+    console.log('[UserProvider] setActiveRole called with:', role);
     if (user && user.roles.includes(role)) {
       setActiveRoleState(role);
       localStorage.setItem("activeRole", role);
+      console.log('[UserProvider] setActiveRole updated state and localStorage:', role);
+    } else {
+      console.log('[UserProvider] setActiveRole: user does not have role', role, user?.roles);
     }
   };
 

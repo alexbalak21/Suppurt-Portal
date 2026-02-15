@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export function useLogout() {
   const { apiClient, clearAccessToken, clearRefreshToken, accessToken, refreshToken } = useAuth();
-  const { setUser } = useUser();
+  const { setUser, setActiveRole } = useUser();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -28,9 +28,18 @@ export function useLogout() {
       const message = err instanceof Error ? err.message : "Logout failed";
       setError(message);
     } finally {
+      // Clear all localStorage and sessionStorage for a clean logout
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+        console.log('[useLogout] Cleared localStorage and sessionStorage');
+      } catch (e) {
+        console.warn('[useLogout] Failed to clear storage:', e);
+      }
       clearAccessToken();
       clearRefreshToken();
       setUser(null);
+      setActiveRole(null);
       setLoading(false);
       navigate("/");
     }
