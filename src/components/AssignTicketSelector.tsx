@@ -14,7 +14,8 @@ const AssignTicketSelector: React.FC<AssignTicketSelectorProps> = ({
   currentAssignedUserId,
   onAssignSuccess,
 }) => {
-  const { users, loading: loadingUsers } = useUsers();
+  // Only fetch users with SUPPORT role (role=3)
+  const { users, loading: loadingUsers } = useUsers({ role: 3 });
   const { loading: assigning, error, assignTicket } = useAssignTicket();
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
