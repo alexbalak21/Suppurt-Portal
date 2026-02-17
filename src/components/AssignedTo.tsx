@@ -40,7 +40,8 @@ const AssignedTo: React.FC<AssignedToProps> = ({
         </Tooltip>
       </div>
 
-      {canAssignSelf && !isAssignedToMe && (
+      {/* Hide 'Assign to Me' for managers */}
+      {canAssignSelf && !isAssignedToMe && !canAssignOthers && (
         <div className="flex flex-col items-end gap-1">
           <Button
             onClick={onAssignToSelf}
@@ -75,7 +76,6 @@ const AssignedTo: React.FC<AssignedToProps> = ({
 
       {canAssignOthers && (
         <div className="flex flex-col items-end gap-1">
-          <span className="text-xs font-semibold text-gray-600">Assign to user:</span>
           <AssignTicketSelector
             ticketId={ticketId}
             currentAssignedUserId={assignedUserId}
