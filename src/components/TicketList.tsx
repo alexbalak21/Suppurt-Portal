@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Ticket } from "../features/ticket/useTickets";
 import { usePriorities } from "../features/ticket/usePriorities";
@@ -23,6 +25,9 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
 
+  const [sortKey, setSortKey] = useState<string>('id');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+
   const getPriorityName = (priorityId: number) => {
     const priority = priorities.find(p => p.id === priorityId);
     return priority?.name || 'Unknown';
@@ -38,6 +43,59 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
     return (status?.color as BadgeColor) || 'gray';
   };
 
+  // Sorting logic
+  const sortedTickets = [...tickets].sort((a, b) => {
+    let aValue: any;
+    let bValue: any;
+    switch (sortKey) {
+      case 'id':
+        aValue = a.id;
+        bValue = b.id;
+        break;
+      case 'createdBy':
+        aValue = a.createdBy;
+        bValue = b.createdBy;
+        break;
+      case 'priority':
+        aValue = getPriorityName(a.priorityId);
+        bValue = getPriorityName(b.priorityId);
+        break;
+      case 'status':
+        aValue = getStatusName(a.statusId);
+        bValue = getStatusName(b.statusId);
+        break;
+      case 'assignedTo':
+        aValue = a.assignedTo || 0;
+        bValue = b.assignedTo || 0;
+        break;
+      case 'created':
+        aValue = new Date(a.createdAt).getTime();
+        bValue = new Date(b.createdAt).getTime();
+        break;
+      case 'updated':
+        aValue = new Date(a.updatedAt).getTime();
+        bValue = new Date(b.updatedAt).getTime();
+        break;
+      default:
+        aValue = a.id;
+        bValue = b.id;
+    }
+    if (aValue < bValue) return sortDir === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const sortIndicator = (key: string) => sortKey === key ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+
   return (
     <div className="overflow-x-auto dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md dark:shadow-lg w-full h-full transition-colors duration-300">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -45,8 +103,8 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
           <tr>
             {/* Show ID for support/admin/manager */}
             {showAdminColumns && (
-              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                ID
+              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('id')}>
+                ID{sortIndicator('id')}
               </th>
             )}
 
@@ -56,40 +114,39 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
 
             {/* Show Created By for support/admin/manager */}
             {showAdminColumns && (
-              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                Created By
+              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('createdBy')}>
+                Created By{sortIndicator('createdBy')}
               </th>
             )}
 
 
-            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-              Priority
+            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('priority')}>
+              Priority{sortIndicator('priority')}
             </th>
 
-            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-              Status
+            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('status')}>
+              Status{sortIndicator('status')}
             </th>
 
-            
             {/* Show Assigned To */}
-            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-              Assigned To
+            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('assignedTo')}>
+              Assigned To{sortIndicator('assignedTo')}
             </th>
 
-            <th className="px-4 py-2 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-              Created
+            <th className="px-4 py-2 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('created')}>
+              Created{sortIndicator('created')}
             </th>
 
             {/* Show Updated for support/admin/manager */}
             {showAdminColumns && (
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                Updated
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none" onClick={() => handleSort('updated')}>
+                Updated{sortIndicator('updated')}
               </th>
             )}
           </tr>
         </thead>
         <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-          {tickets.map(ticket => (
+          {sortedTickets.map(ticket => (
             <tr key={ticket.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
               {/* ID Column */}
               {showAdminColumns && (
