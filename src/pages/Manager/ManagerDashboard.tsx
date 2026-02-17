@@ -18,6 +18,11 @@ export default function ManagerDashboard() {
 	const { users } = useUsers({ role: 3 });
 	const { priorities } = usePriorities();
 	const [assignModal, setAssignModal] = useState<{ open: boolean; ticketId: number | null }>({ open: false, ticketId: null });
+	const [search, setSearch] = useState("");
+	// Filter tickets by search
+	const filteredTickets = tickets.filter(ticket =>
+		ticket.title.toLowerCase().includes(search.toLowerCase())
+	);
 
 	useEffect(() => {
 		console.log('ManagerDashboardLegacy mounted');
@@ -89,9 +94,18 @@ export default function ManagerDashboard() {
 						   <ManagerPriorityMatrix tickets={tickets} users={users} priorities={priorities} />
 					   </div>
 				   </div>
-				   <div className="mt-8">
-					   <TicketList tickets={tickets} showAdminColumns={true} />
-				   </div>
+				 <div className="mt-8">
+					 <div className="mb-4 flex justify-start">
+						 <input
+							 type="text"
+							 className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-800 dark:text-gray-100"
+							 placeholder="Search by title..."
+							 value={search}
+							 onChange={e => setSearch(e.target.value)}
+						 />
+					 </div>
+					 <TicketList tickets={filteredTickets} showAdminColumns={true} />
+				 </div>
 				<AssignTicketModal
 					open={assignModal.open}
 					ticketId={assignModal.ticketId}
