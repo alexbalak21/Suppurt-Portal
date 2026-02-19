@@ -12,7 +12,9 @@ import { priorityDotColors } from "../utils/priorityDotColors";
 interface TicketListProps {
   tickets: Ticket[];
   showAdminColumns?: boolean;
+  statusFilter?: string; // status name to filter by (e.g., "Resolved", "Open")
 }
+
 
 function getPriorityColor(priorityId?: number) {
   if (!priorityId || !priorityDotColors[priorityId as keyof typeof priorityDotColors]) {
@@ -21,7 +23,8 @@ function getPriorityColor(priorityId?: number) {
   return priorityDotColors[priorityId as keyof typeof priorityDotColors];
 }
 
-export default function TicketList({ tickets, showAdminColumns = false }: TicketListProps) {
+export default function TicketList({ tickets, showAdminColumns = false, statusFilter }: TicketListProps) {
+
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
 
@@ -44,8 +47,19 @@ export default function TicketList({ tickets, showAdminColumns = false }: Ticket
     return (status?.color as BadgeColor) || 'gray';
   };
 
+  // Filter by status if statusFilter is provided
+  let filteredTickets = tickets;
+  if (typeof statusFilter === 'string' && statusFilter.length > 0) {
+    const statusObj = statuses.find(s => s.name.toLowerCase() === statusFilter.toLowerCase());
+    if (statusObj) {
+      filteredTickets = tickets.filter(t => t.statusId === statusObj.id);
+    } else {
+      filteredTickets = [];
+    }
+  }
+
   // Sort tickets (parent should filter by search)
-  const sortedTickets = [...tickets].sort((a, b) => {
+  const sortedTickets = [...filteredTickets].sort((a, b) => {
     let aValue: any;
     let bValue: any;
     switch (sortKey) {
