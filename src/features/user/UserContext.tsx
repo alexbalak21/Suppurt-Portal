@@ -66,6 +66,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       console.log('[UserProvider] Not authenticated, clearing user and activeRole');
       setUser(null);
       setActiveRoleState(null);
+      localStorage.removeItem("activeRole"); // Remove from storage on logout
       didRun.current = false; // Reset the ref when logging out
       return;
     }
@@ -106,12 +107,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     fetchUser();
   }, [authenticated, apiClient]);
 
-  const setActiveRole = (role: Role) => {
+  const setActiveRole = (role: Role | null) => {
     console.log('[UserProvider] setActiveRole called with:', role);
-    if (user && user.roles.includes(role)) {
+    if (role && user && user.roles.includes(role)) {
       setActiveRoleState(role);
       localStorage.setItem("activeRole", role);
       console.log('[UserProvider] setActiveRole updated state and localStorage:', role);
+    } else if (role === null) {
+      setActiveRoleState(null);
+      localStorage.removeItem("activeRole");
+      console.log('[UserProvider] setActiveRole cleared state and localStorage');
     } else {
       console.log('[UserProvider] setActiveRole: user does not have role', role, user?.roles);
     }
