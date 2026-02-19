@@ -23,14 +23,14 @@ function getPriorityColor(priorityId?: number) {
   return priorityDotColors[priorityId as keyof typeof priorityDotColors];
 }
 
-export default function TicketList({ tickets, showAdminColumns = false, statusFilter }: TicketListProps) {
-
+export default function TicketList({ tickets, showAdminColumns = false, statusFilter: statusFilterProp }: TicketListProps) {
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
 
   const [sortKey, setSortKey] = useState<string>('id');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
-  // Removed internal search state; search is handled by parent
+  // Local state for status filter if not controlled by parent
+  const [statusFilter, setStatusFilter] = useState<string>(statusFilterProp || '');
 
   const getPriorityName = (priorityId: number) => {
     const priority = priorities.find(p => p.id === priorityId);
@@ -152,7 +152,19 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
               className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => handleSort('status')}
             >
-              Status{sortIndicator('status')}
+              <div className="flex flex-col items-center">
+                <span>Status{sortIndicator('status')}</span>
+                <select
+                  className="mt-1 block w-28 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500"
+                  value={statusFilter}
+                  onChange={e => setStatusFilter(e.target.value)}
+                >
+                  <option value="">All</option>
+                  {statuses.map(s => (
+                    <option key={s.id} value={s.name}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
             </th>
 
             {/* Show Assigned To */}
