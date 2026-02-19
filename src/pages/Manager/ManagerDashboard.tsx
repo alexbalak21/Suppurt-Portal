@@ -9,7 +9,7 @@ import TicketList from "@components/TicketList";
 import { useState, useEffect } from "react";
 import { usePriorities } from "@features/ticket/usePriorities";
 import { priorityDotColors } from "@features/theme/priorityDotColors";
-
+import ManagerStatsCards from "@components/ManagerStatsCards";
 
 export default function ManagerDashboard() {
 	// All hooks must be called unconditionally and in the same order
@@ -78,6 +78,7 @@ export default function ManagerDashboard() {
 		return (
 			<div className="mx-auto max-w-7xl space-y-8">
 				<h1 className="text-3xl font-bold my-4">Manager Dashboard</h1>
+				<ManagerStatsCards tickets={tickets} />
 				   <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 					   {/* First row */}
 					   <div className="md:col-span-2">

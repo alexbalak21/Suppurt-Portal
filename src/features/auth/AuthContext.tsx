@@ -81,15 +81,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // -----------------------------
   const refreshAccessToken = useCallback(async (): Promise<string | null> => {
     if (isRefreshing.current) {
+      console.debug('[AuthContext] refreshAccessToken: Already refreshing, queueing subscriber');
       return new Promise(resolve => {
         refreshSubscribers.current.push(resolve);
       });
     }
 
     isRefreshing.current = true;
+    console.debug('[AuthContext] refreshAccessToken: Starting refresh with refreshToken', refreshToken);
 
     try {
       if (!refreshToken) {
+        console.warn('[AuthContext] refreshAccessToken: No refresh token, clearing tokens');
         refreshSubscribers.current.forEach(cb => cb(null));
         refreshSubscribers.current = [];
         clearAccessToken();
@@ -104,7 +107,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ refresh_token: refreshToken })
       });
 
+      console.debug('[AuthContext] refreshAccessToken: /auth/refresh response', response.status, response);
+
       if (!response.ok) {
+        console.warn('[AuthContext] refreshAccessToken: Refresh failed, clearing tokens');
         refreshSubscribers.current.forEach(cb => cb(null));
         refreshSubscribers.current = [];
         clearAccessToken();
@@ -115,6 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newToken = data.data.access_token;
       const newRefreshToken = data.data.refresh_token ?? refreshToken;
 
+      console.debug('[AuthContext] refreshAccessToken: Got new tokens', { newToken, newRefreshToken });
       setAccessToken(newToken);
       setRefreshToken(newRefreshToken);
 
@@ -122,7 +129,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       refreshSubscribers.current = [];
 
       return newToken;
-    } catch {
+    } catch (err) {
+      console.error('[AuthContext] refreshAccessToken: Exception', err);
       refreshSubscribers.current.forEach(cb => cb(null));
       refreshSubscribers.current = [];
       clearAccessToken();
@@ -158,15 +166,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // First attempt
       const response = await makeRequest(accessToken);
+      console.debug('[AuthContext] apiClient: Response', {
+        url: resolvedUrl,
+        status: response.status,
+        headers: Object.fromEntries(response.headers.entries())
+      });
 
       const expired = response.headers.get("X-Token-Expired") === "true";
       if (!expired) return response;
 
+      console.warn('[AuthContext] apiClient: Token expired, attempting refresh');
       // Refresh
       const newToken = await refreshAccessToken();
-      if (!newToken) return response;
+      if (!newToken) {
+        console.error('[AuthContext] apiClient: Refresh failed, returning original response');
+        return response;
+      }
 
       // Retry once
+      console.debug('[AuthContext] apiClient: Retrying request with new token');
       return makeRequest(newToken);
     },
     [accessToken, refreshAccessToken]
