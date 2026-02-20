@@ -13,6 +13,7 @@ import { priorityDotColors } from "@features/theme/priorityDotColors";
 import ManagerStatsCards from "@components/ManagerStatsCards";
 import TicketFilterBar from "@components/TicketFilterBar";
 import { useStatuses } from "@features/ticket/useStatuses";
+import {Spinner} from "@components/Spinner";
 
 
 export default function ManagerDashboard() {
@@ -47,7 +48,11 @@ export default function ManagerDashboard() {
 	}, [users]);
 
 	if (!isManager) return <div className="p-8 text-red-600">Access denied.</div>;
-	if (loading) return <div className="p-8 text-gray-500">Loading tickets...</div>;
+		if (loading) return (
+				<div className="p-8 flex justify-center items-center">
+					<Spinner size="md" color="primary" />
+				</div>
+			);
 	if (error) return <div className="p-8 text-red-600">{error}</div>;
 
 	// Handler stub for assignment

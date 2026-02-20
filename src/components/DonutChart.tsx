@@ -34,7 +34,7 @@ export default function DonutChart({ title, slices }: Props) {
           style={{ background: gradient }}
         />
         <div
-          className="absolute inset-0 m-auto rounded-full bg-white dark:bg-gray-900"
+          className="absolute inset-0 m-auto rounded-full bg-white dark:bg-gray-800"
           style={{ width: "60%", height: "60%" }}
         />
       </div>
