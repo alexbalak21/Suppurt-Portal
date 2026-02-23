@@ -6,6 +6,7 @@ import { useUser, USER_ENDPOINTS } from "../../features/user";
 import { useAuth } from "../../features/auth";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import UpdateUserPassword from "./UpdateUserPassword";
+import { ArrowUpTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function UpdateProfile() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -19,6 +20,19 @@ export default function UpdateProfile() {
   // Initialize form with user data when available
   // Removed setFormData usage as formData state is gone
 
+  
+  const handleImageDelete = async () => {
+    try {
+      const response = await apiClient(USER_ENDPOINTS.profileImage, {
+        method: "DELETE",
+      });
+      if (response.ok && user) {
+        setUser({ ...user, profileImage: null });
+      }
+    } catch (err) {
+      console.error("Image delete failed:", err);
+    }
+  };
 
 
   const handleImageUpload = async (file: File) => {
@@ -61,19 +75,32 @@ export default function UpdateProfile() {
               imageData={user.profileImage}
               size={96}
             />
-            <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-60 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity">
-              <span className="text-white text-xs">Change</span>
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleImageUpload(file);
-                }}
-              />
-            </label>
+            <div className="flex justify-center mt-2">
+              <div className="flex gap-1 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-full p-1 shadow-md transition-opacity opacity-80 hover:opacity-100">
+                <label className="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleImageUpload(file);
+                    }}
+                  />
+                  <ArrowUpTrayIcon className="h-6 w-6 text-gray-500" />
+                </label>
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                  onClick={handleImageDelete}
+                  aria-label="Remove profile image"
+                >
+                  <XMarkIcon className="h-6 w-6 text-gray-500" />
+                </button>
+              </div>
+            </div>
           </div>
+          
         </div>
 
         <div className="text-center mb-8">
