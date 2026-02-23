@@ -58,7 +58,7 @@ export default function UpdateProfile() {
           <div className="relative group">
             <Avatar
               name={user.name}
-              imageUrl={user.profileImage}
+              imageData={user.profileImage}
               size={96}
             />
             <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-60 opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity">

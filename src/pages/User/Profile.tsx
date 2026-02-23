@@ -45,7 +45,7 @@ export default function Profile() {
         <div className="flex justify-center mb-6">
           <Avatar
             name={user?.name}
-            imageUrl={user?.profileImage}
+            imageData={user?.profileImage}
             size={96}
           />
         </div>

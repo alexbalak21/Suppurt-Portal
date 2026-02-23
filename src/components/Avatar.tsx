@@ -1,6 +1,6 @@
 interface AvatarProps {
   name?: string;              // user name
-  imageUrl?: string | null;   // optional image URL
+  imageData?: string | null;   // optional image URL
   size?: number;              // size in pixels (default 32)
   bgColor?: string;           // Tailwind background color class (default "bg-indigo-600")
   textColor?: string;         // Tailwind text color class (default "text-white")
@@ -8,17 +8,20 @@ interface AvatarProps {
 
 export default function Avatar({
   name,
-  imageUrl,
+  imageData,
   size = 32,
   bgColor = "bg-gray-400",
   textColor = "text-white",
 }: AvatarProps) {
   const initial = name ? name.charAt(0).toUpperCase() : "?";
 
-  if (imageUrl) {
+  if (imageData) {
+    // If imageData is already a data URL, use as is. Otherwise, assume it's base64 and prepend JPEG header.
+    const isDataUrl = imageData.startsWith("data:");
+    const src = isDataUrl ? imageData : `data:image/jpeg;base64,${imageData}`;
     return (
       <img
-        src={imageUrl}
+        src={src}
         alt={name || "User avatar"}
         style={{ width: size, height: size }}
         className="rounded-full object-cover bg-white dark:bg-gray-800"

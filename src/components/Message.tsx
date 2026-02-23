@@ -37,7 +37,7 @@ const Message: React.FC<MessageProps> = ({ id, senderId, body, createdAt, update
             {body}
           </div>
         </div>
-        <Avatar name={user.name} imageUrl={user.profileImage} size={40} />
+        <Avatar name={user.name} imageData={user.profileImage} size={40} />
       </div>
     );
   }

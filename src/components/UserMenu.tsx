@@ -25,7 +25,7 @@ export default function UserMenu({ user }: UserMenuProps) {
         <span className="sr-only">Open user menu</span>
         <Avatar
           name={user.name}
-          imageUrl={user.profileImage}
+          imageData={user.profileImage}
           size={32}
           bgColor="bg-gray-400"
           textColor="text-white"
