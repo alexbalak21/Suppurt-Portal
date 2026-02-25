@@ -13,4 +13,6 @@ export { default as AdminTicketList } from "./AdminTicketList";
 export { default as AssignTicketSelector } from "./AssignTicketSelector";
 export { default as AssignedTo } from "./AssignedTo";
 
+export { default as SimpleSelect } from "./SimpleSelct";
+
 export type { SidebarLink } from "./Sidebar";

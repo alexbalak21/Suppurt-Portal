@@ -1,7 +1,7 @@
 import { AppRoutes } from "./routes";
 import { Navbar, ToastContainer } from "../components";
-import { useUser } from "../features/user";
-import { useTheme } from "../features/theme/useTheme";
+import { useUser } from "@features/user";
+import { useTheme } from "@features/theme/useTheme";
 
 export default function App() {
   const { user } = useUser();

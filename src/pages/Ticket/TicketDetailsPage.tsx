@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { usePriorities } from '../../features/ticket/usePriorities';
-import { useStatuses } from '../../features/ticket/useStatuses';
-import { useAuth } from '../../features/auth';
-import { useRole } from '../../features/auth/useRole';
-import { useUser } from '../../features/user';
-import { useAssignTicket } from '../../features/ticket/useAssignTicket';
-import { can } from '../../features/auth/permissions';
-import StatusBadge from '../../components/StatusBadge';
-import { StatusSelector } from '../../components/StatusSelector';
-import Tooltip from '../../components/Tooltip';
-import { PrioritySelector } from '../../components/PrioritySelector';
-import { PriorityDisplay } from '../../components/PriorityDisplay';
-import AssignedTo from '../../components/AssignedTo';
-import Conversation from '../../components/Conversation';
-import AddMessage from '../../components/AddMessage';
+import { usePriorities } from '@features/ticket/usePriorities';
+import { useStatuses } from '@features/ticket/useStatuses';
+import { useAuth } from '@features/auth';
+import { useRole } from '@features/auth/useRole';
+import { useUser } from '@features/user';
+import { useAssignTicket } from '@features/ticket/useAssignTicket';
+import { can } from '@features/auth/permissions';
+import StatusBadge from '@components/StatusBadge';
+import type { Colors } from '@features/theme/colors';
+import { StatusSelector } from '@components/StatusSelector';
+import Tooltip from '@components/Tooltip';
+import { PrioritySelector } from '@components/PrioritySelector';
+import { PriorityDisplay } from '@components/PriorityDisplay';
+import AssignedTo from '@components/AssignedTo';
+import Conversation from '@components/Conversation';
+import AddMessage from '@components/AddMessage';
 
 interface MessageData {
   id: number;
@@ -174,7 +175,7 @@ const TicketDetailsPage: React.FC = () => {
               <span className="font-extralight pb-1">Status:</span>
                 <div>
                   {activeRole && !can('changeStatus', activeRole as any) ? (
-                    <StatusBadge text={status?.name} color={status?.color as import("../../features/theme/colors").Colors} />
+                    <StatusBadge text={status?.name} color={status?.color as Colors} />
                   ) : (
                     <StatusSelector
                       statusId={ticket.statusId}

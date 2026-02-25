@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useAuth } from '../features/auth';
+import { useAuth } from '@features/auth';
 import Button from './Button';
 
 interface AddMessageProps {

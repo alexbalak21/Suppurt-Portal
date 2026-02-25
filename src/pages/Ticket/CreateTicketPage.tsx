@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Editor from "@components/Editor";
 import Input from "@components/Input";
 import { PrioritySelector } from "@/components/PrioritySelector";
-import { useCreateTicket } from "../../features/ticket/useCreateTicket";
+import { useCreateTicket } from "@features/ticket/useCreateTicket";
 import { useToast } from "@/components/ToastContainer";
 
 export default function CreateTicketPage() {

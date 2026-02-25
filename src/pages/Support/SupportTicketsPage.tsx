@@ -1,5 +1,5 @@
-import { useTickets } from "../../features/ticket/useTickets";
-import AdminTicketList from "../../components/AdminTicketList";
+import { useTickets } from "@features/ticket/useTickets";
+import AdminTicketList from "@components/AdminTicketList";
 
 export default function SupportTicketsPage() {
   const { tickets, loading, error } = useTickets();

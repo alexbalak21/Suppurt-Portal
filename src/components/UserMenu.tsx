@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Avatar from "./Avatar";
 import Confirm from "./Confirm";
 import { useState } from "react";
-import { useLogout } from "../features/auth";
+import { useLogout } from "@features/auth";
 
 interface UserMenuProps {
   user: { name: string; email: string; profileImage?: string | null };

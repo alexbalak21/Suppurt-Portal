@@ -5,8 +5,8 @@ import {
   ListboxOption,
   ListboxOptions,
 } from '@headlessui/react'
-import { usePriorities } from "../features/ticket/usePriorities";
-import { usePatchTicketPriority } from "../features/ticket/usePatchTicketPriority";
+import { usePriorities } from "@features/ticket/usePriorities";
+import { usePatchTicketPriority } from "@features/ticket/usePatchTicketPriority";
 import { ChevronDownIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { priorityDotColors } from "../utils/priorityDotColors";

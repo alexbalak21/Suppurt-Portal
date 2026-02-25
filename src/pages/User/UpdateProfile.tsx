@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Avatar } from "../../components";
-import { EditableText } from "../../components";
-import { useUser, USER_ENDPOINTS } from "../../features/user";
-import { useAuth } from "../../features/auth";
+import { Button, Avatar, EditableText } from "@components";
+import { useUser, USER_ENDPOINTS } from "@features/user";
+import { useAuth } from "@features/auth";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import UpdateUserPassword from "./UpdateUserPassword";
 import { ArrowUpTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";

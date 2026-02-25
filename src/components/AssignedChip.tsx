@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUsers } from '../features/user/useUsers';
+import { useUsers } from '@features/user/useUsers';
 
 // Deprecated: Use UserBadge instead
 interface UserBadgeProps {

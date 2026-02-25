@@ -7,10 +7,10 @@ import {
 } from "@headlessui/react";
 import clsx from "clsx";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { useStatuses } from "../features/ticket/useStatuses";
-import { useAuth } from "../features/auth";
+import { useStatuses } from "@features/ticket/useStatuses";
+import { useAuth } from "@features/auth";
 import StatusBadge from "@components/StatusBadge"; // correct
-import type { BadgeColor } from "../features/theme/badgeColors";
+import type { BadgeColor } from "@features/theme/badgeColors";
 
 type StatusSelectorProps = {
   statusId?: number;

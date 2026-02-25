@@ -1,5 +1,5 @@
-import { colorClasses } from '../features/theme/badgeColors'
-import type { BadgeColor } from '../features/theme/badgeColors'
+import { colorClasses } from '@features/theme/badgeColors'
+import type { BadgeColor } from '@features/theme/badgeColors'
 
 interface BadgeProps {
   text?: string

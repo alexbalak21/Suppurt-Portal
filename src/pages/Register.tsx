@@ -3,9 +3,9 @@ import FormErrorMessage from "../components/FormErrorMessage";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastContainer";
 import { Button, Input } from "../components";
-import { register } from "../features/auth";
-import { useAuth } from "../features/auth";
-import { useUser } from "../features/user";
+import { register } from "@features/auth";
+import { useAuth } from "@features/auth";
+import { useUser } from "@features/user";
 
 interface RegisterFormData {
   name: string;

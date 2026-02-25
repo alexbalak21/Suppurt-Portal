@@ -3,9 +3,9 @@ import {useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastContainer";
 import FormErrorMessage from "../components/FormErrorMessage";
 import { Button, Input } from "../components";
-import { login } from "../features/auth";
-import { useAuth } from "../features/auth";
-import { useUser } from "../features/user";
+import { login } from "@features/auth";
+import { useAuth } from "@features/auth";
+import { useUser } from "@features/user";
 
 interface LoginFormData {
   email: string;

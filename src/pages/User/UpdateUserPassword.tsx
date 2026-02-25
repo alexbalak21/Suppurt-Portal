@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input } from '../../components';
-import { useAuth } from "../../features/auth";
-import { USER_ENDPOINTS } from "../../features/user";
-import { useToast } from "../../components/ToastContainer";
+import { Button, Input } from '@components';
+import { useAuth } from "@features/auth";
+import { USER_ENDPOINTS } from "@features/user";
+import { useToast } from "@components/ToastContainer";
 
 
 

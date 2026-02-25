@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from './Button';
 import AssignTicketModal from './AssignTicketModal';
-import { useAssignTicket } from '../features/ticket/useAssignTicket';
+import { useAssignTicket } from '@features/ticket/useAssignTicket';
 
 interface AssignTicketSelectorProps {
   ticketId: string | number;

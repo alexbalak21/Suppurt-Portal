@@ -2,7 +2,7 @@ import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/react"
 import {Bars3Icon, XMarkIcon} from "@heroicons/react/24/outline"
 import {useMemo} from "react"
 import {Link, useLocation} from "react-router-dom"
-import {useRole} from "../features/auth/useRole"
+import {useRole} from "@features/auth/useRole"
 import UserMenu from "./UserMenu"
 
 function classNames(...classes: Array<string | false | null | undefined>): string {

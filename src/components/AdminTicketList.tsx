@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import type { Ticket } from "../features/ticket/useTickets";
-import { usePriorities } from "../features/ticket/usePriorities";
-import { useStatuses } from "../features/ticket/useStatuses";
+import type { Ticket } from "@features/ticket/useTickets";
+import { usePriorities } from "@features/ticket/usePriorities";
+import { useStatuses } from "@features/ticket/useStatuses";
 import StatusChip from "./StatusChip";
 import { priorityDotColors } from "../utils/priorityDotColors";
 import UserBadge from "./UserBadge";
