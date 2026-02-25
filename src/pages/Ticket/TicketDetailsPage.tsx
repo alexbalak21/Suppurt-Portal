@@ -188,7 +188,7 @@ const TicketDetailsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="my-4 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800">
+        <div className="my-4 text-gray-700 min-h-[200px] dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800">
           <div dangerouslySetInnerHTML={{ __html: ticket.body }} />
         </div>
 
