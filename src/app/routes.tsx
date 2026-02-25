@@ -1,8 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
 import About from "../pages/About";
 import Login from "../pages/Login";
-import ApiDemo from "../pages/ApiDemo";
 import Register from "../pages/Register";
 import Profile from "../pages/User/Profile";
 import UpdateProfile from "../pages/User/UpdateProfile";
@@ -29,9 +27,7 @@ export function AppRoutes() {
   return (
     <Routes>
       {/* Normal pages without sidebar */}
-      <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/demo" element={<ApiDemo />} />
       <Route path="/create-ticket" element={<CreateTicketPage />} />
       <Route path="/ticket-list" element={<TicketListPage />} />
       <Route path="/ticket/:id" element={<TicketDetailsPage />} />

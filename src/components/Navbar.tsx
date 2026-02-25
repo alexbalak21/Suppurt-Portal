@@ -27,9 +27,9 @@ export default function Navbar({user}: NavbarProps) {
 
   const navLinks: NavLink[] = useMemo(
     () => [
-      {name: "Home", href: "/", show: true},
+      // {name: "Home", href: "/", show: true},
       {name: "About", href: "/about", show: isVisitor},
-      {name: "API Demo", href: "/demo", show: isUser || isSupport || isAdmin || isManager},
+      // {name: "API Demo", href: "/demo", show: isUser || isSupport || isAdmin || isManager},
       {name: "Create Ticket", href: "/create-ticket", show: isUser || isSupport || isAdmin || isManager},
       {name: "My Tickets", href: "/ticket-list", show: isUser},
       {name: "My Profile", href: "/user/profile", show: isUser || isManager},
