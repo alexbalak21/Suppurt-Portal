@@ -99,9 +99,9 @@ export default function Navbar({user}: NavbarProps) {
                 <Link to="/login" className="block text-gray-700 dark:text-gray-200 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
                   Login
                 </Link>
-                <Link to="/register" className="block text-indigo-600 dark:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                {/* <Link to="/register" className="block text-indigo-600 dark:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
                   Sign up
-                </Link>
+                </Link> */}
               </>
             )}
           </div>
