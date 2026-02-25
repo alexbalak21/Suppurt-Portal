@@ -89,14 +89,16 @@ export default function UpdateProfile() {
                   />
                   <ArrowUpTrayIcon className="h-6 w-6 text-gray-500" />
                 </label>
-                <button
-                  type="button"
-                  className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                  onClick={handleImageDelete}
-                  aria-label="Remove profile image"
-                >
-                  <XMarkIcon className="h-6 w-6 text-gray-500" />
-                </button>
+                {user.profileImage && (
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={handleImageDelete}
+                    aria-label="Remove profile image"
+                  >
+                    <XMarkIcon className="h-6 w-6 text-gray-500" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
