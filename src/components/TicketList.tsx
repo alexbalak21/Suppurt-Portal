@@ -30,9 +30,9 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
   const [sortKey, setSortKey] = useState<string>('id');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   // Local state for status filter if not controlled by parent
-  const [statusFilter, setStatusFilter] = useState<string>(statusFilterProp || '');
+  const [statusFilter] = useState<string>(statusFilterProp || '');
   // Local state for priority filter if not controlled by parent
-  const [priorityFilter, setPriorityFilter] = useState<string>(priorityFilterProp || '');
+  const [priorityFilter] = useState<string>(priorityFilterProp || '');
 
   const getPriorityName = (priorityId: number) => {
     const priority = priorities.find(p => p.id === priorityId);

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../../features/theme/useTheme";
 import type { Theme } from "../../features/theme/useTheme";
 import { useNavigate } from "react-router-dom";
-import { Button, EditableText, Avatar } from "../../components";
+import { Button, Avatar } from "../../components";
 import { useUser } from "../../features/user";
 import { useRole } from "../../features/auth/useRole";
 import SimpleSelect from "../../components/SimpleSelct";
@@ -11,7 +11,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user } = useUser();
   const { activeRole, setActiveRole } = useRole();
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   // Theme hook
   const { theme, setTheme } = useTheme();

@@ -10,7 +10,7 @@ interface MessageProps {
   updatedAt: string;
 }
 
-const Message: React.FC<MessageProps> = ({ id, senderId, body, createdAt, updatedAt }) => {
+const Message: React.FC<MessageProps> = ({ senderId, body, createdAt }) => {
   const { user } = useUser();
   const { users } = useUsers();
   const isCurrentUser = user?.id === senderId;

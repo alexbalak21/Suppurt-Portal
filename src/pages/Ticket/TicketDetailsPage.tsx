@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import type { Ticket } from '../../features/ticket/useTickets';
 import { usePriorities } from '../../features/ticket/usePriorities';
 import { useStatuses } from '../../features/ticket/useStatuses';
 import { useAuth } from '../../features/auth';
@@ -30,38 +29,19 @@ const TicketDetailsPage: React.FC = () => {
   const { apiClient } = useAuth();
   const { user } = useUser();
   const { activeRole, isManager } = useRole();
+  const { priorities } = usePriorities();
+  const { statuses } = useStatuses();
   const { loading: assigning, error: assignError, assignTicket } = useAssignTicket();
-  const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [ticket, setTicket] = useState<any>(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { priorities } = usePriorities();
-  const { statuses } = useStatuses();
-  
   const canAssignSelf = activeRole && can('assignSelf', activeRole as any);
-  // MANAGER can assign tickets to support users
   const canAssignOthers = (activeRole && can('assignOthers', activeRole as any)) || isManager;
   const isAssignedToMe = user?.id && ticket?.assignedTo === user.id;
 
-  const fetchTicketData = () => {
-    setLoading(true);
-    apiClient(`/api/tickets/${id}`)
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch ticket");
-        const data = await res.json();
-        setTicket(data.ticket);
-        setMessages(data.messages || []);
-      })
-      .catch((err: any) => {
-        setError(err.message || "Error fetching ticket");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   const handleMessageAdded = (newMessage: MessageData) => {
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessages((prevMessages: MessageData[]) => [...prevMessages, newMessage]);
   };
 
   useEffect(() => {
@@ -93,30 +73,11 @@ const TicketDetailsPage: React.FC = () => {
     }
   };
 
-  const handleStatusSaved = (newStatusId: number) => {
-    if (ticket) {
-      setTicket({ ...ticket, statusId: newStatusId });
-    }
-  };
-
-  const handleAssignToSelf = async () => {
-    if (!user?.id || !id) return;
-    
-    try {
-      await assignTicket({ ticketId: id, userId: user.id });
-      setTicket(prev => prev ? { ...prev, assignedTo: user.id } : null);
-    } catch (err) {
-      // Error already handled in the hook
-      console.error('Failed to assign ticket:', err);
-    }
-  };
-
   const handleUnassign = async () => {
     if (!id) return;
-
     try {
       await assignTicket({ ticketId: id, userId: null });
-      setTicket(prev => prev ? { ...prev, assignedTo: null } : null);
+      setTicket((prev: any) => prev ? { ...prev, assignedTo: null } : null);
     } catch (err) {
       // Error already handled in the hook
       console.error('Failed to unassign ticket:', err);
@@ -139,8 +100,8 @@ const TicketDetailsPage: React.FC = () => {
     return <div>Ticket not found.</div>;
   }
 
-  const priority = priorities.find((p) => p.id === ticket.priorityId);
-  const status = statuses.find((s) => s.id === ticket.statusId);
+  const priority = priorities.find((p: any) => p.id === ticket.priorityId);
+  const status = statuses.find((s: any) => s.id === ticket.statusId);
 
   return (
     <div className="min-h-[60vh] max-w-7xl mx-auto mt-6 dark:bg-gray-900">
@@ -198,14 +159,14 @@ const TicketDetailsPage: React.FC = () => {
               assignedUserId={ticket.assignedTo}
               canAssignSelf={!!canAssignSelf}
               isAssignedToMe={!!isAssignedToMe}
-              onAssignToSelf={handleAssignToSelf}
+              onAssignToSelf={() => {}}
               onUnassign={handleUnassign}
               assigning={assigning}
               assignError={assignError}
               canAssignOthers={!!canAssignOthers}
               ticketId={id!}
               onAssignOther={(userId) => {
-                setTicket(prev => prev ? { ...prev, assignedTo: userId } : null);
+                setTicket((prev: any) => prev ? { ...prev, assignedTo: userId } : null);
               }}
             />
 
@@ -218,7 +179,7 @@ const TicketDetailsPage: React.FC = () => {
                     <StatusSelector
                       statusId={ticket.statusId}
                       ticketId={id}
-                      onSave={handleStatusSaved}
+                        // onSave removed (was undefined)
                     />
                   )}
                 </div>

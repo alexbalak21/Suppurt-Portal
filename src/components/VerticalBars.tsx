@@ -11,7 +11,6 @@ interface VerticalBarsProps {
   minHeight?: number;
 }
 
-const BAR_WIDTH = 48; // px
 
 export function VerticalBars({
   data,

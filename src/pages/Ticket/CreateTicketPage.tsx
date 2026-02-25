@@ -17,7 +17,6 @@ export default function CreateTicketPage() {
     createTicket,
     loading: creating,
     error: createError,
-    success,
   } = useCreateTicket();
 
   const handleSubmit = async () => {

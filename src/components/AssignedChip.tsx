@@ -1,6 +1,5 @@
 import React from 'react';
 import { useUsers } from '../features/user/useUsers';
-import Avatar from './Avatar';
 
 // Deprecated: Use UserBadge instead
 interface UserBadgeProps {

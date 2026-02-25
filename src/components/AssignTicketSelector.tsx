@@ -15,7 +15,7 @@ const AssignTicketSelector: React.FC<AssignTicketSelectorProps> = ({
   currentAssignedUserId,
   onAssignSuccess,
 }) => {
-  const { loading: assigning, error, assignTicket } = useAssignTicket();
+  const { error, assignTicket } = useAssignTicket();
   const [modalOpen, setModalOpen] = useState(false);
 
   // Always use a number for ticketId
