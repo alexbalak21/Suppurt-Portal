@@ -32,7 +32,7 @@ export default function Navbar({user}: NavbarProps) {
       // {name: "API Demo", href: "/demo", show: isUser || isSupport || isAdmin || isManager},
       {name: "Create Ticket", href: "/create-ticket", show: isUser || isSupport || isAdmin || isManager},
       {name: "My Tickets", href: "/ticket-list", show: isUser},
-      {name: "My Profile", href: "/user/profile", show: isUser || isManager},
+      {name: "My Profile", href: "/user/profile", show: isUser},
       {name: "Dashboard", href: "/user/dashboard", show: isUser},
       {name: "Tickets", href: "/agent/tickets", show: isSupport},
       {name: "Support Dashboard", href: "/support/dashboard", show: isSupport},

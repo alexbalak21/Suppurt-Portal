@@ -55,8 +55,10 @@ export default function Login() {
       }
 
       toast.success("Login successful!");
-      // Redirect support role to /support/dashboard
-      if (response.data.user?.roles?.includes("SUPPORT")) {
+      // Redirect by role priority: MANAGER > SUPPORT > default
+      if (response.data.user?.roles?.includes("MANAGER")) {
+        navigate("/manager/dashboard");
+      } else if (response.data.user?.roles?.includes("SUPPORT")) {
         navigate("/support/dashboard");
       } else {
         navigate("/");

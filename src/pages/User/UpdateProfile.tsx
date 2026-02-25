@@ -66,7 +66,7 @@ export default function UpdateProfile() {
 
   return (
     <div className="min-h-[calc(100vh-65px)] ps-8 flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6 min-w-100 border border-gray-200 dark:border-gray-700">
+      <div className="max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6 min-w-100 border border-gray-200 dark:border-gray-700">
         {/* Upload profile image at the top */}
         <div className="flex justify-center mb-6">
           <div className="relative group">
