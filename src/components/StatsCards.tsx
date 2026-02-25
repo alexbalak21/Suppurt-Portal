@@ -29,7 +29,7 @@ export default function StatsCards({ tickets }: Props) {
       {statusCounts.map((s) => (
         <div
           key={s.id}
-          className="flex items-center bg-white dark:bg-gray-900 rounded-lg shadow p-4"
+          className="flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-4"
         >
           <span
             className={`w-3 h-3 rounded-full mr-3 ${s.colorClass}`}

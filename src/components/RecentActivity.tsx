@@ -29,7 +29,7 @@ export default function RecentActivity({ tickets }: Props) {
     .slice(0, 5);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 mb-6">
+    <div className="bg-white h-full border border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow p-4 mb-6">
       <div className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
         Recent Activity
       </div>

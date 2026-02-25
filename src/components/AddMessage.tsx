@@ -53,11 +53,11 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
   };
 
   return (
-    <div ref={sectionRef} className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900 mb-3">Add a Message</h3>
+    <div ref={sectionRef} className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Add a Message</h3>
       <form onSubmit={handleSubmit}>
         <textarea
-          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           rows={4}
           placeholder="Type your message here..."
           value={message}
@@ -65,7 +65,7 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
           disabled={isSubmitting}
         />
         {error && (
-          <div className="mt-2 text-sm text-red-600">{error}</div>
+          <div className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</div>
         )}
         <div className="mt-3 flex justify-end">
           <Button

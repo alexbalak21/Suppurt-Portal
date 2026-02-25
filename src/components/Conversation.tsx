@@ -16,8 +16,8 @@ interface ConversationProps {
 const Conversation: React.FC<ConversationProps> = ({ messages }) => {
   if (!messages || messages.length === 0) {
     return (
-      <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-        <p className="text-gray-500 text-center">No messages in this conversation yet.</p>
+      <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-6 bg-gray-50 dark:bg-gray-900">
+        <p className="text-gray-500 dark:text-gray-400 text-center">No messages in this conversation yet.</p>
       </div>
     );
   }

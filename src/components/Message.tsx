@@ -1,5 +1,5 @@
 import React from "react";
-import { useUser, useUsers } from "../features/user";
+import { useUser, useUsers } from "@features/user";
 import Avatar from "./Avatar";
 
 interface MessageProps {
@@ -30,10 +30,10 @@ const Message: React.FC<MessageProps> = ({ id, senderId, body, createdAt, update
       <div className="flex justify-end gap-3 items-start">
         <div className="flex flex-col items-end max-w-[70%]">
           <div className="flex flex-col items-end mb-1">
-            <span className="text-sm font-semibold text-gray-700">{user.name}</span>
-            <span className="text-xs text-gray-500">{formattedDate}</span>
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">{user.name}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{formattedDate}</span>
           </div>
-          <div className="bg-indigo-600 text-white rounded-lg p-4 shadow-sm text-base">
+          <div className="bg-indigo-600 text-white dark:bg-indigo-500 dark:text-white rounded-lg p-4 shadow-sm text-base">
             {body}
           </div>
         </div>
@@ -47,12 +47,12 @@ const Message: React.FC<MessageProps> = ({ id, senderId, body, createdAt, update
       <Avatar name={sender?.name ?? `User ${senderId}`} size={40} />
       <div className="flex flex-col items-start max-w-[70%]">
         <div className="flex flex-col items-start mb-1">
-          <span className="text-sm font-semibold text-gray-700">
+          <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
             {sender?.name ?? `User ${senderId}`}
           </span>
-          <span className="text-xs text-gray-500">{formattedDate}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{formattedDate}</span>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm text-base">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm text-base text-gray-900 dark:text-gray-100">
           {body}
         </div>
       </div>

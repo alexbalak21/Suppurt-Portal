@@ -25,13 +25,13 @@ export default function TicketsStatusBars({ tickets, maxY }: TicketsStatusBarsPr
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 py-1 rounded shadow-md dark:shadow-lg h-68 transition-colors duration-300">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 py-1 rounded shadow-md dark:shadow-lg h-68 transition-colors duration-300 overflow-hidden flex flex-col" style={{ height: '272px', minHeight: '272px', maxHeight: '272px' }}>
       <h3 className="font-semibold mb-1 text-center text-gray-800 dark:text-gray-50">
         Tickets Status
       </h3>
 
       {/* Chart takes all remaining height */}
-      <div className="h-[calc(100%-28px)] w-full">
+      <div className="flex-1 w-full overflow-hidden">
         <VerticalBars data={data} maxY={maxY} />
       </div>
     </div>

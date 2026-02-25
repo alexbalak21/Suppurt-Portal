@@ -1,6 +1,7 @@
 interface Bar {
   label: string;
   value: number;
+  color?: string;
 }
 
 interface Props {
@@ -25,10 +26,13 @@ export default function HorizontalBarChart({ title, bars }: Props) {
               <span>{b.value}</span>
             </div>
             
-            <div className="w-full bg-gray-200 dark:bg-gray-700 h-3 rounded">
+            <div className="w-full h-3 rounded bg-gray-200 dark:bg-gray-700">
               <div
-                className="h-3 rounded bg-indigo-500"
-                style={{ width: `${(b.value / max) * 100}%` }}
+                className="h-3 rounded"
+                style={{
+                  width: `${(b.value / max) * 100}%`,
+                  backgroundColor: b.color || '#6366f1',
+                }}
               />
             </div>
           </div>

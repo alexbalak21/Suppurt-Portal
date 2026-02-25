@@ -143,16 +143,16 @@ const TicketDetailsPage: React.FC = () => {
   const status = statuses.find((s) => s.id === ticket.statusId);
 
   return (
-    <div className="min-h-[60vh] max-w-7xl mx-auto mt-6">
-      <div className="border border-gray-300 w-full rounded-lg p-6 min-w-87.5 bg-white shadow-sm">
+    <div className="min-h-[60vh] max-w-7xl mx-auto mt-6 dark:bg-gray-900">
+      <div className="border border-gray-300 dark:border-gray-700 w-full rounded-lg p-6 min-w-87.5 bg-white dark:bg-gray-800 shadow-sm">
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
+            <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               {ticket.title}
             </h1>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-300">
               <span className="font-semibold">Created at:</span>{' '}
               <Tooltip
                 content={new Date(ticket.createdAt).toLocaleTimeString('en-GB', {
@@ -226,11 +226,11 @@ const TicketDetailsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="my-4 text-gray-700 border border-gray-300 rounded-lg py-2 px-3 h-[50vh]">
+        <div className="my-4 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 h-[50vh] bg-white dark:bg-gray-800">
           {ticket.body}
         </div>
 
-        <div className="mb-2 text-right text-sm text-gray-600">
+        <div className="mb-2 text-right text-sm text-gray-600 dark:text-gray-300">
           <span className="font-semibold">Updated at:</span>{' '}
           <Tooltip
             content={new Date(ticket.updatedAt).toLocaleTimeString('en-GB', {
@@ -251,8 +251,8 @@ const TicketDetailsPage: React.FC = () => {
 
         {ticket.resolvedAt && (
           <div className="mb-2">
-            <span className="font-semibold">Resolved at:</span>{' '}
-            {new Date(ticket.resolvedAt).toLocaleString()}
+            <span className="font-semibold dark:text-gray-300">Resolved at:</span>{' '}
+            <span className="dark:text-gray-200">{new Date(ticket.resolvedAt).toLocaleString()}</span>
           </div>
         )}
       </div>

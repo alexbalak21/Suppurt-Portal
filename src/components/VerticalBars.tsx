@@ -11,6 +11,8 @@ interface VerticalBarsProps {
   minHeight?: number;
 }
 
+const BAR_WIDTH = 48; // px
+
 export function VerticalBars({
   data,
   maxY,
@@ -30,7 +32,7 @@ export function VerticalBars({
         return (
           <div
             key={slice.label}
-            className="flex flex-col items-center flex-1"
+            className="flex flex-col items-center flex-1 min-w-0"
             style={{ height: "100%" }}
           >
             {/* BAR AREA */}
@@ -50,14 +52,14 @@ export function VerticalBars({
 
             {/* LABEL AREA */}
             <div
-              className="flex flex-col items-center justify-center mt-1 mb-1"
+              className="flex flex-col items-center justify-center mt-1 mb-1 text-center w-full"
               style={{ height: LABEL_HEIGHT }}
             >
-              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-tight">
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-tight w-full text-center">
                 {slice.label}
               </span>
 
-              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 w-full text-center">
                 {slice.value}
               </span>
             </div>

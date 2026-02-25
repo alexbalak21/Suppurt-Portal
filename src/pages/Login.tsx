@@ -55,7 +55,12 @@ export default function Login() {
       }
 
       toast.success("Login successful!");
-      navigate("/");
+      // Redirect support role to /support/dashboard
+      if (response.data.user?.roles?.includes("SUPPORT")) {
+        navigate("/support/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed. Please try again.";
       setError(errorMessage);
