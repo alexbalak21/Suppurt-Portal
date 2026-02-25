@@ -45,7 +45,7 @@ export function AppRoutes() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/update-profile" element={<UpdateProfile />} />
       <Route element={<UserLayout links={userLinks} position="left" />}>
-        <Route path="/update-password" element={<UpdateUserPassword />} />
+        <Route path="/update-password" element={<UpdateUserPassword onClose={() => {}} />} />
       </Route>
     </Routes>
   );
