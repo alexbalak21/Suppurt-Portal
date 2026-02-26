@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import About from "../pages/About";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -8,6 +8,8 @@ import UpdateUserPassword from "../pages/User/UpdateUserPassword";
 import UserDashboard from "../pages/User/userDashboard";
 import { UserLayout } from "../components";
 import { UserIcon, PencilSquareIcon, KeyIcon, HomeIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "@features/auth";
+import { useRole } from "@features/auth/useRole";
 
 import CreateTicketPage from "../pages/Ticket/CreateTicketPage";
 import TicketListPage from "../pages/Ticket/TicketListPage";
@@ -22,10 +24,24 @@ const userLinks = [
   { name: "Update Password", href: "/update-password", icon: KeyIcon },
 ];
 
+function RootRedirect() {
+  const { accessToken } = useAuth();
+  const { isManager, isSupport, isUser } = useRole();
+
+  if (!accessToken) return <Navigate to="/login" replace />;
+  if (isManager) return <Navigate to="/manager/dashboard" replace />;
+  if (isSupport) return <Navigate to="/support/dashboard" replace />;
+  if (isUser) return <Navigate to="/user/dashboard" replace />;
+  return <Navigate to="/login" replace />;
+}
+
 export function AppRoutes() {
   // You can add role-based logic here if needed, or keep this as the main route structure
   return (
     <Routes>
+      {/* Root redirect */}
+      <Route path="/" element={<RootRedirect />} />
+
       {/* Normal pages without sidebar */}
       <Route path="/about" element={<About />} />
       <Route path="/create-ticket" element={<CreateTicketPage />} />

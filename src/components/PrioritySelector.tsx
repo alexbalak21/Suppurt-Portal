@@ -114,6 +114,8 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
       setSaveError(null);
       const newPriorityId = await patchPriority({ ticketId, priorityId: selected.id });
       setHasChanged(false);
+      const priorityName = priorities.find(p => p.id === selected.id)?.name || 'Unknown';
+      (window as any).showToast?.(`Priority changed to ${priorityName}`, 'success');
       onSave?.(newPriorityId);
     } catch (err) {
       setSaveError(patchError || 'Failed to save priority');

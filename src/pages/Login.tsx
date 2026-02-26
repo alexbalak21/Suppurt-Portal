@@ -158,8 +158,13 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="text-center mb-4">
+          <span className="inline-block px-4 py-2 text-xs font-semibold tracking-widest rounded-full bg-indigo-100 text-blue-600 dark:bg-blue-900 dark:text-indigo-300">
+            Demo App
+          </span>
+        </div>
+        <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">
           Quick login as:
         </p>
         <div className="flex justify-center gap-3">
