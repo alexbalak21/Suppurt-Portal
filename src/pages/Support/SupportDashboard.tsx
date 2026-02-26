@@ -13,7 +13,7 @@ export default function SupportDashboard() {
   const [search, setSearch] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [unassignedFilter, setUnassignedFilter] = useState(false);
+  const [unassignedFilter] = useState(false);
   // priorities and statuses for filter bar
   const prioritiesFilter = [
     { id: 1, label: "Low", color: "#00C950" },
