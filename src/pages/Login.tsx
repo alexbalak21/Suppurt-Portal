@@ -165,7 +165,7 @@ export default function Login() {
         <div className="flex justify-center gap-3">
           <button
             type="button"
-            onClick={() => loginAs("manager@example.com")}
+            onClick={() => loginAs("michael.anderson@example.com")}
             disabled={isLoading}
             className="px-4 py-2 text-sm font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 transition-colors"
           >
@@ -173,7 +173,7 @@ export default function Login() {
           </button>
           <button
             type="button"
-            onClick={() => loginAs("gordon.freeman@example.com")}
+            onClick={() => loginAs("claire.dupont@example.com")}
             disabled={isLoading}
             className="px-4 py-2 text-sm font-medium rounded-lg bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
           >
@@ -181,7 +181,7 @@ export default function Login() {
           </button>
           <button
             type="button"
-            onClick={() => loginAs("sarah.connor@example.com")}
+            onClick={() => loginAs("daniel.martin@example.com")}
             disabled={isLoading}
             className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
