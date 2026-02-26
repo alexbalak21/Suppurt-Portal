@@ -89,6 +89,18 @@ export default function TicketListPage() {
           {...(activeRole === "SUPPORT" ? { myTicketsFilter, setMyTicketsFilter } : {})}
         />
       )}
+      {/* Search bar for USER role */}
+      {activeRole === "USER" && (
+        <div className="mb-4">
+          <input
+            type="text"
+            className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-800 dark:text-gray-100"
+            placeholder="Search by title..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
+        </div>
+      )}
       {/* MANAGER sees all tickets, like SUPPORT/ADMIN */}
       <TicketList
         tickets={filteredTickets}

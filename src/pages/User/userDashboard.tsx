@@ -1,6 +1,8 @@
 import { useRole } from "@features/auth/useRole";
 import { useTickets } from "@features/ticket/useTickets";
+import { useNavigate } from "react-router-dom";
 import TicketList from "@components/TicketList";
+import Button from "@components/Button";
 
 import StatsCards from "@components/StatsCards";
 import PriorityChart from "@components/PriorityChart";
@@ -9,6 +11,7 @@ import RecentActivity from "@components/RecentActivity";
 export default function UserDashboard() {
   const { isUser } = useRole();
   const { tickets, loading, error } = useTickets();
+  const navigate = useNavigate();
 
   if (!isUser) {
     return (
@@ -21,12 +24,21 @@ export default function UserDashboard() {
 
   return (
     <div className="max-w-5xl mx-auto px-2 py-6">
-      <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-gray-100">
-        Dashboard
-      </h1>
-
-      <div className="mb-8 text-gray-600 dark:text-gray-300">
-        Overview of your support tickets and recent activity.
+      <div className="flex items-center justify-between mb-2">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Dashboard
+          </h1>
+          <div className="mt-1 text-gray-600 dark:text-gray-300">
+            Overview of your support tickets and recent activity.
+          </div>
+        </div>
+        <Button
+          onClick={() => navigate("/create-ticket")}
+          className="bg-indigo-600 text-white hover:bg-indigo-700"
+        >
+          Create Ticket
+        </Button>
       </div>
 
       {loading ? (

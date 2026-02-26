@@ -19,8 +19,8 @@ export default function Login() {
   const { setUser, setActiveRole } = useUser();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "gordon.freeman@example.com",
-    password: "password1234",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,11 +55,13 @@ export default function Login() {
       }
 
       toast.success("Login successful!");
-      // Redirect by role priority: MANAGER > SUPPORT > default
+      // Redirect by role priority: MANAGER > SUPPORT > USER > default
       if (response.data.user?.roles?.includes("MANAGER")) {
         navigate("/manager/dashboard");
       } else if (response.data.user?.roles?.includes("SUPPORT")) {
         navigate("/support/dashboard");
+      } else if (response.data.user?.roles?.includes("USER")) {
+        navigate("/user/dashboard");
       } else {
         navigate("/");
       }
@@ -69,6 +71,10 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const loginAs = (email: string) => {
+    setFormData({ email, password: "password1234" });
   };
 
   return (
@@ -152,6 +158,38 @@ export default function Login() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
+        </div>
+      </div>
+
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
+        <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+          Quick login as:
+        </p>
+        <div className="flex justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => loginAs("manager@example.com")}
+            disabled={isLoading}
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 transition-colors"
+          >
+            Manager
+          </button>
+          <button
+            type="button"
+            onClick={() => loginAs("gordon.freeman@example.com")}
+            disabled={isLoading}
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+          >
+            Support
+          </button>
+          <button
+            type="button"
+            onClick={() => loginAs("sarah.connor@example.com")}
+            disabled={isLoading}
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            User
+          </button>
         </div>
       </div>
     </div>
