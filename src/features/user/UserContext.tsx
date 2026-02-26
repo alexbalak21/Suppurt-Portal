@@ -43,6 +43,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   // Prevent React Strict Mode from running the effect twice
   const didRun = useRef(false);
+  const prevApiClientRef = useRef<typeof apiClient | null>(null);
 
   // Load activeRole from localStorage on mount
   useEffect(() => {
@@ -69,6 +70,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("activeRole"); // Remove from storage on logout
       didRun.current = false; // Reset the ref when logging out
       return;
+    }
+
+    // Reset didRun if apiClient changed (new login/token) so we re-fetch user data
+    if (prevApiClientRef.current !== apiClient) {
+      didRun.current = false;
+      prevApiClientRef.current = apiClient;
     }
 
     if (didRun.current) return;
