@@ -14,6 +14,7 @@ export default function TicketListPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [unassignedFilter, setUnassignedFilter] = useState(false);
   // Get priorities and statuses for filter bar
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
@@ -36,6 +37,9 @@ export default function TicketListPage() {
     if (statusObj) {
       filteredTickets = filteredTickets.filter(ticket => ticket.statusId === statusObj.id);
     }
+  }
+  if (unassignedFilter) {
+    filteredTickets = filteredTickets.filter(ticket => !ticket.assignedTo);
   }
 
   // Determine page title and description based on role
@@ -74,6 +78,8 @@ export default function TicketListPage() {
           setStatusFilter={setStatusFilter}
           priorities={priorities}
           statuses={statuses}
+          unassignedFilter={unassignedFilter}
+          setUnassignedFilter={setUnassignedFilter}
         />
       )}
       {/* MANAGER sees all tickets, like SUPPORT/ADMIN */}

@@ -38,31 +38,6 @@ export default function TicketFilterBar({
 				onChange={e => setSearch(e.target.value)}
 			/>
 			<div className="flex items-center ml-4">
-								{/* Unassigned filter button */}
-								{setUnassignedFilter && (
-									<div className="flex items-center ml-2">
-										{!unassignedFilter ? (
-											<button
-												type="button"
-												className="px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 rounded hover:bg-yellow-400 hover:text-white transition-colors"
-												onClick={() => setUnassignedFilter(true)}
-												title="Show only unassigned tickets"
-											>
-												Unassigned
-											</button>
-										) : (
-											<button
-												type="button"
-												className="flex items-center px-3 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 transition-colors"
-												onClick={() => setUnassignedFilter(false)}
-												title="Clear unassigned filter"
-											>
-												<XCircleIcon className="h-6 w-6 mr-1" />
-												Unassigned
-											</button>
-										)}
-									</div>
-								)}
 				{priorityFilter && (
 					<button
 						type="button"
@@ -111,6 +86,29 @@ export default function TicketFilterBar({
 					))}
 				</select>
 			</div>
+			{/* Unassigned filter button */}
+			{setUnassignedFilter && (
+				<div className="flex items-center ml-4">
+					{unassignedFilter && (
+						<button
+							type="button"
+							className="w-7 ml-1 text-gray-400 hover:text-red-500 focus:outline-none"
+							onClick={() => setUnassignedFilter(false)}
+							title="Clear unassigned filter"
+						>
+							<XCircleIcon className="h-6 w-6 mr-1" />
+						</button>
+					)}
+					<button
+						type="button"
+						className={`px-3 py-2 rounded transition-colors ${unassignedFilter ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 hover:bg-indigo-400 hover:text-white'}`}
+						onClick={() => setUnassignedFilter(!unassignedFilter)}
+						title="Show only unassigned tickets"
+					>
+						Unassigned
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }

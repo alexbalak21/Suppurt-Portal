@@ -28,6 +28,7 @@ export default function ManagerDashboard() {
 	// Priority filter state
 	const [priorityFilter, setPriorityFilter] = useState("");
 	const [statusFilter, setStatusFilter] = useState("");
+	const [unassignedFilter, setUnassignedFilter] = useState(false);
 	// Filter tickets by search and priority
 	const filteredTickets = tickets
 		.filter(ticket => ticket.title.toLowerCase().includes(search.toLowerCase()))
@@ -40,6 +41,10 @@ export default function ManagerDashboard() {
 			if (!statusFilter) return true;
 			const statusObj = statuses.find(s => s.name.toLowerCase() === statusFilter.toLowerCase());
 			return statusObj ? ticket.statusId === statusObj.id : true;
+		})
+		.filter(ticket => {
+			if (!unassignedFilter) return true;
+			return !ticket.assignedTo;
 		});
 
 	useEffect(() => {
@@ -127,6 +132,8 @@ export default function ManagerDashboard() {
 					setStatusFilter={setStatusFilter}
 					priorities={priorities}
 					statuses={statuses}
+					unassignedFilter={unassignedFilter}
+					setUnassignedFilter={setUnassignedFilter}
 				/>
 				<TicketList tickets={filteredTickets} showAdminColumns={true} priorityFilter={priorityFilter} statusFilter={statusFilter} />
 			</div>

@@ -13,6 +13,7 @@ export default function SupportDashboard() {
   const [search, setSearch] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [unassignedFilter, setUnassignedFilter] = useState(false);
   // priorities and statuses for filter bar
   const prioritiesFilter = [
     { id: 1, label: "Low", color: "#00C950" },
@@ -47,6 +48,9 @@ export default function SupportDashboard() {
     if (statusObj) {
       filteredTickets = filteredTickets.filter(ticket => ticket.statusId === statusObj.id);
     }
+  }
+  if (unassignedFilter) {
+    filteredTickets = filteredTickets.filter(ticket => !ticket.assignedTo);
   }
 
   // Prepare data for DonutChart
