@@ -16,6 +16,7 @@ import { PriorityDisplay } from '@components/PriorityDisplay';
 import AssignedTo from '@components/AssignedTo';
 import Conversation from '@components/Conversation';
 import AddMessage from '@components/AddMessage';
+import Editor from '@components/Editor';
 
 interface MessageData {
   id: number;
@@ -225,13 +226,12 @@ const TicketDetailsPage: React.FC = () => {
         <div className="my-4 text-gray-700 min-h-[200px] dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800 relative">
           {editingBody ? (
             <>
-              <textarea
-                className="w-full min-h-[120px] p-2 border border-gray-400 rounded bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
-                value={editedBody}
-                onChange={e => setEditedBody(e.target.value)}
-                disabled={savingBody}
+              <Editor
+                content={editedBody}
+                setContent={setEditedBody}
+                placeholder="Edit ticket body..."
               />
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-5 mb-2 justify-end">
                 <button
                   className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-60"
                   onClick={handleSaveBody}
