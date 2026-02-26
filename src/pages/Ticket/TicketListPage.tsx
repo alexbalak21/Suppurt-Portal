@@ -79,7 +79,7 @@ export default function TicketListPage() {
       {/* MANAGER sees all tickets, like SUPPORT/ADMIN */}
       <TicketList
         tickets={filteredTickets}
-        showAdminColumns={canSeeAllColumns}
+        showAdminColumns={activeRole === "SUPPORT" ? false : canSeeAllColumns}
         statusFilter={statusFilter}
         priorityFilter={priorityFilter}
       />

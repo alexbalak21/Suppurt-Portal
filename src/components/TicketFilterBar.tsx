@@ -2,6 +2,7 @@
 
 import { XCircleIcon } from "@heroicons/react/24/outline";
 
+
 interface TicketFilterBarProps {
 	search: string;
 	setSearch: (v: string) => void;
@@ -11,6 +12,8 @@ interface TicketFilterBarProps {
 	setStatusFilter: (v: string) => void;
 	priorities: Array<{ id: number; name: string }>;
 	statuses: Array<{ id: number; name: string }>;
+	unassignedFilter?: boolean;
+	setUnassignedFilter?: (v: boolean) => void;
 }
 
 export default function TicketFilterBar({
@@ -22,9 +25,11 @@ export default function TicketFilterBar({
 	setStatusFilter,
 	priorities,
 	statuses,
+	unassignedFilter = false,
+	setUnassignedFilter,
 }: TicketFilterBarProps) {
 	return (
-		<div className="mb-4 flex justify-start items-center">
+		<div className="mb-4 flex flex-wrap gap-2 justify-start items-center">
 			<input
 				type="text"
 				className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-800 dark:text-gray-100"
@@ -33,6 +38,31 @@ export default function TicketFilterBar({
 				onChange={e => setSearch(e.target.value)}
 			/>
 			<div className="flex items-center ml-4">
+								{/* Unassigned filter button */}
+								{setUnassignedFilter && (
+									<div className="flex items-center ml-2">
+										{!unassignedFilter ? (
+											<button
+												type="button"
+												className="px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 rounded hover:bg-yellow-400 hover:text-white transition-colors"
+												onClick={() => setUnassignedFilter(true)}
+												title="Show only unassigned tickets"
+											>
+												Unassigned
+											</button>
+										) : (
+											<button
+												type="button"
+												className="flex items-center px-3 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 transition-colors"
+												onClick={() => setUnassignedFilter(false)}
+												title="Clear unassigned filter"
+											>
+												<XCircleIcon className="h-6 w-6 mr-1" />
+												Unassigned
+											</button>
+										)}
+									</div>
+								)}
 				{priorityFilter && (
 					<button
 						type="button"
