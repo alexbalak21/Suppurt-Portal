@@ -48,3 +48,7 @@
 .rsw-editor{
   border: none !important;
 }
+
+.rsw-ce {
+  min-height: 360px;
+}
