@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTickets } from "@features/ticket/useTickets";
 import { useRole } from "@features/auth/useRole";
+import { useUser } from "@features/user";
 import { can } from "@features/auth/permissions";
 import type { PermissionRole } from "@features/auth/permissions";
 import TicketList from "@components/TicketList";
@@ -11,10 +12,12 @@ import { useStatuses } from "@features/ticket/useStatuses";
 export default function TicketListPage() {
   const { tickets, loading, error } = useTickets();
   const { activeRole, isManager } = useRole();
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [unassignedFilter, setUnassignedFilter] = useState(false);
+  const [myTicketsFilter, setMyTicketsFilter] = useState(false);
   // Get priorities and statuses for filter bar
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
@@ -40,6 +43,9 @@ export default function TicketListPage() {
   }
   if (unassignedFilter) {
     filteredTickets = filteredTickets.filter(ticket => !ticket.assignedTo);
+  }
+  if (myTicketsFilter && user?.id) {
+    filteredTickets = filteredTickets.filter(ticket => ticket.assignedTo === user.id);
   }
 
   // Determine page title and description based on role
@@ -80,6 +86,7 @@ export default function TicketListPage() {
           statuses={statuses}
           unassignedFilter={unassignedFilter}
           setUnassignedFilter={setUnassignedFilter}
+          {...(activeRole === "SUPPORT" ? { myTicketsFilter, setMyTicketsFilter } : {})}
         />
       )}
       {/* MANAGER sees all tickets, like SUPPORT/ADMIN */}

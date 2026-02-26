@@ -14,6 +14,8 @@ interface TicketFilterBarProps {
 	statuses: Array<{ id: number; name: string }>;
 	unassignedFilter?: boolean;
 	setUnassignedFilter?: (v: boolean) => void;
+	myTicketsFilter?: boolean;
+	setMyTicketsFilter?: (v: boolean) => void;
 }
 
 export default function TicketFilterBar({
@@ -27,6 +29,8 @@ export default function TicketFilterBar({
 	statuses,
 	unassignedFilter = false,
 	setUnassignedFilter,
+	myTicketsFilter = false,
+	setMyTicketsFilter,
 }: TicketFilterBarProps) {
 	return (
 		<div className="mb-4 flex flex-wrap gap-2 justify-start items-center">
@@ -86,6 +90,7 @@ export default function TicketFilterBar({
 					))}
 				</select>
 			</div>
+			
 			{/* Unassigned filter button */}
 			{setUnassignedFilter && (
 				<div className="flex items-center ml-4">
@@ -101,11 +106,36 @@ export default function TicketFilterBar({
 					)}
 					<button
 						type="button"
-						className={`px-3 py-2 rounded transition-colors ${unassignedFilter ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 hover:bg-indigo-400 hover:text-white'}`}
-						onClick={() => setUnassignedFilter(!unassignedFilter)}
-						title="Show only unassigned tickets"
+						className={`px-3 py-2 rounded transition-colors ${myTicketsFilter ? 'opacity-50 cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100' : unassignedFilter ? 'bg-indigo-500 text-white hover:bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 hover:bg-indigo-400 hover:text-white'}`}
+						onClick={() => !myTicketsFilter && setUnassignedFilter(!unassignedFilter)}
+						disabled={myTicketsFilter}
+						title={myTicketsFilter ? 'Disable "My Tickets" first' : 'Show only unassigned tickets'}
 					>
 						Unassigned
+					</button>
+				</div>
+			)}
+			{/* My Tickets filter button */}
+			{setMyTicketsFilter && (
+				<div className="flex items-center ml-4">
+					{myTicketsFilter && (
+						<button
+							type="button"
+							className="w-7 ml-1 text-gray-400 hover:text-red-500 focus:outline-none"
+							onClick={() => setMyTicketsFilter(false)}
+							title="Clear my tickets filter"
+						>
+							<XCircleIcon className="h-6 w-6 mr-1" />
+						</button>
+					)}
+					<button
+						type="button"
+						className={`px-3 py-2 rounded transition-colors ${unassignedFilter ? 'opacity-50 cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100' : myTicketsFilter ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 hover:bg-green-400 hover:text-white'}`}
+						onClick={() => !unassignedFilter && setMyTicketsFilter(!myTicketsFilter)}
+						disabled={unassignedFilter}
+						title={unassignedFilter ? 'Disable "Unassigned" first' : 'Show only tickets assigned to me'}
+					>
+						My Tickets
 					</button>
 				</div>
 			)}
