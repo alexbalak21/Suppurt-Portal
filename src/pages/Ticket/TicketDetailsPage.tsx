@@ -85,6 +85,7 @@ const TicketDetailsPage: React.FC = () => {
     try {
       await assignTicket({ ticketId: id, userId: null });
       setTicket((prev: any) => prev ? { ...prev, assignedTo: null } : null);
+      (window as any).showToast?.('Ticket unassigned', 'error');
     } catch (err) {
       // Error already handled in the hook
       console.error('Failed to unassign ticket:', err);
@@ -188,7 +189,16 @@ const TicketDetailsPage: React.FC = () => {
               assignedUserId={ticket.assignedTo}
               canAssignSelf={!!canAssignSelf}
               isAssignedToMe={!!isAssignedToMe}
-              onAssignToSelf={() => {}}
+              onAssignToSelf={async () => {
+                if (!id || !user?.id) return;
+                try {
+                  await assignTicket({ ticketId: id, userId: user.id });
+                  setTicket((prev: any) => prev ? { ...prev, assignedTo: user.id } : null);
+                  (window as any).showToast?.('Ticket assigned to me', 'success');
+                } catch (err) {
+                  console.error('Failed to assign ticket:', err);
+                }
+              }}
               onUnassign={handleUnassign}
               assigning={assigning}
               assignError={assignError}

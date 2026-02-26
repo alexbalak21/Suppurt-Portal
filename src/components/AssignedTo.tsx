@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Tooltip from './Tooltip';
 import UserBadge from './UserBadge';
 import Button from './Button';
 import AssignTicketSelector from './AssignTicketSelector';
+import Confirm from './Confirm';
 
 interface AssignedToProps {
   assignedUserId?: number | null;
@@ -29,6 +30,8 @@ const AssignedTo: React.FC<AssignedToProps> = ({
   ticketId,
   onAssignOther,
 }) => {
+  const [showUnassignConfirm, setShowUnassignConfirm] = useState(false);
+
   return (
     <div className="flex flex-col items-start sm:items-end gap-2">
       <div className="flex items-center gap-2">
@@ -61,7 +64,7 @@ const AssignedTo: React.FC<AssignedToProps> = ({
         <div className="flex items-center gap-2">
           <span className="text-sm text-green-600 font-medium">✓ Assigned to you</span>
           <Button
-            onClick={onUnassign}
+            onClick={() => setShowUnassignConfirm(true)}
             disabled={assigning}
             size="sm"
             variant="danger"
@@ -71,6 +74,16 @@ const AssignedTo: React.FC<AssignedToProps> = ({
           >
             X
           </Button>
+          <Confirm
+            open={showUnassignConfirm}
+            title="Unassign Ticket"
+            message="Are you sure you want to unassign this ticket from yourself?"
+            onConfirm={() => {
+              setShowUnassignConfirm(false);
+              onUnassign();
+            }}
+            onCancel={() => setShowUnassignConfirm(false)}
+          />
         </div>
       )}
 

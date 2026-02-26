@@ -30,7 +30,7 @@ export default function Navbar({user}: NavbarProps) {
       // {name: "Home", href: "/", show: true},
       {name: "About", href: "/about", show: isVisitor},
       // {name: "API Demo", href: "/demo", show: isUser || isSupport || isAdmin || isManager},
-      {name: "Create Ticket", href: "/create-ticket", show: isUser || isSupport || isAdmin || isManager},
+      {name: "Create Ticket", href: "/create-ticket", show: isUser || isAdmin || isManager},
       {name: "My Tickets", href: "/ticket-list", show: isUser},
       {name: "My Profile", href: "/user/profile", show: isUser},
       {name: "Dashboard", href: "/user/dashboard", show: isUser},
