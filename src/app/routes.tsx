@@ -31,7 +31,7 @@ export function AppRoutes() {
       <Route path="/create-ticket" element={<CreateTicketPage />} />
       <Route path="/ticket-list" element={<TicketListPage />} />
       <Route path="/ticket/:id" element={<TicketDetailsPage />} />
-      <Route path="/agent/tickets" element={<TicketListPage />} />
+      <Route path="/support/tickets" element={<TicketListPage />} />
       <Route path="/support/dashboard" element={<SupportDashboard />} />
       <Route path="/manager/dashboard" element={<ManagerDashboard />} />
       <Route path="/login" element={<Login />} />

@@ -47,7 +47,7 @@ export default function PriorityChart({ tickets }: Props) {
   const gradient = `conic-gradient(${segments.join(", ")})`;
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
       <div className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-200">
         Tickets by Priority
       </div>

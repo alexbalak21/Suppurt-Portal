@@ -140,7 +140,7 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
               Title
             </th>
 
-            {/* Show Created By for support/admin/manager */}
+            {/* Always show Created By if showAdminColumns is true (SupportDashboard) */}
             {showAdminColumns && (
               <th
                 className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -169,13 +169,15 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
               </div>
             </th>
 
-            {/* Show Assigned To */}
-            <th
-              className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => handleSort('assignedTo')}
-            >
-              Assigned To{sortIndicator('assignedTo')}
-            </th>
+            {/* Hide Assigned To column if showAdminColumns is true (SupportDashboard) */}
+            {!showAdminColumns && (
+              <th
+                className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-700"
+                onClick={() => handleSort('assignedTo')}
+              >
+                Assigned To{sortIndicator('assignedTo')}
+              </th>
+            )}
 
             <th
               className="px-4 py-2 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -215,10 +217,10 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
                 </Link>
               </td>
 
-              {/* Created By Column */}
+              {/* Always show Created By if showAdminColumns is true (SupportDashboard) */}
               {showAdminColumns && (
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                   <UserBadge userId={ticket.createdBy} />
+                  <UserBadge userId={ticket.createdBy} />
                 </td>
               )}
 
@@ -238,14 +240,16 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
                 <StatusBadge text={getStatusName(ticket.statusId)} color={getStatusColor(ticket.statusId)} />
               </td>
 
-              {/* Assigned To Column */}
-              <td className="py-2 whitespace-nowrap text-center">
-                {ticket.assignedTo ? (
-                  <UserBadge userId={ticket.assignedTo} />
-                ) : (
-                  <UserBadge userId={null} />
-                )}
-              </td>
+              {/* Hide Assigned To column if showAdminColumns is true (SupportDashboard) */}
+              {!showAdminColumns && (
+                <td className="py-2 whitespace-nowrap text-center">
+                  {ticket.assignedTo ? (
+                    <UserBadge userId={ticket.assignedTo} />
+                  ) : (
+                    <UserBadge userId={null} />
+                  )}
+                </td>
+              )}
 
               {/* Created At Column */}
               <td className="px-4 py-2 whitespace-nowrap text-end text-sm text-gray-500 dark:text-gray-400">

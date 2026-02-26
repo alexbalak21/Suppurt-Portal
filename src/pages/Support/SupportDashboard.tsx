@@ -99,7 +99,7 @@ export default function SupportDashboard() {
           priorities={prioritiesFilter.map(p => ({ id: p.id, name: p.label }))}
           statuses={statuses}
         />
-        <TicketList tickets={filteredTickets} />
+        <TicketList tickets={filteredTickets} showAdminColumns={true} />
       </div>
     </div>
   );

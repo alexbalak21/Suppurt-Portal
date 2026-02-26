@@ -34,7 +34,7 @@ export default function Navbar({user}: NavbarProps) {
       {name: "My Tickets", href: "/ticket-list", show: isUser},
       {name: "My Profile", href: "/user/profile", show: isUser},
       {name: "Dashboard", href: "/user/dashboard", show: isUser},
-      {name: "Tickets", href: "/agent/tickets", show: isSupport},
+      {name: "All Tickets", href: "/support/tickets", show: isSupport},
       {name: "Support Dashboard", href: "/support/dashboard", show: isSupport},
       {name: "Manager Dashboard", href: "/manager/dashboard", show: isManager},
       {name: "All Tickets", href: "/ticket-list", show: isManager},
