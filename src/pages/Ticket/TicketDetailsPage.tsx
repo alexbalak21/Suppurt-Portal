@@ -37,6 +37,10 @@ const TicketDetailsPage: React.FC = () => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingBody, setEditingBody] = useState(false);
+  const [editedBody, setEditedBody] = useState('');
+  const [savingBody, setSavingBody] = useState(false);
+  const [bodyError, setBodyError] = useState<string | null>(null);
   const canAssignSelf = activeRole && can('assignSelf', activeRole as any);
   const canAssignOthers = (activeRole && can('assignOthers', activeRole as any)) || isManager;
   const isAssignedToMe = user?.id && ticket?.assignedTo === user.id;
@@ -103,6 +107,36 @@ const TicketDetailsPage: React.FC = () => {
 
   const priority = priorities.find((p: any) => p.id === ticket.priorityId);
   const status = statuses.find((s: any) => s.id === ticket.statusId);
+
+  const handleEditBody = () => {
+    setEditedBody(ticket.body || '');
+    setEditingBody(true);
+    setBodyError(null);
+  };
+
+  const handleCancelEditBody = () => {
+    setEditingBody(false);
+    setBodyError(null);
+  };
+
+  const handleSaveBody = async () => {
+    setSavingBody(true);
+    setBodyError(null);
+    try {
+      const res = await apiClient(`/api/tickets/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: editedBody }),
+      });
+      if (!res.ok) throw new Error('Failed to update ticket body');
+      setTicket((prev: any) => prev ? { ...prev, body: editedBody } : prev);
+      setEditingBody(false);
+    } catch (err: any) {
+      setBodyError(err.message || 'Failed to update body');
+    } finally {
+      setSavingBody(false);
+    }
+  };
 
   return (
     <div className="min-h-[60vh] max-w-7xl mx-auto mt-6 dark:bg-gray-900">
@@ -188,8 +222,36 @@ const TicketDetailsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="my-4 text-gray-700 min-h-[200px] dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800">
-          <div dangerouslySetInnerHTML={{ __html: ticket.body }} />
+        <div className="my-4 text-gray-700 min-h-[200px] dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800 relative">
+          {editingBody ? (
+            <>
+              <textarea
+                className="w-full min-h-[120px] p-2 border border-gray-400 rounded bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                value={editedBody}
+                onChange={e => setEditedBody(e.target.value)}
+                disabled={savingBody}
+              />
+              <div className="flex gap-2 mt-2">
+                <button
+                  className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-60"
+                  onClick={handleSaveBody}
+                  disabled={savingBody}
+                >
+                  {savingBody ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                  className="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500"
+                  onClick={handleCancelEditBody}
+                  disabled={savingBody}
+                >
+                  Cancel
+                </button>
+              </div>
+              {bodyError && <div className="text-red-500 mt-1">{bodyError}</div>}
+            </>
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: ticket.body }} />
+          )}
         </div>
 
         <div className="mb-2 text-right text-sm text-gray-600 dark:text-gray-300">
@@ -209,7 +271,19 @@ const TicketDetailsPage: React.FC = () => {
               })}
             </span>
           </Tooltip>
+           {/* Edit Ticket Body Button - bottom left */}
         </div>
+        <div className="flex">
+           {!editingBody && (
+        <button
+          className="px-4 py-2 ml-auto mt-5 mb-2 bg-yellow-500 text-white rounded shadow-lg hover:bg-yellow-600 transition-colors"
+          onClick={handleEditBody}
+        >
+          Edit Ticket
+        </button>
+      )}
+        </div>
+        
 
         {ticket.resolvedAt && (
           <div className="mb-2">
@@ -220,6 +294,8 @@ const TicketDetailsPage: React.FC = () => {
       </div>
 
       {/* MANAGER has access to all messages and notes */}
+
+     
       <div className="mt-6">
         <Conversation messages={messages} />
       </div>
