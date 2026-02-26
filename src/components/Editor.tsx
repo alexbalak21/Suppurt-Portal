@@ -50,13 +50,13 @@ export default function Editor({ content, setContent, placeholder }: EditorProps
 
   return (
     <EditorProvider>
-      <div className="overflow-y-auto max-h-96">
+      <div>
         <WysiwygEditor
           value={content}
           onChange={onChange}
           placeholder={typeof placeholder === 'string' ? placeholder : ''}
           className="
-          w-full h-64 p-2 bg-white shadow-sm
+          w-full p-2 bg-white shadow-sm
           dark:bg-gray-700 dark:text-gray-100
           border border-gray-200 rounded-b-sm dark:border-gray-500
           focus-within:border-gray-300

@@ -6,6 +6,7 @@ import { useAuth } from '@features/auth';
 import { useRole } from '@features/auth/useRole';
 import { useUser } from '@features/user';
 import { useAssignTicket } from '@features/ticket/useAssignTicket';
+import { usePatchTicketBody } from '@features/ticket/usePatchTicketBody';
 import { can } from '@features/auth/permissions';
 import StatusBadge from '@components/StatusBadge';
 import type { Colors } from '@features/theme/colors';
@@ -40,8 +41,8 @@ const TicketDetailsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editingBody, setEditingBody] = useState(false);
   const [editedBody, setEditedBody] = useState('');
-  const [savingBody, setSavingBody] = useState(false);
   const [bodyError, setBodyError] = useState<string | null>(null);
+  const { loading: savingBody, error: patchBodyError, patchBody } = usePatchTicketBody();
   const canAssignSelf = activeRole && can('assignSelf', activeRole as any);
   const canAssignOthers = (activeRole && can('assignOthers', activeRole as any)) || isManager;
   const isAssignedToMe = user?.id && ticket?.assignedTo === user.id;
@@ -121,21 +122,13 @@ const TicketDetailsPage: React.FC = () => {
   };
 
   const handleSaveBody = async () => {
-    setSavingBody(true);
     setBodyError(null);
     try {
-      const res = await apiClient(`/api/tickets/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: editedBody }),
-      });
-      if (!res.ok) throw new Error('Failed to update ticket body');
-      setTicket((prev: any) => prev ? { ...prev, body: editedBody } : prev);
+      const updatedTicket = await patchBody({ ticketId: id!, body: editedBody });
+      setTicket(updatedTicket);
       setEditingBody(false);
     } catch (err: any) {
-      setBodyError(err.message || 'Failed to update body');
-    } finally {
-      setSavingBody(false);
+      setBodyError(err.message || patchBodyError || 'Failed to update body');
     }
   };
 
@@ -223,7 +216,7 @@ const TicketDetailsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="my-4 text-gray-700 min-h-[200px] dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800 relative">
+        <div className="my-4 text-gray-700 min-h-50 dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg py-2 px-3 bg-white dark:bg-gray-800 relative">
           {editingBody ? (
             <>
               <Editor
@@ -274,14 +267,14 @@ const TicketDetailsPage: React.FC = () => {
            {/* Edit Ticket Body Button - bottom left */}
         </div>
         <div className="flex">
-           {!editingBody && (
-        <button
-          className="px-4 py-2 ml-auto mt-5 mb-2 bg-yellow-500 text-white rounded shadow-lg hover:bg-yellow-600 transition-colors"
-          onClick={handleEditBody}
-        >
-          Edit Ticket
-        </button>
-      )}
+          {!editingBody && user?.id === ticket.createdBy && (
+            <button
+              className="px-4 py-2 ml-auto mt-5 mb-2 bg-yellow-500 text-white rounded shadow-lg hover:bg-yellow-600 transition-colors"
+              onClick={handleEditBody}
+            >
+              Edit Ticket
+            </button>
+          )}
         </div>
         
 
