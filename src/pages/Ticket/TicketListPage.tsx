@@ -105,6 +105,7 @@ export default function TicketListPage() {
       <TicketList
         tickets={filteredTickets}
         showAdminColumns={activeRole === "SUPPORT" ? false : canSeeAllColumns}
+        showAssignedTo={isManager || undefined}
         statusFilter={statusFilter}
         priorityFilter={priorityFilter}
       />

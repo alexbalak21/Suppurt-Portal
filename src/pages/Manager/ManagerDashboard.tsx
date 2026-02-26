@@ -89,7 +89,7 @@ export default function ManagerDashboard() {
 	const unassignedCount = tickets.filter(t => !t.assignedTo).length;
 	const slices = [
 		...agentSlices,
-		{ label: "Unassigned", value: unassignedCount, color: "#d1d5db" },
+		{ label: "Unassigned", value: unassignedCount, color: "#99A1AF" },
 	];
 
 	// Use hex values from priorityDotColors for priorities
@@ -135,7 +135,7 @@ export default function ManagerDashboard() {
 					unassignedFilter={unassignedFilter}
 					setUnassignedFilter={setUnassignedFilter}
 				/>
-				<TicketList tickets={filteredTickets} showAdminColumns={true} priorityFilter={priorityFilter} statusFilter={statusFilter} />
+				<TicketList tickets={filteredTickets} showAdminColumns={true} showAssignedTo={true} priorityFilter={priorityFilter} statusFilter={statusFilter} />
 			</div>
 			<AssignTicketModal
 				open={assignModal.open}

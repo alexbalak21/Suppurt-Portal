@@ -11,6 +11,7 @@ import { priorityDotColors } from "@utils/priorityDotColors";
 interface TicketListProps {
   tickets: Ticket[];
   showAdminColumns?: boolean;
+  showAssignedTo?: boolean;
   statusFilter?: string; // status name to filter by (e.g., "Resolved", "Open")
   priorityFilter?: string; // priority name to filter by (e.g., "High", "Low")
 }
@@ -23,7 +24,8 @@ function getPriorityColor(priorityId?: number) {
   return priorityDotColors[priorityId as keyof typeof priorityDotColors];
 }
 
-export default function TicketList({ tickets, showAdminColumns = false, statusFilter: statusFilterProp, priorityFilter: priorityFilterProp }: TicketListProps) {
+export default function TicketList({ tickets, showAdminColumns = false, showAssignedTo, statusFilter: statusFilterProp, priorityFilter: priorityFilterProp }: TicketListProps) {
+  const displayAssignedTo = showAssignedTo !== undefined ? showAssignedTo : !showAdminColumns;
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
 
@@ -169,8 +171,8 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
               </div>
             </th>
 
-            {/* Hide Assigned To column if showAdminColumns is true (SupportDashboard) */}
-            {!showAdminColumns && (
+            {/* Assigned To column */}
+            {displayAssignedTo && (
               <th
                 className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase cursor-pointer select-none transition-colors duration-150 hover:bg-gray-200 dark:hover:bg-gray-700"
                 onClick={() => handleSort('assignedTo')}
@@ -240,13 +242,13 @@ export default function TicketList({ tickets, showAdminColumns = false, statusFi
                 <StatusBadge text={getStatusName(ticket.statusId)} color={getStatusColor(ticket.statusId)} />
               </td>
 
-              {/* Hide Assigned To column if showAdminColumns is true (SupportDashboard) */}
-              {!showAdminColumns && (
+              {/* Assigned To column */}
+              {displayAssignedTo && (
                 <td className="py-2 whitespace-nowrap text-center">
                   {ticket.assignedTo ? (
                     <UserBadge userId={ticket.assignedTo} />
                   ) : (
-                    <UserBadge userId={null} />
+                    <span className="text-indigo-600 font-semibold text-sm">Unassigned</span>
                   )}
                 </td>
               )}
