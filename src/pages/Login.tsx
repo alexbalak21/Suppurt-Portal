@@ -30,32 +30,18 @@ export default function Login() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const doLogin = async (email: string, password: string) => {
     setError(null);
-
-    if (!formData.email.trim() || !formData.password) {
-      setError("Please enter both email and password");
-      return;
-    }
-
     setIsLoading(true);
-
     try {
-      const response = await login({ email: formData.email, password: formData.password });
-
-      // Store token and user
-
+      const response = await login({ email, password });
       setAccessToken(response.data.access_token);
       setRefreshToken(response.data.refresh_token ?? null);
       setUser(response.data.user);
-      // Set activeRole to first available role after login
       if (response.data.user?.roles?.length) {
         setActiveRole(response.data.user.roles[0]);
       }
-
       toast.success("Login successful!");
-      // Redirect by role priority: MANAGER > SUPPORT > USER > default
       if (response.data.user?.roles?.includes("MANAGER")) {
         navigate("/manager/dashboard");
       } else if (response.data.user?.roles?.includes("SUPPORT")) {
@@ -73,8 +59,19 @@ export default function Login() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email.trim() || !formData.password) {
+      setError("Please enter both email and password");
+      return;
+    }
+    await doLogin(formData.email, formData.password);
+  };
+
   const loginAs = (email: string) => {
-    setFormData({ email, password: "password1234" });
+    const password = "password1234";
+    setFormData({ email, password });
+    doLogin(email, password);
   };
 
   return (

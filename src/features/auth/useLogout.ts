@@ -45,7 +45,8 @@ export function useLogout() {
       setUser(null);
       setActiveRole(null);
       setLoading(false);
-      navigate("/");
+      (window as any).showToast?.('Logged out successfully', 'info');
+      navigate("/login");
     }
   };
 
