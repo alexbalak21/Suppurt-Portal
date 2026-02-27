@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../auth";
+import { useMemo } from "react";
+import { useAllUsers } from "./UsersContext";
 
 export interface BasicUser {
   id: number;
@@ -7,38 +7,22 @@ export interface BasicUser {
   roles: string[];
 }
 
+const ROLE_MAP: Record<number, string> = {
+  1: "USER",
+  2: "MANAGER",
+  3: "SUPPORT",
+  4: "ADMIN",
+};
+
 export function useUsers(filter?: { role?: number }) {
-  const { apiClient } = useAuth();
-  const [users, setUsers] = useState<BasicUser[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { allUsers, loading, error } = useAllUsers();
 
-  useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-
-    let url = "/api/users";
-    if (filter?.role) {
-      url += `?role=${filter.role}`;
-    }
-
-    apiClient(url)
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch users");
-        const data = await res.json();
-        if (isMounted) setUsers(data);
-      })
-      .catch((err: any) => {
-        if (isMounted) setError(err.message || "Error fetching users");
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [apiClient, filter?.role]);
+  const users = useMemo(() => {
+    if (!filter?.role) return allUsers;
+    const roleName = ROLE_MAP[filter.role];
+    if (!roleName) return allUsers;
+    return allUsers.filter((u) => u.roles.includes(roleName));
+  }, [allUsers, filter?.role]);
 
   return { users, loading, error };
 }
