@@ -218,7 +218,9 @@ const TicketDetailsPage: React.FC = () => {
                     <StatusSelector
                       statusId={ticket.statusId}
                       ticketId={id}
-                        // onSave removed (was undefined)
+                      onSave={(newStatusId) => {
+                        setTicket((prev: any) => prev ? { ...prev, statusId: newStatusId } : null);
+                      }}
                     />
                   )}
                 </div>

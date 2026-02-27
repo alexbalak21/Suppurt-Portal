@@ -92,7 +92,7 @@ export default function SupportDashboard() {
 
       {/* Table of assigned tickets */}
       <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">My Assigned Tickets</h2>
+        <h2 className="text-xl font-semibold mb-4">My Tickets</h2>
         <TicketFilterBar
           search={search}
           setSearch={setSearch}
