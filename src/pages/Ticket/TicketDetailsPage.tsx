@@ -18,6 +18,7 @@ import AssignedTo from '@components/AssignedTo';
 import Conversation from '@components/Conversation';
 import AddMessage from '@components/AddMessage';
 import Editor from '@components/Editor';
+import { Spinner } from '@components/Spinner';
 
 interface MessageData {
   id: number;
@@ -95,7 +96,7 @@ const TicketDetailsPage: React.FC = () => {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-        <span>Loading...</span>
+        <Spinner size="md" color="primary" />
       </div>
     );
   }

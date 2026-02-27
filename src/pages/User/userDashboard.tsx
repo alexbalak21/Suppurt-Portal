@@ -7,6 +7,7 @@ import Button from "@components/Button";
 import StatsCards from "@components/StatsCards";
 import PriorityChart from "@components/PriorityChart";
 import RecentActivity from "@components/RecentActivity";
+import { Spinner } from "@components/Spinner";
 
 export default function UserDashboard() {
   const { isUser } = useRole();
@@ -42,7 +43,9 @@ export default function UserDashboard() {
       </div>
 
       {loading ? (
-        <div className="text-center py-10 text-gray-400">Loading...</div>
+        <div className="flex justify-center items-center py-10">
+          <Spinner size="md" color="primary" />
+        </div>
       ) : error ? (
         <div className="text-center py-10 text-red-500">{error}</div>
       ) : (

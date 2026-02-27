@@ -10,6 +10,7 @@ import { usePatchTicketPriority } from "@features/ticket/usePatchTicketPriority"
 import { ChevronDownIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { priorityDotColors } from "../utils/priorityDotColors";
+import { Spinner } from "./Spinner";
 import type { ReactNode } from 'react'
 
 export type SelectOption = {
@@ -124,9 +125,9 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
 
   if (loading || options.length === 0) {
     return (
-      <span className="inline-flex items-center gap-2 px-2 py-1 rounded border border-gray-300 text-sm text-gray-500">
-        Loading...
-      </span>
+      <div className="flex justify-center items-center py-1.5">
+        <Spinner size="sm" color="primary" />
+      </div>
     );
   }
 

@@ -1,4 +1,5 @@
 import { useRole } from "@features/auth/useRole";
+import { useUser } from "@features/user/UserContext";
 import { useTickets } from "@features/ticket/useTickets";
 import { useUsers } from "@features/user/useUsers";
 import TicketsStatusBars from "@components/TicketsStatusBars";
@@ -19,6 +20,7 @@ import {Spinner} from "@components/Spinner";
 export default function ManagerDashboard() {
 	// All hooks must be called unconditionally and in the same order
 	const { isManager } = useRole();
+	const { user } = useUser();
 	const { tickets, loading, error } = useTickets();
 	const { users } = useUsers({ role: 3 });
 	const { priorities } = usePriorities();
@@ -52,12 +54,12 @@ export default function ManagerDashboard() {
 		console.log('Users:', users);
 	}, [users]);
 
+	if (!user || loading) return (
+		<div className="p-8 flex justify-center items-center">
+			<Spinner size="md" color="primary" />
+		</div>
+	);
 	if (!isManager) return <div className="p-8 text-red-600">Access denied.</div>;
-		if (loading) return (
-				<div className="p-8 flex justify-center items-center">
-					<Spinner size="md" color="primary" />
-				</div>
-			);
 	if (error) return <div className="p-8 text-red-600">{error}</div>;
 
 	// Handler stub for assignment

@@ -6,6 +6,7 @@ import { Button, Avatar } from "@components";
 import { useUser } from "@features/user";
 import { useRole } from "@features/auth/useRole";
 import SimpleSelect from "@components/SimpleSelct";
+import { Spinner } from "@components/Spinner";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -20,7 +21,11 @@ export default function Profile() {
 
 
   if (loading) {
-    return <div className="text-center p-8 dark:bg-gray-900 dark:text-white">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center p-8 dark:bg-gray-900">
+        <Spinner size="md" color="primary" />
+      </div>
+    );
   }
 
   if (!user) {
