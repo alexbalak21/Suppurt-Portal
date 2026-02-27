@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import type { AuthContextType } from "./auth.types";
+import { debug, debugWarn, debugError } from "@/shared/lib/debug";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -81,18 +82,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // -----------------------------
   const refreshAccessToken = useCallback(async (): Promise<string | null> => {
     if (isRefreshing.current) {
-      console.debug('[AuthContext] refreshAccessToken: Already refreshing, queueing subscriber');
+      debug('[AuthContext] refreshAccessToken: Already refreshing, queueing subscriber');
       return new Promise(resolve => {
         refreshSubscribers.current.push(resolve);
       });
     }
 
     isRefreshing.current = true;
-    console.debug('[AuthContext] refreshAccessToken: Starting refresh with refreshToken', refreshToken);
+    debug('[AuthContext] refreshAccessToken: Starting refresh with refreshToken', refreshToken);
 
     try {
       if (!refreshToken) {
-        console.warn('[AuthContext] refreshAccessToken: No refresh token, clearing tokens');
+        debugWarn('[AuthContext] refreshAccessToken: No refresh token, clearing tokens');
         refreshSubscribers.current.forEach(cb => cb(null));
         refreshSubscribers.current = [];
         clearAccessToken();
@@ -107,10 +108,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ refresh_token: refreshToken })
       });
 
-      console.debug('[AuthContext] refreshAccessToken: /auth/refresh response', response.status, response);
+      debug('[AuthContext] refreshAccessToken: /auth/refresh response', response.status);
 
       if (!response.ok) {
-        console.warn('[AuthContext] refreshAccessToken: Refresh failed, clearing tokens');
+        debugWarn('[AuthContext] refreshAccessToken: Refresh failed, clearing tokens');
         refreshSubscribers.current.forEach(cb => cb(null));
         refreshSubscribers.current = [];
         clearAccessToken();
@@ -121,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newToken = data.data.access_token;
       const newRefreshToken = data.data.refresh_token ?? refreshToken;
 
-      console.debug('[AuthContext] refreshAccessToken: Got new tokens', { newToken, newRefreshToken });
+      debug('[AuthContext] refreshAccessToken: Got new tokens');
       setAccessToken(newToken);
       setRefreshToken(newRefreshToken);
 
@@ -130,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return newToken;
     } catch (err) {
-      console.error('[AuthContext] refreshAccessToken: Exception', err);
+      debugError('[AuthContext] refreshAccessToken: Exception', err);
       refreshSubscribers.current.forEach(cb => cb(null));
       refreshSubscribers.current = [];
       clearAccessToken();
@@ -166,49 +167,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // First attempt
       const response = await makeRequest(accessToken);
-      console.debug('[AuthContext] apiClient: Response', {
-        url: resolvedUrl,
-        status: response.status,
-        headers: Object.fromEntries(response.headers.entries())
-      });
+      debug('[AuthContext] apiClient: Response', { url: resolvedUrl, status: response.status });
 
       const expired = response.headers.get("X-Token-Expired") === "true";
       if (!expired) return response;
 
-      console.warn('[AuthContext] apiClient: Token expired, attempting refresh');
+      debugWarn('[AuthContext] apiClient: Token expired, attempting refresh');
       // Refresh
       const newToken = await refreshAccessToken();
       if (!newToken) {
-        console.error('[AuthContext] apiClient: Refresh failed, returning original response');
+        debugError('[AuthContext] apiClient: Refresh failed, returning original response');
         return response;
       }
 
       // Retry once
-      console.debug('[AuthContext] apiClient: Retrying request with new token');
+      debug('[AuthContext] apiClient: Retrying request with new token');
       return makeRequest(newToken);
     },
     [accessToken, refreshAccessToken]
   );
 
   const value = useMemo(
-    () => {
-      console.log("[AuthContext] value:", {
-        accessToken,
-        refreshToken,
-        authenticated: !!accessToken
-      });
-      return {
-        accessToken,
-        refreshToken,
-        setAccessToken,
-        setRefreshToken,
-        clearAccessToken,
-        clearRefreshToken,
-        authenticated: !!accessToken,
-        refreshAccessToken,
-        apiClient
-      };
-    },
+    () => ({
+      accessToken,
+      refreshToken,
+      setAccessToken,
+      setRefreshToken,
+      clearAccessToken,
+      clearRefreshToken,
+      authenticated: !!accessToken,
+      refreshAccessToken,
+      apiClient,
+    }),
     [accessToken, refreshToken, refreshAccessToken, apiClient, clearAccessToken, clearRefreshToken]
   );
 

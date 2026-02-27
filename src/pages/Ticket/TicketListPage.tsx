@@ -8,6 +8,7 @@ import TicketList from "@components/TicketList";
 import TicketFilterBar from "@components/TicketFilterBar";
 import { usePriorities } from "@features/ticket/usePriorities";
 import { useStatuses } from "@features/ticket/useStatuses";
+import { useDebouncedValue } from "@/shared/lib/useDebouncedValue";
 
 export default function TicketListPage() {
   const { tickets, loading, error } = useTickets();
@@ -18,15 +19,18 @@ export default function TicketListPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [unassignedFilter, setUnassignedFilter] = useState(false);
   const [myTicketsFilter, setMyTicketsFilter] = useState(false);
-  // Get priorities and statuses for filter bar
+  // Get priorities and statuses for filter bar — served from cache (staleTime: Infinity)
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
 
+  // Debounce the text search so filtering doesn't run on every keystroke
+  const debouncedSearch = useDebouncedValue(searchQuery, 250);
+
   // Filter tickets based on search query
   let filteredTickets = tickets;
-  if (searchQuery) {
+  if (debouncedSearch) {
     filteredTickets = filteredTickets.filter(ticket =>
-      ticket.title.toLowerCase().includes(searchQuery.toLowerCase())
+      ticket.title.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
   }
   if (priorityFilter) {

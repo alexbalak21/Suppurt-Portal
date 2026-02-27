@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./AuthContext";
 import { useUser } from "../user";
 import { useNavigate } from "react-router-dom";
+import { debug, debugWarn } from "@/shared/lib/debug";
 
 export function useLogout() {
   const { apiClient, clearAccessToken, clearRefreshToken, accessToken, refreshToken } = useAuth();
   const { setUser, setActiveRole } = useUser();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,16 +33,16 @@ export function useLogout() {
     } finally {
       // Clear all localStorage and sessionStorage for a clean logout
       try {
-        // Only remove auth-related keys, preserve theme
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("activeRole");
-        // Do NOT clear themeMode
         sessionStorage.clear();
-        console.log('[useLogout] Cleared auth keys from localStorage and all sessionStorage');
+        debug('[useLogout] Cleared auth keys from localStorage and all sessionStorage');
       } catch (e) {
-        console.warn('[useLogout] Failed to clear storage:', e);
+        debugWarn('[useLogout] Failed to clear storage:', e);
       }
+      // Clear all React Query cached data so no stale user data persists
+      queryClient.clear();
       clearAccessToken();
       clearRefreshToken();
       setUser(null);

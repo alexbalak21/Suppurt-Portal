@@ -8,13 +8,14 @@ import HorizontalBarChart from "@components/HorizontalBarChart";
 import { ManagerPriorityMatrix } from "@components/ManagerPriorityMatrix";
 import AssignTicketModal from "@components/AssignTicketModal";
 import TicketList from "@components/TicketList";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { usePriorities } from "@features/ticket/usePriorities";
 import { priorityDotColors } from "@features/theme/priorityDotColors";
 import ManagerStatsCards from "@components/ManagerStatsCards";
 import TicketFilterBar from "@components/TicketFilterBar";
 import { useStatuses } from "@features/ticket/useStatuses";
 import {Spinner} from "@components/Spinner";
+import { useDebouncedValue } from "@/shared/lib/useDebouncedValue";
 
 
 export default function ManagerDashboard() {
@@ -31,9 +32,11 @@ export default function ManagerDashboard() {
 	const [priorityFilter, setPriorityFilter] = useState("");
 	const [statusFilter, setStatusFilter] = useState("");
 	const [unassignedFilter, setUnassignedFilter] = useState(false);
+	// Debounce text search to avoid filtering on every keystroke
+	const debouncedSearch = useDebouncedValue(search, 250);
 	// Filter tickets by search and priority
 	const filteredTickets = tickets
-		.filter(ticket => ticket.title.toLowerCase().includes(search.toLowerCase()))
+		.filter(ticket => ticket.title.toLowerCase().includes(debouncedSearch.toLowerCase()))
 		.filter(ticket => {
 			if (!priorityFilter) return true;
 			const priorityObj = priorities.find(p => p.name.toLowerCase() === priorityFilter.toLowerCase());
@@ -48,11 +51,6 @@ export default function ManagerDashboard() {
 			if (!unassignedFilter) return true;
 			return !ticket.assignedTo;
 		});
-
-	useEffect(() => {
-		console.log('ManagerDashboardLegacy mounted');
-		console.log('Users:', users);
-	}, [users]);
 
 	if (!user || loading) return (
 		<div className="p-8 flex justify-center items-center">

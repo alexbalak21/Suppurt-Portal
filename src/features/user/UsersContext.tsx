@@ -1,5 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../auth";
+import { USERS_KEY } from "../ticket/queryKeys";
 import type { BasicUser } from "./useUsers";
 
 interface UsersContextType {
@@ -12,46 +14,30 @@ const UsersContext = createContext<UsersContextType | undefined>(undefined);
 
 export function UsersProvider({ children }: { children: React.ReactNode }) {
   const { apiClient, authenticated } = useAuth();
-  const [allUsers, setAllUsers] = useState<BasicUser[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!authenticated) {
-      setAllUsers([]);
-      setLoading(false);
-      return;
-    }
-
-    let isMounted = true;
-    setLoading(true);
-
-    apiClient("/api/users")
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch users");
-        const data = await res.json();
-        // Handle both plain array and wrapped { data: [...] } response formats
-        const list: BasicUser[] = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-          ? data.data
-          : [];
-        if (isMounted) setAllUsers(list);
-      })
-      .catch((err: any) => {
-        if (isMounted) setError(err.message || "Error fetching users");
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [authenticated, apiClient]);
+  const { data, isPending, error } = useQuery({
+    queryKey: USERS_KEY,
+    queryFn: async () => {
+      const res = await apiClient("/api/users");
+      if (!res.ok) throw new Error("Failed to fetch users");
+      const data = await res.json();
+      const list: BasicUser[] = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.data)
+        ? data.data
+        : [];
+      return list;
+    },
+    enabled: authenticated,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   return (
-    <UsersContext.Provider value={{ allUsers, loading, error }}>
+    <UsersContext.Provider value={{
+      allUsers: data ?? [],
+      loading: isPending && authenticated,
+      error: error?.message ?? null,
+    }}>
       {children}
     </UsersContext.Provider>
   );

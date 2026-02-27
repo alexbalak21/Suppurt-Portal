@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../auth";
+import { TICKETS_KEY } from "./queryKeys";
 
 interface CreateTicketPayload {
   title: string;
@@ -9,15 +10,10 @@ interface CreateTicketPayload {
 
 export function useCreateTicket() {
   const { apiClient } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const queryClient = useQueryClient();
 
-  const createTicket = async (payload: CreateTicketPayload) => {
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
-    try {
+  const mutation = useMutation({
+    mutationFn: async (payload: CreateTicketPayload) => {
       const res = await apiClient("/api/tickets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,15 +27,20 @@ export function useCreateTicket() {
         } catch {}
         throw new Error(message);
       }
-      setSuccess(true);
-      return await res.json();
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+      return res.json();
+    },
 
-  return { createTicket, loading, error, success };
+    onSuccess: () => {
+      // Invalidate the ticket list cache so the new ticket appears immediately
+      queryClient.invalidateQueries({ queryKey: TICKETS_KEY });
+    },
+  });
+
+  return {
+    createTicket: (payload: CreateTicketPayload) => mutation.mutateAsync(payload),
+    loading: mutation.isPending,
+    error: mutation.error?.message ?? null,
+    success: mutation.isSuccess,
+  };
 }
+

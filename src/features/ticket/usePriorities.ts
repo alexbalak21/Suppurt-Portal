@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../auth";
+import { PRIORITIES_KEY } from "./queryKeys";
 
 export interface Priority {
   id: number;
@@ -11,29 +12,22 @@ export interface Priority {
 
 export function usePriorities() {
   const { apiClient } = useAuth();
-  const [priorities, setPriorities] = useState<Priority[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    apiClient("/api/priorities")
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch priorities");
-        const data = await res.json();
-        if (isMounted) setPriorities(data);
-      })
-      .catch((err: any) => {
-        if (isMounted) setError(err.message || "Error fetching priorities");
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [apiClient]);
+  const { data, isPending, error } = useQuery({
+    queryKey: PRIORITIES_KEY,
+    queryFn: async () => {
+      const res = await apiClient("/api/priorities");
+      if (!res.ok) throw new Error("Failed to fetch priorities");
+      return res.json() as Promise<Priority[]>;
+    },
+    // Priorities never change — cache forever for the session
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
-  return { priorities, loading, error };
+  return {
+    priorities: data ?? [],
+    loading: isPending,
+    error: error?.message ?? null,
+  };
 }

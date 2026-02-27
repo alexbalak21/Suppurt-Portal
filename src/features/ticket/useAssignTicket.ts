@@ -1,47 +1,64 @@
-import { useState } from 'react';
-import { useAuth } from '../auth';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../auth";
+import { TICKETS_KEY, MY_ASSIGNED_TICKETS_KEY, ticketDetailKey } from "./queryKeys";
+import type { Ticket } from "./useTickets";
 
 type AssignTicketParams = {
   ticketId: string | number;
   userId: number | null;
 };
 
-type UseAssignTicketReturn = {
-  loading: boolean;
-  error: string | null;
-  assignTicket: (params: AssignTicketParams) => Promise<void>;
-};
-
-export const useAssignTicket = (): UseAssignTicketReturn => {
+export const useAssignTicket = () => {
   const { apiClient } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const assignTicket = async ({ ticketId, userId }: AssignTicketParams) => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  const mutation = useMutation({
+    mutationFn: async ({ ticketId, userId }: AssignTicketParams) => {
       const response = await apiClient(`/api/tickets/${ticketId}/assign`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: userId }),
       });
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to assign ticket');
+        throw new Error(errorData.message || "Failed to assign ticket");
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
 
-  return { loading, error, assignTicket };
+    onMutate: async ({ ticketId, userId }) => {
+      await queryClient.cancelQueries({ queryKey: TICKETS_KEY });
+      await queryClient.cancelQueries({ queryKey: MY_ASSIGNED_TICKETS_KEY });
+      await queryClient.cancelQueries({ queryKey: ticketDetailKey(String(ticketId)) });
+
+      const previousTickets = queryClient.getQueryData(TICKETS_KEY);
+      const previousAssigned = queryClient.getQueryData(MY_ASSIGNED_TICKETS_KEY);
+      const previousDetail = queryClient.getQueryData(ticketDetailKey(String(ticketId)));
+
+      const patcher = (old: Ticket[] | undefined) =>
+        old?.map(t => t.id === Number(ticketId) ? { ...t, assignedTo: userId } : t) ?? [];
+      queryClient.setQueryData(TICKETS_KEY, patcher);
+      queryClient.setQueryData(MY_ASSIGNED_TICKETS_KEY, patcher);
+      queryClient.setQueryData(ticketDetailKey(String(ticketId)), (old: any) =>
+        old ? { ...old, ticket: { ...old.ticket, assignedTo: userId } } : old
+      );
+
+      return { previousTickets, previousAssigned, previousDetail };
+    },
+
+    onError: (_err, { ticketId }, context) => {
+      if (context?.previousTickets !== undefined)
+        queryClient.setQueryData(TICKETS_KEY, context.previousTickets);
+      if (context?.previousAssigned !== undefined)
+        queryClient.setQueryData(MY_ASSIGNED_TICKETS_KEY, context.previousAssigned);
+      if (context?.previousDetail !== undefined)
+        queryClient.setQueryData(ticketDetailKey(String(ticketId)), context.previousDetail);
+    },
+  });
+
+  return {
+    loading: mutation.isPending,
+    error: mutation.error?.message ?? null,
+    assignTicket: (params: AssignTicketParams) => mutation.mutateAsync(params),
+  };
 };
+

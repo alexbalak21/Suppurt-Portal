@@ -1,47 +1,42 @@
-import { useState } from 'react';
-import { useAuth } from '../auth';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../auth";
+import { ticketDetailKey } from "./queryKeys";
 
 export type PatchTicketBodyParams = {
   ticketId: string | number;
   body: string;
 };
 
-export type UsePatchTicketBodyReturn = {
-  loading: boolean;
-  error: string | null;
-  patchBody: (params: PatchTicketBodyParams) => Promise<any>; // returns updated ticket
-};
-
-export const usePatchTicketBody = (): UsePatchTicketBodyReturn => {
+export const usePatchTicketBody = () => {
   const { apiClient } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const patchBody = async ({ ticketId, body }: PatchTicketBodyParams) => {
-    setLoading(true);
-    setError(null);
-    try {
+  const mutation = useMutation({
+    mutationFn: async ({ ticketId, body }: PatchTicketBodyParams) => {
       const response = await apiClient(`/api/tickets/${ticketId}/body`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ body }),
       });
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to update ticket body');
+        throw new Error(errorData.message || "Failed to update ticket body");
       }
-      const updatedTicket = await response.json();
-      return updatedTicket;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+      return response.json();
+    },
 
-  return { loading, error, patchBody };
+    onSuccess: (updatedTicket, { ticketId }) => {
+      // Merge the updated ticket body into the cached detail
+      queryClient.setQueryData(ticketDetailKey(String(ticketId)), (old: any) =>
+        old ? { ...old, ticket: updatedTicket } : old
+      );
+    },
+  });
+
+  return {
+    loading: mutation.isPending,
+    error: mutation.error?.message ?? null,
+    patchBody: (params: PatchTicketBodyParams) => mutation.mutateAsync(params),
+  };
 };
+

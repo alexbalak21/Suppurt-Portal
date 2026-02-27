@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../auth";
+import { STATUSES_KEY } from "./queryKeys";
 
 export interface Status {
   id: number;
@@ -10,29 +11,22 @@ export interface Status {
 
 export function useStatuses() {
   const { apiClient } = useAuth();
-  const [statuses, setStatuses] = useState<Status[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    apiClient("/api/status")
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch statuses");
-        const data = await res.json();
-        if (isMounted) setStatuses(data);
-      })
-      .catch((err: any) => {
-        if (isMounted) setError(err.message || "Error fetching statuses");
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [apiClient]);
+  const { data, isPending, error } = useQuery({
+    queryKey: STATUSES_KEY,
+    queryFn: async () => {
+      const res = await apiClient("/api/status");
+      if (!res.ok) throw new Error("Failed to fetch statuses");
+      return res.json() as Promise<Status[]>;
+    },
+    // Statuses never change — cache forever for the session
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
-  return { statuses, loading, error };
+  return {
+    statuses: data ?? [],
+    loading: isPending,
+    error: error?.message ?? null,
+  };
 }

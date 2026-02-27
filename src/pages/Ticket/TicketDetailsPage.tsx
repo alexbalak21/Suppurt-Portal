@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { usePriorities } from '@features/ticket/usePriorities';
 import { useStatuses } from '@features/ticket/useStatuses';
-import { useAuth } from '@features/auth';
 import { useRole } from '@features/auth/useRole';
 import { useUser } from '@features/user';
 import { useAssignTicket } from '@features/ticket/useAssignTicket';
 import { usePatchTicketBody } from '@features/ticket/usePatchTicketBody';
+import { useTicketDetail } from '@features/ticket/useTicketDetail';
+import { ticketDetailKey } from '@features/ticket/queryKeys';
+import type { MessageData } from '@features/ticket/useTicketDetail';
 import { can } from '@features/auth/permissions';
 import StatusBadge from '@components/StatusBadge';
 import type { Colors } from '@features/theme/colors';
@@ -20,76 +23,49 @@ import AddMessage from '@components/AddMessage';
 import Editor from '@components/Editor';
 import { Spinner } from '@components/Spinner';
 
-interface MessageData {
-  id: number;
-  senderId: number;
-  body: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 const TicketDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { apiClient } = useAuth();
+  const queryClient = useQueryClient();
   const { user } = useUser();
   const { activeRole, isManager } = useRole();
   const { priorities } = usePriorities();
   const { statuses } = useStatuses();
   const { loading: assigning, error: assignError, assignTicket } = useAssignTicket();
-  const [ticket, setTicket] = useState<any>(null);
-  const [messages, setMessages] = useState<MessageData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { loading: savingBody, error: patchBodyError, patchBody } = usePatchTicketBody();
+
+  // Single query for ticket + messages â€” served from cache on revisit
+  const { data, isPending: loading, error: queryError } = useTicketDetail(id);
+  const ticket = data?.ticket ?? null;
+  const messages = data?.messages ?? [];
+
   const [editingBody, setEditingBody] = useState(false);
   const [editedBody, setEditedBody] = useState('');
   const [bodyError, setBodyError] = useState<string | null>(null);
-  const { loading: savingBody, error: patchBodyError, patchBody } = usePatchTicketBody();
+
   const canAssignSelf = activeRole && can('assignSelf', activeRole as any);
   const canAssignOthers = (activeRole && can('assignOthers', activeRole as any)) || isManager;
   const isAssignedToMe = user?.id && ticket?.assignedTo === user.id;
 
+  // Append new message to the cached detail without triggering a refetch
   const handleMessageAdded = (newMessage: MessageData) => {
-    setMessages((prevMessages: MessageData[]) => [...prevMessages, newMessage]);
+    queryClient.setQueryData(ticketDetailKey(id!), (old: any) =>
+      old ? { ...old, messages: [...(old.messages ?? []), newMessage] } : old
+    );
   };
 
-  useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    apiClient(`/api/tickets/${id}`)
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch ticket");
-        const data = await res.json();
-        if (isMounted) {
-          setTicket(data.ticket);
-          setMessages(data.messages || []);
-        }
-      })
-      .catch((err: any) => {
-        if (isMounted) setError(err.message || "Error fetching ticket");
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [id, apiClient]);
-
-  const handlePrioritySaved = (newPriorityId: number) => {
-    if (ticket) {
-      setTicket({ ...ticket, priorityId: newPriorityId });
-    }
+  const handleCancelEditBody = () => {
+    setEditingBody(false);
+    setBodyError(null);
   };
 
-  const handleUnassign = async () => {
-    if (!id) return;
+  const handleSaveBody = async () => {
+    setBodyError(null);
     try {
-      await assignTicket({ ticketId: id, userId: null });
-      setTicket((prev: any) => prev ? { ...prev, assignedTo: null } : null);
-      (window as any).showToast?.('Ticket unassigned', 'error');
-    } catch (err) {
-      // Error already handled in the hook
-      console.error('Failed to unassign ticket:', err);
+      await patchBody({ ticketId: id!, body: editedBody });
+      // Cache is updated in usePatchTicketBody's onSuccess
+      setEditingBody(false);
+    } catch (err: any) {
+      setBodyError(err.message || patchBodyError || 'Failed to update body');
     }
   };
 
@@ -101,37 +77,21 @@ const TicketDetailsPage: React.FC = () => {
     );
   }
 
-  if (error) {
-    return <div style={{ color: 'red' }}>Error: {error}</div>;
+  if (queryError) {
+    return <div style={{ color: 'red' }}>Error: {queryError.message}</div>;
   }
 
   if (!ticket) {
     return <div>Ticket not found.</div>;
   }
 
-  const priority = priorities.find((p: any) => p.id === ticket.priorityId);
-  const status = statuses.find((s: any) => s.id === ticket.statusId);
+  const priority = priorities.find((p) => p.id === ticket.priorityId);
+  const status = statuses.find((s) => s.id === ticket.statusId);
 
   const handleEditBody = () => {
     setEditedBody(ticket.body || '');
     setEditingBody(true);
     setBodyError(null);
-  };
-
-  const handleCancelEditBody = () => {
-    setEditingBody(false);
-    setBodyError(null);
-  };
-
-  const handleSaveBody = async () => {
-    setBodyError(null);
-    try {
-      const updatedTicket = await patchBody({ ticketId: id!, body: editedBody });
-      setTicket(updatedTicket);
-      setEditingBody(false);
-    } catch (err: any) {
-      setBodyError(err.message || patchBodyError || 'Failed to update body');
-    }
   };
 
   return (
@@ -178,7 +138,9 @@ const TicketDetailsPage: React.FC = () => {
                     priorityId={ticket.priorityId}
                     priorityName={priority?.name}
                     ticketId={id}
-                    onSave={handlePrioritySaved}
+                    onSave={() => {
+                      // Cache is already updated optimistically by usePatchTicketPriority
+                    }}
                   />
                 )}
               </span>
@@ -194,19 +156,26 @@ const TicketDetailsPage: React.FC = () => {
                 if (!id || !user?.id) return;
                 try {
                   await assignTicket({ ticketId: id, userId: user.id });
-                  setTicket((prev: any) => prev ? { ...prev, assignedTo: user.id } : null);
                   (window as any).showToast?.('Ticket assigned to me', 'success');
                 } catch (err) {
                   console.error('Failed to assign ticket:', err);
                 }
               }}
-              onUnassign={handleUnassign}
+              onUnassign={async () => {
+                if (!id) return;
+                try {
+                  await assignTicket({ ticketId: id, userId: null });
+                  (window as any).showToast?.('Ticket unassigned', 'error');
+                } catch (err) {
+                  console.error('Failed to unassign ticket:', err);
+                }
+              }}
               assigning={assigning}
               assignError={assignError}
               canAssignOthers={!!canAssignOthers}
               ticketId={id!}
-              onAssignOther={(userId) => {
-                setTicket((prev: any) => prev ? { ...prev, assignedTo: userId } : null);
+              onAssignOther={() => {
+                // Cache is already updated optimistically by useAssignTicket
               }}
             />
 
@@ -219,8 +188,8 @@ const TicketDetailsPage: React.FC = () => {
                     <StatusSelector
                       statusId={ticket.statusId}
                       ticketId={id}
-                      onSave={(newStatusId) => {
-                        setTicket((prev: any) => prev ? { ...prev, statusId: newStatusId } : null);
+                      onSave={() => {
+                        // Cache is already updated optimistically by usePatchTicketStatus
                       }}
                     />
                   )}
@@ -277,7 +246,6 @@ const TicketDetailsPage: React.FC = () => {
               })}
             </span>
           </Tooltip>
-           {/* Edit Ticket Body Button - bottom left */}
         </div>
         <div className="flex">
           {!editingBody && user?.id === ticket.createdBy && (
@@ -289,7 +257,6 @@ const TicketDetailsPage: React.FC = () => {
             </button>
           )}
         </div>
-        
 
         {ticket.resolvedAt && (
           <div className="mb-2">
@@ -299,9 +266,6 @@ const TicketDetailsPage: React.FC = () => {
         )}
       </div>
 
-      {/* MANAGER has access to all messages and notes */}
-
-     
       <div className="mt-6">
         <Conversation messages={messages} />
       </div>

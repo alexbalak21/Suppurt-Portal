@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "../auth";
 import type { UserInfo, UserContextType, Role } from "./user.types";
 import { USER_ENDPOINTS } from "./user.endpoints";
+import { debug, debugWarn } from "@/shared/lib/debug";
 
 type RawUser = {
   id: number;
@@ -22,8 +23,6 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
  */
 function normalizeUserData(data: RawUser): UserInfo {
   const roles = Array.isArray(data.roles) ? data.roles : (data.role ? [data.role] : []);
-  console.log("[UserContext] normalizeUserData input:", data);
-  console.log("[UserContext] normalizeUserData output roles:", roles);
   return {
     id: data.id,
     name: data.name,
@@ -38,7 +37,6 @@ function normalizeUserData(data: RawUser): UserInfo {
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [activeRole, setActiveRoleState] = useState<Role | null>(null);
-  console.log('[UserProvider] RENDER user:', user, 'activeRole:', activeRole);
   const { apiClient, authenticated } = useAuth();
 
   // Prevent React Strict Mode from running the effect twice
@@ -49,7 +47,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const storedRole = localStorage.getItem("activeRole");
     if (storedRole) {
-      console.log('[UserProvider] Loaded activeRole from localStorage:', storedRole);
+      debug('[UserProvider] Loaded activeRole from localStorage:', storedRole);
       setActiveRoleState(storedRole);
     }
   }, []);
@@ -57,18 +55,18 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   // Save activeRole to localStorage when it changes
   useEffect(() => {
     if (activeRole) {
-      console.log('[UserProvider] Saving activeRole to localStorage:', activeRole);
+      debug('[UserProvider] Saving activeRole to localStorage:', activeRole);
       localStorage.setItem("activeRole", activeRole);
     }
   }, [activeRole]);
 
   useEffect(() => {
     if (!authenticated) {
-      console.log('[UserProvider] Not authenticated, clearing user and activeRole');
+      debug('[UserProvider] Not authenticated, clearing user and activeRole');
       setUser(null);
       setActiveRoleState(null);
-      localStorage.removeItem("activeRole"); // Remove from storage on logout
-      didRun.current = false; // Reset the ref when logging out
+      localStorage.removeItem("activeRole");
+      didRun.current = false;
       return;
     }
 
@@ -84,20 +82,19 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const fetchUser = async () => {
       try {
         const response = await apiClient(USER_ENDPOINTS.me);
-        console.log("[UserContext] /auth/me response:", response);
+          debug('[UserContext] /auth/me response status:', response.status);
 
         if (response.ok) {
           const userData = await response.json();
-          console.log("[UserContext] /auth/me userData:", userData);
+          debug('[UserContext] /auth/me userdata received');
           const normalized = normalizeUserData(userData);
           setUser(normalized);
-          // If activeRole is not in user's roles, set to first role
           setActiveRoleState((prev) => {
             if (prev && normalized.roles.includes(prev)) {
-              console.log('[UserProvider] activeRole remains:', prev);
+              debug('[UserProvider] activeRole remains:', prev);
               return prev;
             }
-            console.log('[UserProvider] Setting activeRole to first user role:', normalized.roles[0]);
+            debug('[UserProvider] Setting activeRole to first user role:', normalized.roles[0]);
             return normalized.roles[0] || null;
           });
         } else {
@@ -105,7 +102,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           setActiveRoleState(null);
         }
       } catch (err) {
-        console.log("[UserContext] fetchUser error:", err);
+        debugWarn('[UserContext] fetchUser error:', err);
         setUser(null);
         setActiveRoleState(null);
       }
@@ -115,17 +112,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [authenticated, apiClient]);
 
   const setActiveRole = (role: Role | null) => {
-    console.log('[UserProvider] setActiveRole called with:', role);
+    debug('[UserProvider] setActiveRole called with:', role);
     if (role && user && user.roles.includes(role)) {
       setActiveRoleState(role);
       localStorage.setItem("activeRole", role);
-      console.log('[UserProvider] setActiveRole updated state and localStorage:', role);
     } else if (role === null) {
       setActiveRoleState(null);
       localStorage.removeItem("activeRole");
-      console.log('[UserProvider] setActiveRole cleared state and localStorage');
     } else {
-      console.log('[UserProvider] setActiveRole: user does not have role', role, user?.roles);
+      debugWarn('[UserProvider] setActiveRole: user does not have role', role, user?.roles);
     }
   };
 

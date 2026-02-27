@@ -1,4 +1,7 @@
 import { useMyAssignedTickets } from "@features/ticket/useMyAssignedTickets";
+import { usePriorities } from "@features/ticket/usePriorities";
+import { useStatuses } from "@features/ticket/useStatuses";
+import { useDebouncedValue } from "@/shared/lib/useDebouncedValue";
 import TicketList from "@components/TicketList";
 import TicketsStatusBars from "@components/TicketsStatusBars";
 import DonutChart from "@components/DonutChart";
@@ -10,35 +13,22 @@ import HorizontalBarChart from "@components/HorizontalBarChart";
 
 export default function SupportDashboard() {
   const { tickets } = useMyAssignedTickets();
+  // Use real priority/status data (cached from previous fetches — staleTime: Infinity)
+  const { priorities } = usePriorities();
+  const { statuses } = useStatuses();
   const [search, setSearch] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [unassignedFilter] = useState(false);
-  // priorities and statuses for filter bar
-  const prioritiesFilter = [
-    { id: 1, label: "Low", color: "#00C950" },
-    { id: 2, label: "Medium", color: "#fbbf24" },
-    { id: 3, label: "High", color: "#FF6900" },
-    { id: 4, label: "Critical", color: "#FB2C36" },
-  ];
-  const statuses = [
-    { id: 1, name: "Open" },
-    { id: 2, name: "In Progress" },
-    { id: 3, name: "Waiting" },
-    { id: 4, name: "On Hold" },
-    { id: 5, name: "Resolved" },
-    { id: 6, name: "Closed" },
-    { id: 7, name: "Canceled" },
-  ];
+  const debouncedSearch = useDebouncedValue(search, 250);
   // Filter tickets
   let filteredTickets = tickets;
-  if (search) {
+  if (debouncedSearch) {
     filteredTickets = filteredTickets.filter(ticket =>
-      ticket.title.toLowerCase().includes(search.toLowerCase())
+      ticket.title.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
   }
   if (priorityFilter) {
-    const priorityObj = prioritiesFilter.find(p => p.label === priorityFilter);
+    const priorityObj = priorities.find(p => p.name === priorityFilter);
     if (priorityObj) {
       filteredTickets = filteredTickets.filter(ticket => ticket.priorityId === priorityObj.id);
     }
@@ -49,23 +39,20 @@ export default function SupportDashboard() {
       filteredTickets = filteredTickets.filter(ticket => ticket.statusId === statusObj.id);
     }
   }
-  if (unassignedFilter) {
-    filteredTickets = filteredTickets.filter(ticket => !ticket.assignedTo);
-  }
 
   // Prepare data for DonutChart
-  const slices = prioritiesFilter.map(p => ({
-    label: p.label,
+  const slices = priorities.map(p => ({
+    label: p.name,
     value: tickets.filter(t => t.priorityId === p.id).length,
     color: p.color,
   }));
 
-    // Prepare data for HorizontalBarChart (Tickets by Priority)
-    const ticketsByPriority = prioritiesFilter.map(p => ({
-      label: p.label,
-      value: tickets.filter(t => t.priorityId === p.id).length,
-      color : p.color,
-    }));
+  // Prepare data for HorizontalBarChart (Tickets by Priority)
+  const ticketsByPriority = priorities.map(p => ({
+    label: p.name,
+    value: tickets.filter(t => t.priorityId === p.id).length,
+    color: p.color,
+  }));
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
@@ -100,7 +87,7 @@ export default function SupportDashboard() {
           setPriorityFilter={setPriorityFilter}
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
-          priorities={prioritiesFilter.map(p => ({ id: p.id, name: p.label }))}
+          priorities={priorities}
           statuses={statuses}
         />
         <TicketList tickets={filteredTickets} showAdminColumns={true} />

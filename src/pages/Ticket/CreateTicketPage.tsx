@@ -34,8 +34,8 @@ export default function CreateTicketPage() {
       setTimeout(() => {
         navigate("/ticket-list");
       }, 500);
-    } catch (err) {
-      console.log("❌ Submit error:", err);
+    } catch {
+      // Error displayed via createError state
     }
   };
 

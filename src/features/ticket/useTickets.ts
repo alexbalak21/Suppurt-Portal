@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../auth";
+import { TICKETS_KEY } from "./queryKeys";
 
 export interface Ticket {
   id: number;
@@ -15,30 +16,22 @@ export interface Ticket {
 }
 
 export function useTickets() {
-  const { apiClient } = useAuth();
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { apiClient, authenticated } = useAuth();
 
-  useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    apiClient("/api/tickets")
-      .then(async (res: Response) => {
-        if (!res.ok) throw new Error("Failed to fetch tickets");
-        const data = await res.json();
-        if (isMounted) setTickets(data);
-      })
-      .catch((err: any) => {
-        if (isMounted) setError(err.message || "Error fetching tickets");
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [apiClient]);
+  const { data, isPending, error } = useQuery({
+    queryKey: TICKETS_KEY,
+    queryFn: async () => {
+      const res = await apiClient("/api/tickets");
+      if (!res.ok) throw new Error("Failed to fetch tickets");
+      return res.json() as Promise<Ticket[]>;
+    },
+    enabled: authenticated,
+    staleTime: 1000 * 60 * 2, // 2 minutes
+  });
 
-  return { tickets, loading, error };
+  return {
+    tickets: data ?? [],
+    loading: isPending && authenticated,
+    error: error?.message ?? null,
+  };
 }
