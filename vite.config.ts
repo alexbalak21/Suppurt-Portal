@@ -31,9 +31,4 @@ export default defineConfig({
       },
     },
   },
-
-  build: {
-    outDir: "S:/DEV/Issue-Tracker-App/src/main/resources/static",
-    emptyOutDir: true,
-  },
 })
