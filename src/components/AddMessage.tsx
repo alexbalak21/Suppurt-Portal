@@ -41,6 +41,7 @@ const AddMessage: React.FC<AddMessageProps> = ({ ticketId, onMessageAdded }) => 
       const newMessage = await response.json();
       setMessage('');
       onMessageAdded(newMessage);
+      (window as any).showToast?.('Message sent', 'success');
       // Scroll to Add a Message section after posting
       setTimeout(() => {
         sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
