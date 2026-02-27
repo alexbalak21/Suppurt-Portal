@@ -1,5 +1,5 @@
 
-# Issue Tracker Frontend
+# Support Portal Frontend
 
 A **React 19 + TypeScript** single-page application for a support ticket management system with role-based dashboards, JWT authentication, and a rich component library. Built with Vite and Tailwind CSS 4, designed to deploy as static files into a **Spring Boot** backend.
 
