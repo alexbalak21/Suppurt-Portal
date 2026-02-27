@@ -1,7 +1,7 @@
 import { useRole } from "@features/auth/useRole";
 import { useUser } from "@features/user/UserContext";
 import { useTickets } from "@features/ticket/useTickets";
-import { useUsers } from "@features/user/useUsers";
+import { useSupportAgents } from "@features/user/useSupportAgents";
 import TicketsStatusBars from "@components/TicketsStatusBars";
 import DonutChart from "@components/DonutChart";
 import HorizontalBarChart from "@components/HorizontalBarChart";
@@ -22,7 +22,7 @@ export default function ManagerDashboard() {
 	const { isManager } = useRole();
 	const { user } = useUser();
 	const { tickets, loading, error } = useTickets();
-	const { users } = useUsers({ role: 3 });
+	const { agents: users } = useSupportAgents();
 	const { priorities } = usePriorities();
 	const { statuses } = useStatuses();
 	const [assignModal, setAssignModal] = useState<{ open: boolean; ticketId: number | null }>({ open: false, ticketId: null });
@@ -119,7 +119,7 @@ export default function ManagerDashboard() {
 				{/* Second row */}
 				<div className="md:col-span-2">
 					<HorizontalBarChart title="Assignment Workload" bars={slices} />
-				</div>
+				</div>	
 				<div className="md:col-span-2">
 					<ManagerPriorityMatrix tickets={tickets} users={users} priorities={priorities} />
 				</div>

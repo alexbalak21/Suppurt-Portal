@@ -30,7 +30,13 @@ export function UsersProvider({ children }: { children: React.ReactNode }) {
       .then(async (res: Response) => {
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
-        if (isMounted) setAllUsers(data);
+        // Handle both plain array and wrapped { data: [...] } response formats
+        const list: BasicUser[] = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+          ? data.data
+          : [];
+        if (isMounted) setAllUsers(list);
       })
       .catch((err: any) => {
         if (isMounted) setError(err.message || "Error fetching users");
