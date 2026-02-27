@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {useNavigate } from "react-router-dom";
 import { useToast } from "../components/ToastContainer";
 import FormErrorMessage from "../components/FormErrorMessage";
@@ -6,6 +6,8 @@ import { Button, Input } from "../components";
 import { login } from "@features/auth";
 import { useAuth } from "@features/auth";
 import { useUser } from "@features/user";
+
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 interface LoginFormData {
   email: string;
@@ -17,6 +19,30 @@ export default function Login() {
   const toast = useToast();
   const { setAccessToken, setRefreshToken } = useAuth();
   const { setUser, setActiveRole } = useUser();
+  const [serverOnline, setServerOnline] = useState<boolean | null>(null);
+  const [serverStarting, setServerStarting] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const timer = setTimeout(() => {
+      if (isMounted) setServerStarting(true);
+    }, 10000);
+
+    fetch(`${API_URL}/health`)
+      .then((res) => {
+        if (isMounted) {
+          setServerOnline(res.ok);
+          setServerStarting(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setServerOnline(false);
+          setServerStarting(false);
+        }
+      });
+    return () => { isMounted = false; clearTimeout(timer); };
+  }, []);
 
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
@@ -80,17 +106,7 @@ export default function Login() {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Sign in to your account
         </h2>
-        {/* <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
-          Or{" "}
-          <Link
-            to="/register"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            create a new account
-          </Link>
-        </p> */}
       </div>
-
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <FormErrorMessage message={error} />
@@ -156,6 +172,22 @@ export default function Login() {
             </Button>
           </form>
         </div>
+
+        {serverOnline === false && (
+          <div className="mt-4 px-4 py-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-sm text-center font-medium">
+            Server is unreachable. Please try again later.
+          </div>
+        )}
+        {serverOnline === true && (
+          <div className="mt-4 px-4 py-3 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm text-center font-medium">
+            Server is online.
+          </div>
+        )}
+        {serverOnline === null && serverStarting && (
+          <div className="mt-4 px-4 py-3 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-sm text-center font-medium">
+            Server is starting, please wait...
+          </div>
+        )}
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
