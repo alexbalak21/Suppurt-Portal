@@ -27,7 +27,7 @@ export default function Login() {
     let isMounted = true;
     const timer = setTimeout(() => {
       if (isMounted) setServerStarting(true);
-    }, 10000);
+    }, 3000);
 
     fetch(`${API_URL}/health`)
       .then((res) => {
