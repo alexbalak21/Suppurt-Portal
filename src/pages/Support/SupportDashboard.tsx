@@ -40,18 +40,26 @@ export default function SupportDashboard() {
     }
   }
 
+  // Map priority names to Tailwind color values
+  const tailwindPriorityColors: Record<string, string> = {
+    Low: '#22c55e',      // green-500
+    Medium: '#f59e42',   // orange-500
+    High: '#ef4444',     // red-500
+    Critical: '#a21caf', // purple-700
+  };
+
   // Prepare data for DonutChart
   const slices = priorities.map(p => ({
     label: p.name,
     value: tickets.filter(t => t.priorityId === p.id).length,
-    color: p.color,
+    color: tailwindPriorityColors[p.name] || '#6b7280', // fallback: gray-500
   }));
 
   // Prepare data for HorizontalBarChart (Tickets by Priority)
   const ticketsByPriority = priorities.map(p => ({
     label: p.name,
     value: tickets.filter(t => t.priorityId === p.id).length,
-    color: p.color,
+    color: tailwindPriorityColors[p.name] || '#6b7280',
   }));
 
   return (
