@@ -225,7 +225,7 @@ const TicketDetailsPage: React.FC = () => {
               {bodyError && <div className="text-red-500 mt-1">{bodyError}</div>}
             </>
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: ticket.body }} />
+            <div className="prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: ticket.body }} />
           )}
         </div>
 
