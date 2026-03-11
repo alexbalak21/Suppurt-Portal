@@ -6,7 +6,7 @@ A **React 19 + TypeScript** single-page application for a support ticket managem
 
 The frontend works together with **Spring Boot** backend that handles authentication, RBAC, ticket workflows, conversations, and admin management.
 
-🔗 **Backend:** https://github.com/alexbalak21/issue-tracker-app
+🔗 **Backend:** https://github.com/alexbalak21/Support-Portal-API
 
 
 ## Screenshots
