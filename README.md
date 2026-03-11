@@ -2,6 +2,13 @@
 
 A **React 19 + TypeScript** single-page application for a support ticket management system with role-based dashboards, JWT authentication, and a rich component library. Built with Vite and Tailwind CSS 4, designed to deploy as static files served by a **Spring Boot** backend.
 
+## Backend Repository
+
+The frontend works together with **Spring Boot** backend that handles authentication, RBAC, ticket workflows, conversations, and admin management.
+
+🔗 **Backend:** https://github.com/alexbalak21/issue-tracker-app
+
+
 ## Screenshots
 
 | Manager Dashboard | Ticket Details |
