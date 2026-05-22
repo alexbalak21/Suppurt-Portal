@@ -11,9 +11,10 @@ type SimpleSelectProps = {
 
 export default function SimpleSelect({ options, value, onChange }: SimpleSelectProps) {
   // fallback internal state
-  const [internalValue, setInternalValue] = useState(options[0]);
+  const initialValue = options[0] ?? "";
+  const [internalValue, setInternalValue] = useState(initialValue);
 
-  const selected = value ?? internalValue;
+  const selected = value ?? internalValue ?? initialValue;
 
   const handleChange = (val: string) => {
     if (onChange) {
@@ -28,7 +29,7 @@ export default function SimpleSelect({ options, value, onChange }: SimpleSelectP
       <Listbox value={selected} onChange={handleChange}>
         <ListboxButton
           className={clsx(
-            "relative block w-full rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-300 py-1.5 pr-8 pl-3 text-left text-sm",
+            "relative block w-full rounded-lg bg-white text-gray-900 outline-1 outline-gray-300 py-1.5 pr-8 pl-3 text-left text-sm",
             "dark:bg-gray-800 dark:text-white dark:outline-gray-700"
           )}
         >

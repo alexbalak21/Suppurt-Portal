@@ -131,11 +131,13 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
     );
   }
 
+  const activeSelected = selected ?? options[0];
+
   return (
     <div>
       <div className="flex flex-row gap-2 items-start">
         <div className="flex-1">
-          <Listbox value={selected} onChange={handleChange} disabled={disabled}>
+          <Listbox value={activeSelected} onChange={handleChange} disabled={disabled}>
             <div className="relative w-full">
 
               <ListboxButton
@@ -147,7 +149,7 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
                   "w-full py-1.5 pr-8 pl-3 text-sm"
                 )}
               >
-                {selected?.label}
+                {activeSelected?.label}
 
                 <ChevronDownIcon
                   className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-2.5 size-4 text-gray-500 dark:fill-white/60"
