@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../auth";
 import { supportAgentsKey } from "../ticket/queryKeys";
-import type { BasicUser } from "./useUsers";
+import { extractUserList, type BasicUser } from "./useUsers";
 
 const SUPPORT_ROLE_ID = 3;
 
@@ -17,12 +17,7 @@ export function useSupportAgents() {
       const res = await apiClient(`/api/users?role=${SUPPORT_ROLE_ID}`);
       if (!res.ok) throw new Error(`Failed to fetch support agents (${res.status})`);
       const data = await res.json();
-      const list: BasicUser[] = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.data)
-        ? data.data
-        : [];
-      return list;
+      return extractUserList(data) as BasicUser[];
     },
     enabled: authenticated,
     staleTime: 1000 * 60 * 5, // 5 minutes

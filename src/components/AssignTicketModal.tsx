@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import Button from "./Button";
-import { useSupportAgents } from "@features/user/useSupportAgents";
+import { useUsers } from "@features/user/useUsers";
 
 interface Props {
   open: boolean;
@@ -21,7 +21,8 @@ export default function AssignTicketModal({ open, ticketId, onClose, onAssign, c
     }
   }, [open]);
 
-  const { agents, loading, error } = useSupportAgents();
+  const { users, loading, error } = useUsers();
+  const agents = users;
 
   if (!open) return null;
 
@@ -42,7 +43,7 @@ export default function AssignTicketModal({ open, ticketId, onClose, onAssign, c
             onChange={e => setSelectedUserId(e.target.value ? Number(e.target.value) : null)}
             disabled={loading || agents.length === 0}
           >
-            <option value="">{loading ? "Loading support users..." : "Select support user..."}</option>
+            <option value="">{loading ? "Loading users..." : "Select user..."}</option>
             {agents.map(agent => (
               <option
                 key={agent.id}
@@ -54,7 +55,7 @@ export default function AssignTicketModal({ open, ticketId, onClose, onAssign, c
             ))}
           </select>
           {!loading && agents.length === 0 && !error && (
-            <p className="mt-2 text-xs text-gray-500">No support users are available for assignment.</p>
+            <p className="mt-2 text-xs text-gray-500">No users are available for assignment.</p>
           )}
           {error && (
             <p className="mt-2 text-xs text-red-500">{error}</p>
